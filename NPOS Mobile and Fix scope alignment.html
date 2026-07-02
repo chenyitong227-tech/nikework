@@ -446,7 +446,7 @@
     </div>
     <div class="kpi k-mobile-scale">
       <div class="label">Phase 2 · Mobile Scale</div>
-      <div class="value">12</div>
+      <div class="value">13</div>
       <div class="sub">capabilities · 200+ stores · beyond‑parity enhancements</div>
     </div>
     <div class="kpi k-fixed-pilot">
@@ -461,7 +461,7 @@
     </div>
     <div class="kpi k-total">
       <div class="label">Total Scoped Features</div>
-      <div class="value">42</div>
+      <div class="value">43</div>
       <div class="sub">across 4 phases · 9 functional categories</div>
     </div>
   </div>
@@ -561,7 +561,7 @@
           </div>
         </div>
         <div class="r">
-          <div class="metric"><div class="l1">Scope · Capabilities</div><div class="v1">12</div></div>
+          <div class="metric"><div class="l1">Scope · Capabilities</div><div class="v1">13</div></div>
           <div class="metric"><div class="l1">Footprint</div><div class="v1">200+ Stores</div></div>
         </div>
       </div>
@@ -569,6 +569,7 @@
         <table class="features">
           <thead><tr><th style="width:14%">Category</th><th style="width:20%">Feature</th><th>Description</th><th style="width:9%">Owner</th><th style="width:11%">Priority</th><th style="width:12%">Status</th></tr></thead>
           <tbody>
+            <tr><td class="cat">Sales</td><td class="feature">NBY Price Override</td><td class="desc">Enable athletes to override the price at checkout for NBY items. China only maintains <b>4 GTINs</b> for NBY, but <b>20–30 distinct NBY price points</b> need to be sold — without price override, NPOS Mobile cannot ring up the full NBY price ladder.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p>Combines two Confluence items:</p><p><b>1. Price Override</b> — manually override the price for the consumer's purchase (baseline capability).</p><p><b>2. Nike By You</b> — add NBY products to the cart as non‑merch items with stock / GTIN management capability.</p><p><b>GC context (from Confluence):</b> RCC backend maintains a small non‑merch catalog (GTIN, product name, product price, store availability) coordinated with SAP &amp; Tax so the same GTIN can recognize revenue and calculate taxes. In GC we intentionally keep only <b>4 NBY GTINs</b> but sell <b>20–30 different NBY price points</b> — price override on those 4 GTINs is the operational way to cover the full NBY price ladder at scale.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Employee Purchase</td><td class="feature">2 Pieces of Receipts</td><td class="desc">When the transaction uses employee discount, NPOS automatically prints two receipts with a signature area.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P1</span><span class="tag global">Global Feedback · P1</span></div><p>If the transaction uses the employee discount, NPOS can automatically print 2 pieces of receipts which have the signature area.</p><div class="pain"><b>Pain point:</b> Currently using the "print last transaction receipt" functionality to support this business need — would like a proper feature for Swoosh orders.</div><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">SPR</td><td class="feature">Department Analysis Report</td><td class="desc">Realize this report in SPR as real time.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p>Maps to the Confluence reporting items <b>Store Management report</b> and <b>GSS reports including NPOS mobile transactions</b>, plus <b>GC ED&amp;A adaption</b> — necessary GSS + P7 report capability. GC requires the Department Analysis dimension realized in SPR as a real‑time report.</p><p>Confluence open items referenced:</p><p>1. ATT for GC from ROP — done from global in Q1<br>2. Store Ingest — Global TBD, potentially Q2<br>3. Any necessary update from 1POS<br>4. Any necessary update from P7</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Employee Purchase</td><td class="feature">Swoosh Products Identification</td><td class="desc">NPOS directly identifies which products are ineligible for the Swoosh discount.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P1</span></div><p>Some products are flagged as "don't apply swoosh" in the local system. We want NPOS to retrieve this flag and reflect it in the checkout process:</p><p>1) Without the flag → continue checkout with swoosh discount.<br>2) With the flag → checkout without swoosh discount.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri stretch">Stretch</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
