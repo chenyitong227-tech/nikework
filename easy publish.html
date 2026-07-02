@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>把本地 HTML 发布到 GitHub，一键生成分享链接</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --bg-soft: #161b22;
+    --bg-card: #ffffff;
+    --border: #d0d7de;
+    --text: #1f2328;
+    --text-soft: #656d76;
+    --brand: #0969da;
+    --brand-strong: #0550ae;
+    --success: #1a7f37;
+    --warn: #9a6700;
+    --code-bg: #f6f8fa;
+    --shadow: 0 8px 24px rgba(140, 149, 159, 0.15);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(180deg, #f6f8fa 0%, #eef2f6 100%);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* Header */
+  header.hero {
+    background: linear-gradient(135deg, #0d1117 0%, #1f2937 60%, #0969da 130%);
+    color: white;
+    border-radius: 20px;
+    padding: 44px 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 20px 40px rgba(13, 17, 23, 0.25);
+    position: relative;
+    overflow: hidden;
+  }
+  header.hero::after {
+    content: "";
+    position: absolute;
+    right: -60px;
+    top: -60px;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  header.hero .tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+  header.hero h1 {
+    font-size: 32px;
+    margin: 0 0 12px;
+    letter-spacing: -0.5px;
+  }
+  header.hero p {
+    margin: 0;
+    font-size: 16px;
+    color: rgba(255,255,255,0.85);
+    max-width: 640px;
+  }
+
+  /* Overview cards */
+  .overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 44px;
+  }
+  .overview-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .overview-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  .overview-card .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--brand);
+    color: white;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .overview-card .title {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  /* Section (steps) */
+  section.step {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 36px;
+    margin-bottom: 28px;
+    box-shadow: var(--shadow);
+  }
+  .step-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .step-badge {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #0969da 0%, #0550ae 100%);
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(9, 105, 218, 0.35);
+  }
+  .step-head h2 {
+    margin: 0;
+    font-size: 22px;
+    letter-spacing: -0.3px;
+  }
+  .step-head .sub {
+    color: var(--text-soft);
+    font-size: 13px;
+    margin-top: 2px;
+  }
+
+  .step p, .step li {
+    font-size: 15px;
+  }
+  .step ol, .step ul {
+    padding-left: 22px;
+  }
+  .step li { margin-bottom: 8px; }
+
+  /* Callouts */
+  .callout {
+    border-left: 4px solid var(--brand);
+    background: #ddf4ff;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 14px 0;
+    font-size: 14px;
+    color: #0550ae;
+  }
+  .callout.warn {
+    border-left-color: #d1a72c;
+    background: #fff8c5;
+    color: #7d4e00;
+  }
+  .callout.success {
+    border-left-color: var(--success);
+    background: #dafbe1;
+    color: #0f5323;
+  }
+  .callout .icon {
+    display: inline-block;
+    margin-right: 6px;
+  }
+
+  /* Code */
+  code, .kbd {
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px;
+    color: #0550ae;
+    border: 1px solid #eaeef2;
+  }
+  pre {
+    background: #0d1117;
+    color: #c9d1d9;
+    padding: 16px 20px;
+    border-radius: 10px;
+    overflow-x: auto;
+    font-size: 13.5px;
+    line-height: 1.6;
+    margin: 14px 0;
+  }
+  pre code {
+    background: none;
+    border: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+
+  /* Image */
+  .figure {
+    margin: 18px 0;
+    background: var(--code-bg);
+    border: 1px dashed #d0d7de;
+    border-radius: 12px;
+    padding: 14px;
+  }
+  .figure img {
+    width: 100%;
+    display: block;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .figure figcaption {
+    text-align: center;
+    color: var(--text-soft);
+    font-size: 13px;
+    margin-top: 10px;
+  }
+
+  /* Link builder */
+  .link-builder {
+    background: linear-gradient(135deg, #eef4ff 0%, #f5f0ff 100%);
+    border: 1px solid #c8d6ff;
+    border-radius: 14px;
+    padding: 20px;
+    margin: 18px 0 6px;
+  }
+  .link-builder h4 {
+    margin: 0 0 12px;
+    font-size: 15px;
+    color: #0550ae;
+  }
+  .formula {
+    background: white;
+    border: 1px solid #d0d7de;
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 14px;
+    color: #24292f;
+    word-break: break-all;
+    line-height: 1.9;
+  }
+  .formula .part {
+    padding: 2px 6px;
+    border-radius: 5px;
+    margin: 0 1px;
+  }
+  .formula .p1 { background: #ddf4ff; color: #0550ae; }
+  .formula .p2 { background: #dafbe1; color: #0f5323; }
+  .formula .p3 { background: #fff8c5; color: #7d4e00; }
+  .formula .p4 { background: #ffd8b5; color: #7d3a00; }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+    font-size: 12px;
+  }
+  .legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .legend .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    display: inline-block;
+  }
+
+  /* Example table */
+  table.example {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 13.5px;
+  }
+  table.example th, table.example td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+  table.example th {
+    background: var(--code-bg);
+    font-weight: 600;
+    color: var(--text);
+  }
+  table.example td code {
+    font-size: 12.5px;
+  }
+
+  /* FAQ */
+  details.faq {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+  }
+  details.faq summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text);
+    outline: none;
+  }
+  details.faq[open] { border-color: var(--brand); }
+  details.faq summary::marker { color: var(--brand); }
+  details.faq p { margin: 10px 0 0; font-size: 14px; color: var(--text-soft); }
+
+  /* Footer */
+  footer {
+    margin-top: 48px;
+    text-align: center;
+    color: var(--text-soft);
+    font-size: 13px;
+  }
+
+  @media (max-width: 640px) {
+    .container { padding: 24px 16px 60px; }
+    header.hero { padding: 30px 22px; }
+    header.hero h1 { font-size: 24px; }
+    section.step { padding: 22px; }
+    .step-head h2 { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- HERO -->
+    <header class="hero">
+      <span class="tag">TUTORIAL · GITHUB PAGES</span>
+      <h1>把本地 HTML 变成一个可分享的链接</h1>
+      <p>只需 5 步，把你写好的 HTML 文件上传到 GitHub，就能生成一个网页链接。别人可以在微信、飞书、浏览器直接打开 —— 不用装任何东西。</p>
+    </header>
+
+    <!-- OVERVIEW -->
+    <div class="overview">
+      <div class="overview-card"><div class="num">1</div><div class="title">注册 GitHub</div></div>
+      <div class="overview-card"><div class="num">2</div><div class="title">新建仓库</div></div>
+      <div class="overview-card"><div class="num">3</div><div class="title">上传 HTML</div></div>
+      <div class="overview-card"><div class="num">4</div><div class="title">开启 Pages</div></div>
+      <div class="overview-card"><div class="num">5</div><div class="title">拼接链接</div></div>
+    </div>
+
+    <!-- STEP 1 -->
+    <section class="step">
+      <div class="step-head">
+        <div class="step-badge">1</div>
+        <div>
+          <h2>注册 GitHub 账号</h2>
+          <div class="sub">全球最大的代码托管平台，注册免费</div>
+        </div>
+      </div>
+
+      <ol>
+        <li>打开官网：<code>https://github.com</code></li>
+        <li>点击右上角 <strong>Sign up</strong>，按提示输入邮箱、密码、用户名</li>
+        <li>去邮箱收激活验证码，完成注册</li>
+      </ol>
+
+      <div class="callout">
+        <span class="icon">💡</span>
+        <strong>用户名很重要</strong>：以后所有链接里都会包含它，建议起一个简洁、英文、无特殊符号的名字，比如 <code>zhangsan-tech</code>。
+      </div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="step">
+      <div class="step-head">
+        <div class="step-badge">2</div>
+        <div>
+          <h2>新建一个仓库（Repository）</h2>
+          <div class="sub">仓库 = 存放你 HTML 文件的一个"网络文件夹"</div>
+        </div>
+      </div>
+
+      <ol>
+        <li>登录后，点击右上角 <strong>+</strong>  →  选择 <strong>New repository</strong></li>
+        <li>填写仓库名，比如 <code>nikework</code>（英文、小写、不加空格）</li>
+        <li>勾选 <strong>Public</strong>（公开，别人才能通过链接访问）</li>
+        <li>勾选 <strong>Add a README file</strong>（可选，方便后续管理）</li>
+        <li>点击 <strong>Create repository</strong> 完成创建</li>
+      </ol>
+
+      <figure class="figure">
+        <img src="assets/step2-new-repo.png" alt="GitHub 新建仓库入口截图" />
+        <figcaption>在右上角 <code>+</code> 菜单中选择 <strong>New repository</strong></figcaption>
+      </figure>
+
+      <div class="callout warn">
+        <span class="icon">⚠️</span>
+        <strong>一定要选 Public</strong>：Private（私有）仓库虽然可以创建，但需要付费才能开启 GitHub Pages，公开分享给同事和微信打开需要 Public。
+      </div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="step">
+      <div class="step-head">
+        <div class="step-badge">3</div>
+        <div>
+          <h2>上传本地 HTML 文件</h2>
+          <div class="sub">直接把电脑上的文件拖进浏览器就行</div>
+        </div>
+      </div>
+
+      <ol>
+        <li>进入刚才创建的仓库</li>
+        <li>点击页面中间的 <strong>Add file</strong> → 选择 <strong>Upload files</strong></li>
+        <li>把你本地的 <code>index.html</code>（或其他 HTML 文件）<strong>拖拽</strong>到上传区域，或点击 <em>choose your files</em> 选择</li>
+        <li>如果有配套的 <code>images/</code>、<code>css/</code>、<code>js/</code> 文件夹，一起拖进来</li>
+        <li>滚到页面底部，点绿色按钮 <strong>Commit changes</strong></li>
+      </ol>
+
+      <div class="callout success">
+        <span class="icon">✅</span>
+        <strong>命名建议</strong>：把主文件命名为 <code>index.html</code>，这样最终链接可以省略文件名，直接是网站首页。
+      </div>
+
+      <div class="callout warn">
+        <span class="icon">📌</span>
+        <strong>文件名不要用中文</strong>：中文文件名在链接里会变成一串乱码（%E7%AE%80%E5%8D%95...），非常难分享。<br />
+        推荐用英文小写 + 连字符：<code>report.html</code>、<code>q3-sales.html</code>。
+      </div>
+    </section>
+
+    <!-- STEP 4 -->
+    <section class="step">
+      <div class="step-head">
+        <div class="step-badge">4</div>
+        <div>
+          <h2>开启 GitHub Pages（让文件变成网页）</h2>
+          <div class="sub">这一步是"发布"，开启后才有对外访问的链接</div>
+        </div>
+      </div>
+
+      <ol>
+        <li>在仓库页面顶部点击 <strong>Settings</strong>（齿轮图标）</li>
+        <li>在左侧菜单栏中找到 <strong>Pages</strong></li>
+        <li>在 <strong>Build and deployment</strong> 区域：
+          <ul>
+            <li><strong>Source</strong> 选择 <code>Deploy from a branch</code></li>
+            <li><strong>Branch</strong> 选择 <code>main</code>，右边文件夹选 <code>/ (root)</code></li>
+          </ul>
+        </li>
+        <li>点击 <strong>Save</strong> 保存</li>
+        <li>等 <strong>1–2 分钟</strong>刷新页面，最上面就会出现绿色提示：
+          <br /><em>"Your site is live at https://xxx.github.io/xxx/"</em></li>
+      </ol>
+
+      <figure class="figure">
+        <img src="assets/step4-pages-settings.png" alt="GitHub Pages 设置页面截图" />
+        <figcaption>Settings → Pages：选择 <code>main</code> 分支 + <code>/ (root)</code>，点 Save</figcaption>
+      </figure>
+
+      <div class="callout">
+        <span class="icon">⏱️</span>
+        <strong>不用一直刷新</strong>：第一次发布需要等 1–2 分钟，之后每次更新 HTML 大概 20–60 秒生效。
+      </div>
+    </section>
+
+    <!-- STEP 5 -->
+    <section class="step">
+      <div class="step-head">
+        <div class="step-badge">5</div>
+        <div>
+          <h2>拼接你的分享链接</h2>
+          <div class="sub">按下面的公式就能自己拼出来，不用等系统提示</div>
+        </div>
+      </div>
+
+      <p>GitHub Pages 的链接格式非常固定，记住这个公式：</p>
+
+      <div class="link-builder">
+        <h4>📐 链接公式</h4>
+        <div class="formula">
+          https://<span class="part p1">用户名</span>.github.io/<span class="part p2">仓库名</span>/<span class="part p3">文件名.html</span>
+        </div>
+        <div class="legend">
+          <span><span class="dot" style="background:#ddf4ff;"></span>用户名 = 注册时填的 username</span>
+          <span><span class="dot" style="background:#dafbe1;"></span>仓库名 = 第 2 步创建的仓库</span>
+          <span><span class="dot" style="background:#fff8c5;"></span>文件名 = 如果是 index.html 可省略</span>
+        </div>
+      </div>
+
+      <h4 style="margin-top:22px;margin-bottom:8px;">🌰 实际举例</h4>
+      <table class="example">
+        <thead>
+          <tr>
+            <th>用户名</th>
+            <th>仓库名</th>
+            <th>文件名</th>
+            <th>最终链接</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>chenyitong227-tech</code></td>
+            <td><code>nikework</code></td>
+            <td><code>index.html</code></td>
+            <td><code>https://chenyitong227-tech.github.io/nikework/</code></td>
+          </tr>
+          <tr>
+            <td><code>chenyitong227-tech</code></td>
+            <td><code>nikework</code></td>
+            <td><code>report.html</code></td>
+            <td><code>https://chenyitong227-tech.github.io/nikework/report.html</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout success">
+        <span class="icon">🎉</span>
+        <strong>大功告成</strong>！把这个链接复制到微信、飞书、邮件里，任何人点开都能看到你的网页。
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="step">
+      <div class="step-head">
+        <div class="step-badge">?</div>
+        <div>
+          <h2>常见问题</h2>
+          <div class="sub">同事最常问的几个坑</div>
+        </div>
+      </div>
+
+      <details class="faq">
+        <summary>打开链接显示 404 怎么办？</summary>
+        <p>1) 确认 Pages 已经开启（Settings → Pages 有绿色 "Your site is live"）；2) 确认文件名是英文且大小写正确；3) 第一次发布再等 1–2 分钟；4) 检查链接里的用户名、仓库名有没有拼错。</p>
+      </details>
+
+      <details class="faq">
+        <summary>更新 HTML 后链接内容没变？</summary>
+        <p>重新上传文件后需要 20–60 秒才会生效。同时浏览器有缓存，可以按 <span class="kbd">Cmd</span> + <span class="kbd">Shift</span> + <span class="kbd">R</span>（Mac）或 <span class="kbd">Ctrl</span> + <span class="kbd">F5</span>（Win）强制刷新。</p>
+      </details>
+
+      <details class="faq">
+        <summary>HTML 里的图片、CSS、JS 显示不出来？</summary>
+        <p>把用到的资源文件（图片、样式、脚本）也一起上传到仓库，并且 HTML 里引用它们时用<strong>相对路径</strong>，例如 <code>./images/logo.png</code>，不要用本地绝对路径 <code>/Users/xxx/Desktop/...</code>。</p>
+      </details>
+
+      <details class="faq">
+        <summary>我的内容是保密的，不想公开怎么办？</summary>
+        <p>GitHub Pages 需要 Public 仓库才能免费使用。如果不能公开，可以考虑：① 使用公司内部的静态托管平台；② 升级 GitHub Pro（Private 仓库也能用 Pages）；③ 用其他工具比如 Vercel、Netlify。</p>
+      </details>
+
+      <details class="faq">
+        <summary>微信里点链接打不开？</summary>
+        <p>少数情况下微信会拦截 github.io 域名，让对方点右上角"…"→"在浏览器打开"即可。或者可以把链接生成二维码分享。</p>
+      </details>
+    </section>
+
+    <footer>
+      <p>📄 GitHub Pages 官方文档：<code>docs.github.com/pages</code></p>
+      <p>祝发布顺利，有问题随时问我 ✨</p>
+    </footer>
+  </div>
+</body>
+</html>
