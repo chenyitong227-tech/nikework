@@ -152,6 +152,50 @@
   .kpi.k-fixed-scale { --c: var(--accent); }
   .kpi.k-total { --c: var(--text); }
 
+  /* ===== Change Log ===== */
+  .changelog {
+    margin-top: 32px;
+    padding: 22px 26px;
+    background: linear-gradient(135deg, #fff7ed 0%, #fffaf3 100%);
+    border-left: 4px solid var(--accent);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+  }
+  .changelog-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 14px; margin-bottom: 10px; flex-wrap: wrap;
+  }
+  .changelog-title {
+    font-size: 12px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--accent-2); font-weight: 800;
+  }
+  .changelog-date {
+    font-size: 11px; color: var(--text-mute);
+    font-family: 'JetBrains Mono', monospace; letter-spacing: .06em;
+  }
+  .changelog-lede { font-size: 14px; color: var(--text); margin: 0 0 16px; line-height: 1.6; }
+  .changelog-lede b { font-weight: 700; }
+  .changelog-list { display: flex; flex-direction: column; gap: 10px; }
+  .changelog-item {
+    display: grid; grid-template-columns: 88px 1fr; gap: 14px;
+    align-items: start; font-size: 13px; line-height: 1.6;
+  }
+  .changelog-item .cl-tag {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 4px 8px; border-radius: 5px;
+    font-size: 10px; letter-spacing: .08em; text-transform: uppercase; font-weight: 800;
+    color: #fff; text-align: center; white-space: nowrap;
+  }
+  .changelog-item .cl-tag.scope   { background: var(--accent); }
+  .changelog-item .cl-tag.added   { background: #059669; }
+  .changelog-item .cl-tag.moved   { background: #7c3aed; }
+  .changelog-item .cl-tag.edited  { background: #0369a1; }
+  .changelog-item .cl-body { color: var(--text-dim); }
+  .changelog-item .cl-body b { color: var(--text); font-weight: 700; }
+  @media (max-width: 720px) {
+    .changelog-item { grid-template-columns: 1fr; gap: 4px; }
+  }
+
   /* ===== Section header ===== */
   .section { margin-top: 44px; }
   .section-head { display:flex; align-items: baseline; justify-content: space-between; margin-bottom: 18px; gap: 14px; flex-wrap: wrap; }
@@ -433,7 +477,7 @@
   <div class="hero">
     <div>
       <p class="kicker">GC NPOS Program · Mobile & Fixed</p>
-      <h1>Four‑Phase Features Delivery <span class="accent">Roadmap.</span></h1>
+      <h1>Mainland China · Four‑Phase Features Delivery <span class="accent">Roadmap.</span></h1>
     </div>
   </div>
 
@@ -446,12 +490,12 @@
     </div>
     <div class="kpi k-mobile-scale">
       <div class="label">Phase 2 · Mobile Scale</div>
-      <div class="value">13</div>
+      <div class="value">14</div>
       <div class="sub">capabilities · 200+ stores · beyond‑parity enhancements</div>
     </div>
     <div class="kpi k-fixed-pilot">
       <div class="label">Phase 3 · Fixed Pilot</div>
-      <div class="value">12</div>
+      <div class="value">13</div>
       <div class="sub">capabilities · core retail flows ready for fixed rollout</div>
     </div>
     <div class="kpi k-fixed-scale">
@@ -461,8 +505,35 @@
     </div>
     <div class="kpi k-total">
       <div class="label">Total Scoped Features</div>
-      <div class="value">43</div>
+      <div class="value">45</div>
       <div class="sub">across 4 phases · 9 functional categories</div>
+    </div>
+  </div>
+
+  <!-- ===== Change Log ===== -->
+  <div class="changelog">
+    <div class="changelog-head">
+      <span class="changelog-title">Latest Update · Change Log</span>
+      <span class="changelog-date">Alignment Meeting · Jul 7, 2026</span>
+    </div>
+    <p class="changelog-lede">Based on the <b>Jul 7 alignment meeting</b>, this roadmap has been updated to formally scope the program for <b>mainland China</b> and to adjust / add three requirements. Details below.</p>
+    <div class="changelog-list">
+      <div class="changelog-item">
+        <span class="cl-tag scope">Scope</span>
+        <div class="cl-body">Title updated to <b>"Mainland China · Four‑Phase Features Delivery Roadmap"</b> — confirming the program's geographic scope is <b>mainland China (MLC)</b>.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><b>Phase 02 · NPOS Mobile Scale</b> — added <b>NBY Product Sales Rollout</b> (Scale Must). Brings the pilot's NBY capability to all <b>200+ scale stores</b>; pairs with NBY Price Override to cover the full 4 GTINs × 20–30 price‑point ladder.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><b>Phase 02 · NPOS Mobile Scale</b> — added <b>Bag Fee</b> (Scale Must). Mainland China intentionally marks the bag fee as <b>0 RMB</b> — no consumer charge — but the item must still flow through the non‑merch catalog for revenue.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag moved">Moved</span>
+        <div class="cl-body"><b>Non‑Merch Products Income Keyin</b> moved from <b>Phase 02 · Scale Must</b> → <b>Phase 03 · Fixed Pilot Must</b>. Better fit for the fixed POS non‑merch key‑in flow used by store finance.</div>
+      </div>
     </div>
   </div>
 
@@ -561,7 +632,7 @@
           </div>
         </div>
         <div class="r">
-          <div class="metric"><div class="l1">Scope · Capabilities</div><div class="v1">13</div></div>
+          <div class="metric"><div class="l1">Scope · Capabilities</div><div class="v1">14</div></div>
           <div class="metric"><div class="l1">Footprint</div><div class="v1">200+ Stores</div></div>
         </div>
       </div>
@@ -570,6 +641,8 @@
           <thead><tr><th style="width:14%">Category</th><th style="width:20%">Feature</th><th>Description</th><th style="width:9%">Owner</th><th style="width:11%">Priority</th><th style="width:12%">Status</th></tr></thead>
           <tbody>
             <tr><td class="cat">Sales</td><td class="feature">NBY Price Override</td><td class="desc">Enable athletes to override the price at checkout for NBY items. China only maintains <b>4 GTINs</b> for NBY, but <b>20–30 distinct NBY price points</b> need to be sold — without price override, NPOS Mobile cannot ring up the full NBY price ladder.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p>Combines two Confluence items:</p><p><b>1. Price Override</b> — manually override the price for the consumer's purchase (baseline capability).</p><p><b>2. Nike By You</b> — add NBY products to the cart as non‑merch items with stock / GTIN management capability.</p><p><b>GC context (from Confluence):</b> RCC backend maintains a small non‑merch catalog (GTIN, product name, product price, store availability) coordinated with SAP &amp; Tax so the same GTIN can recognize revenue and calculate taxes. In GC we intentionally keep only <b>4 NBY GTINs</b> but sell <b>20–30 different NBY price points</b> — price override on those 4 GTINs is the operational way to cover the full NBY price ladder at scale.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
+            <tr><td class="cat">Sales</td><td class="feature">NBY Product Sales Rollout</td><td class="desc">Roll out NBY product sales capability from the 2‑store pilot to all <b>200+ NPOS Mobile scale stores</b>. Works with NBY Price Override to cover the full 4 GTINs × 20–30 price‑point ladder.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p><b>Nike By You</b> — add NBY products to the cart as non‑merch items with stock / GTIN management capability.</p><p><b>GC context (from Confluence):</b> RCC backend maintains a small non‑merch catalog (GTIN, product name, product price, store availability) coordinated with SAP &amp; Tax so the same GTIN can recognize revenue and calculate taxes consistently for NBY, bag fees and gift cards.</p><p>Phase 01 delivered NBY sales at pilot; Phase 02 scales it to <b>200+ stores</b> alongside NBY Price Override.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
+            <tr><td class="cat">Non‑Merch</td><td class="feature">Bag Fee</td><td class="desc">Support bag fee as a non‑merch item at NPOS Mobile checkout. In mainland China the bag fee is intentionally marked as <b>0 RMB</b> — no consumer charge — but the item must still flow through the non‑merch catalog for revenue.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P1 / P0</span><span class="tag global">Global Feedback · P0</span></div><p><b>Bag Fees</b> — add bag fee as non‑merch items.</p><p><b>GC context:</b> In mainland China the bag fee is priced at <b>0 RMB</b> (consumer pays nothing), but we still key it through the non‑merch catalog so SAP &amp; Tax can recognize revenue and calculate taxes on the same GTIN model shared with NBY, gift cards and other non‑merch items.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Employee Purchase</td><td class="feature">2 Pieces of Receipts</td><td class="desc">When the transaction uses employee discount, NPOS automatically prints two receipts with a signature area.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P1</span><span class="tag global">Global Feedback · P1</span></div><p>If the transaction uses the employee discount, NPOS can automatically print 2 pieces of receipts which have the signature area.</p><div class="pain"><b>Pain point:</b> Currently using the "print last transaction receipt" functionality to support this business need — would like a proper feature for Swoosh orders.</div><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">SPR</td><td class="feature">Department Analysis Report</td><td class="desc">Realize this report in SPR as real time.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p>Maps to the Confluence reporting items <b>Store Management report</b> and <b>GSS reports including NPOS mobile transactions</b>, plus <b>GC ED&amp;A adaption</b> — necessary GSS + P7 report capability. GC requires the Department Analysis dimension realized in SPR as a real‑time report.</p><p>Confluence open items referenced:</p><p>1. ATT for GC from ROP — done from global in Q1<br>2. Store Ingest — Global TBD, potentially Q2<br>3. Any necessary update from 1POS<br>4. Any necessary update from P7</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Employee Purchase</td><td class="feature">Swoosh Products Identification</td><td class="desc">NPOS directly identifies which products are ineligible for the Swoosh discount.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P1</span></div><p>Some products are flagged as "don't apply swoosh" in the local system. We want NPOS to retrieve this flag and reflect it in the checkout process:</p><p>1) Without the flag → continue checkout with swoosh discount.<br>2) With the flag → checkout without swoosh discount.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri stretch">Stretch</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
@@ -577,7 +650,6 @@
             <tr><td class="cat">Employee Purchase</td><td class="feature">Swoosh Limitation</td><td class="desc">Add limitation rules for employee discount with alerting.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P3</span><span class="tag global">Global Feedback · P1</span></div><p>Add a limitation cap for employee discount, with an alert when the cap is about to be exceeded.</p><p><b>Example:</b> If the monthly employee discount cap is ￥3,000 and the employee has used ￥2,800 by 6/28, when they try to use the employee discount again on 6/30 for ￥300 worth of products, NPOS will alert that only ￥200 remaining for June.</p><p><b>GC monthly caps:</b> NVS ￥4,000 · NSO ￥6,000.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri stretch">Stretch</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Member Reward</td><td class="feature">Free of Charge Gift</td><td class="desc">Stores can issue a free‑of‑charge gift to consumers.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p>Able to check member reward after the member is attached, to retrieve all member reward info from PassPlay.</p><p><b>Scenario 1:</b> reward — gift free of charge.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri stretch">Stretch</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Member Reward</td><td class="feature">Reward Redeem Period</td><td class="desc">Consumers can redeem a reward within its validity period.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p><b>Scenario 2:</b> A coupon in PassPlay has a validity period of e.g. 7/1–7/30. However, once the consumer has attached membership in 1POS, the coupon is activated with <b>only 24–72 hours validity</b> before the consumer agrees to use it.</p><p>Sometimes consumers want to <b>save the coupon for the next purchase</b>, but by the next visit the coupon has expired because it only has 24–72 hours validity. Has NPOS solved this?</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri stretch">Stretch</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
-            <tr><td class="cat">Non‑Merch</td><td class="feature">Non‑Merch Products Income Keyin</td><td class="desc">Key in non‑merch items, e.g. delivery box recycle income, into NPOS.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P1</span><span class="tag global">Global Feedback · P0</span></div><p>Non-merch items like delivery box recycle income keyin NPOS.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Receipt</td><td class="feature">Replace UPC with SKU</td><td class="desc">Replace UPC with SKU (9 digits + size) information on the receipt.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p>Replace UPC with SKU (9‑digits) info on the printed receipt for clearer item identification in GC stores.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Receipt</td><td class="feature">Show Chinese Store Address</td><td class="desc">Show store address in Simplified Chinese for mainland China.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p>Show store address in Chinese (Simplified) for mainland China stores.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Receipt</td><td class="feature">Add More Space</td><td class="desc">Add more spacing between each product line on the receipt.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p>Add more space between each product line on the printed receipt to improve readability for GC consumers.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
@@ -604,7 +676,7 @@
           </div>
         </div>
         <div class="r">
-          <div class="metric"><div class="l1">Scope · Capabilities</div><div class="v1">12</div></div>
+          <div class="metric"><div class="l1">Scope · Capabilities</div><div class="v1">13</div></div>
           <div class="metric"><div class="l1">Exit Criterion</div><div class="v1">Run a full store day</div></div>
         </div>
       </div>
@@ -622,6 +694,7 @@
             <tr><td class="cat">Login</td><td class="feature">Okta Login</td><td class="desc">Solve the 9‑digit PT issue and enable Okta login on fixed POS.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p><b>Using Aptos Athlete Logins + OKTA (for Cash Management)</b> — two different login methods supported in NPOS:</p><p>1. Aptos Athlete Logins<br>2. OKTA (for Cash Management privilege actions)</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td><span class="pri must">Pilot Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
             <tr><td class="cat">Login</td><td class="feature">NFC Login</td><td class="desc"><b>Latest (Yoci · Jun 18):</b> More efficient with OKTA login is acknowledged, but usage scenarios &amp; necessity in <b>NSO and NVS</b> still under validation. Local team to source more cost‑effective NFC cards / readers in parallel. Final decision pending — see Decisions Required #02.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0 (offline)</span><span class="tag global">Global Feedback · P3</span></div><p>Confluence lists NFC log‑in under <b>Offline → Offline Log in → NFC log in</b>. Global indicated NFC supports offline mode and previously suggested it seems mandatory, which is why this is back under review for GC.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td><span class="pri nice">Under Review</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Promotion Flexibility</td><td class="feature">Support Multi‑Layer Promotion</td><td class="desc">Support stacking and ordering of multiple promotion layers at checkout.<details class="src"><summary>View source · GC Pricing &amp; Promo One‑Pager</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Need · Item‑Level Stacking</span><span class="tag global">EO · ~$5M / yr (FTW)</span></div><p><b>Promotion Flexibility — Greater China (MLC, HK, TW) Item‑Level Discount Stacking.</b> GC needs the promotion engine to natively stack <b>≥ 2 discount rules at item level</b>, eliminating manual reprice across MLC · HK · MC · TW.</p><p><b>Current state:</b> TW has already proven the two‑layer model (L1 base auto + L2 booster manual), but MLC's 200+ doors are blocked at the system layer — the pricing engine only supports a single base discount today.</p><p><b>Evidence (same SKU pool · WK52, TW 10 doors vs MLC 200+ doors):</b></p><p>· FTW — TW Final MKD% <b>−3.0 pts</b> vs MLC, AUR <b>+$7.4</b> → margin protection<br>· APP‑Pant — TW Final MKD% <b>+10.4 pts</b>, WOS <b>~8 wk faster</b> → accelerated liquidation</p><p><b>EO:</b> ~$5M / year on FTW alone (AUR Gap $7.4 × ~55K units; 2 stacking events / month × 3‑day weekend). Broader upside on APP &amp; seasonal categories.</p><p><b>Next step (from one‑pager):</b> Global team to assess feasibility and propose a solution for item‑level multi‑layer discount stacking across MLC · HK · MC · TW.</p><div class="src-link"><a href="file:///Users/SCh387/Documents/cursor/agent/gc-promotion-flexibility-onepager/gc-promotion-flexibility-onepager - standalone.html" target="_blank" rel="noopener">Open full one‑pager ↗</a></div></div></details></td><td><span class="pri must">Pilot Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">Non‑Merch</td><td class="feature">Non‑Merch Products Income Keyin</td><td class="desc">Key in non‑merch items, e.g. delivery box recycle income, at NPOS Fixed checkout.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P1</span><span class="tag global">Global Feedback · P0</span></div><p>Non‑merch items like delivery box recycle income keyin NPOS.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td><span class="pri must">Pilot Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Tender Type</td><td class="feature">License Store Tenders</td><td class="desc">Add tender types for license stores: Mall Certificate, Other Debit, Tele Transfer.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P1</span></div><p><b>Other Debit / tender for NPOS manually keyin</b> — finance requirement (财务需求) for license stores. Pairs with the related Confluence item:</p><p><b>Add 3 more tenders as placeholder</b> — to support future business innovation as offline tenders.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td><span class="pri must">Pilot Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
             <tr><td class="cat">Tender Return</td><td class="feature">Mall Cert. / Tele Transfer Return</td><td class="desc">Tender return for Mall Certificate and Tele Transfer via original channel. Prioritized into Pilot — license stores (avg 30/month) rely on Mall Certificate tender for LL special promotions; needs alignment with Finance team.</td><td><span class="pri must">Pilot Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
           </tbody>
