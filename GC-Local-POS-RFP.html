@@ -418,154 +418,135 @@
   </table>
 
   <h3 class="sub" id="s2-12"><span class="n">2.12</span>系统对接图（目标态依赖）· Target-State Dependency Map</h3>
-  <p class="lead">下图以数据域展示本地 POS（无论「系统对接」或「自建 Checkout」）与公司企业主数据、支付、下游系统的对接关系，并标注依赖分类 <span class="pill pA">A</span> 必须接公司 / <span class="pill pB">B</span> 可本地化 / <span class="pill pC">C</span> 解耦边界（POSLOG）。节点对应 §2 主数据域（MD-*）。</p>
+  <p class="lead">下图为 <b>GC 本地 POS 目标态系统依赖图</b>（权威来源：Nike Retail Engineering 依赖树 / NPOS Blackhole 容错演练）。Nike POS 客户端发起 <b>8 个直接服务调用</b>（实线）：<b>RAP / Workforce、RCF、RCC、PIC、Product/Search、Membership、SIM、Printing</b>；仅经 <b>RCC</b> 到达的服务（<b>GPPS/DCN、PassPlay、eFapiao</b>）为<b>间接</b>调用（虚线）。每个节点标注 <b style="color:#fa5400">LOCAL</b>（Nike 自有 / 定制）或 <b style="color:#686868">GLOBAL</b>（共享只读）。<b>RCC</b> 向 <b>ROP</b> 提交 <b>POSLOG</b>；ROP 企业级 fan-out 并将 tender extract 回喂 PIC 的 Retail Order Tender Repository。<b>DOMS</b> 经 RCC 提供 <b>DSIS 库存预留 / 履约</b>（MD-INV-02）；<b>GlobalTax 不在 GC NPOS v1 范围</b>。节点与 §2 主数据域（MD-*）对照见图下表。</p>
 
+  <div class="remap">
   <style>
-  .sysmap{--panel:#fff;--panel2:#f2f7fd;--line:#e2e9f3;--muted:#6b7a99;--accent:#2f7ff0;--chip:#eef4fc;--bucketA:#ec5a72;--bucketB:#18b184;--bucketC:#f2a71b}
-  .sysmap .legend{display:flex;flex-wrap:wrap;gap:14px;margin:6px 0 10px;font-size:12px;color:var(--muted);align-items:center}
-  .sysmap .lg{display:flex;align-items:center;gap:6px}
-  .sysmap .dot{width:12px;height:12px;border-radius:3px;display:inline-block}
-  .sysmap .dClient{background:#2f7ff0}.sysmap .dCore{background:#2064c9}
-  .sysmap .dA{background:var(--bucketA)}.sysmap .dB{background:var(--bucketB)}.sysmap .dC{background:var(--bucketC)}
-  .sysmap .diagram{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 20px 24px;overflow-x:auto;box-shadow:0 6px 24px rgba(31,43,69,.06)}
-  .sysmap .diagram-inner{min-width:1000px}
-  .sysmap .band-label{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
-  .sysmap .cols{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
-  .sysmap .cat{border:1px solid var(--line);border-radius:12px;padding:9px 9px 11px;background:var(--panel2)}
-  .sysmap .cat>.ct{font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#7d8cad;margin-bottom:7px;text-align:center}
-  .sysmap .node{border-radius:9px;padding:7px 9px;margin-bottom:7px;border:1px solid var(--line);background:#fff;box-shadow:0 1px 2px rgba(31,43,69,.04)}
-  .sysmap .node:last-child{margin-bottom:0}
-  .sysmap .node .n{font-size:12px;font-weight:700;line-height:1.2;color:#22314f}
-  .sysmap .node .s{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.25}
-  .sysmap .bA{border-left:4px solid var(--bucketA)}
-  .sysmap .bB{border-left:4px solid var(--bucketB)}
-  .sysmap .tagB{display:inline-block;font-size:9px;font-weight:800;padding:1px 5px;border-radius:4px;margin-left:5px;vertical-align:middle}
-  .sysmap .tA{background:rgba(236,90,114,.12);color:#d23a55;border:1px solid rgba(236,90,114,.35)}
-  .sysmap .tB{background:rgba(24,177,132,.12);color:#0f8f6a;border:1px solid rgba(24,177,132,.35)}
-  .sysmap .arrowband{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;font-weight:600;margin:8px 0}
-  .sysmap .midrow{display:grid;grid-template-columns:0.9fr 2.6fr 1.5fr;gap:12px;align-items:stretch;margin-top:12px}
-  .sysmap .zone{border-radius:14px;padding:12px;border:1px dashed var(--line)}
-  .sysmap .zone-title{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin-bottom:9px;text-align:center}
-  .sysmap .zone.client{border-color:rgba(47,127,240,.4);background:rgba(47,127,240,.05)}
-  .sysmap .zone.core{border-color:var(--accent);background:rgba(47,127,240,.07);border-style:solid;box-shadow:0 4px 14px rgba(47,127,240,.12)}
-  .sysmap .zone.pay{border-color:rgba(138,107,255,.4);background:rgba(138,107,255,.05)}
-  .sysmap .zone.client .zone-title{color:#2f7ff0}
-  .sysmap .zone.core .zone-title{color:#2064c9}
-  .sysmap .zone.pay .zone-title{color:#7458e6}
-  .sysmap .cnode{background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 10px;margin-bottom:8px;box-shadow:0 1px 2px rgba(31,43,69,.04)}
-  .sysmap .cnode:last-child{margin-bottom:0}
-  .sysmap .cnode .n{font-size:12px;font-weight:700;color:#22314f}
-  .sysmap .cnode .s{font-size:10px;color:var(--muted);margin-top:2px}
-  .sysmap .core-flow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .sysmap .core-flow .cnode{margin-bottom:0}
-  .sysmap .build-badge{display:inline-block;font-size:9.5px;font-weight:800;color:#0f8f6a;background:rgba(24,177,132,.12);border:1px solid rgba(24,177,132,.35);border-radius:4px;padding:1px 6px;margin-left:6px}
-  .sysmap .downstream{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center}
-  .sysmap .poslog{border:2px solid var(--bucketC);border-radius:12px;padding:10px 14px;background:rgba(242,167,27,.10);text-align:center}
-  .sysmap .poslog .n{font-size:14px;font-weight:800;color:#b9790a}
-  .sysmap .poslog .s{font-size:10.5px;color:var(--muted);margin-top:2px}
-  .sysmap .dchips{display:flex;flex-wrap:wrap;gap:8px}
-  .sysmap .dchip{background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:7px 11px;font-size:11.5px}
-  .sysmap .dchip b{color:#2b3a5c}
-  .sysmap .dchip .s{font-size:10px;color:var(--muted);display:block}
-  .sysmap .dchip.global{background:rgba(47,127,240,.08);border-color:rgba(47,127,240,.35)}
-  .sysmap .dchip.global b{color:#2064c9}
+  .remap{--ink:#141821;--muted:#6b7688;--line:#e6e9ef;--soft:#f6f8fb;--orange:#fa5400;--orange-soft:#fff4ee;--orange-line:#ffd2ba;--black:#101319}
+  .remap *{box-sizing:border-box}
+  .remap .rmap{border:1px solid var(--line);border-radius:20px;padding:24px;background:#fff;box-shadow:0 8px 30px rgba(20,30,55,.07);overflow-x:auto}
+  .remap .rmap-legend{display:flex;flex-wrap:wrap;gap:18px;align-items:center;font-size:12px;color:var(--muted);margin-bottom:20px}
+  .remap .rmap-legend .k{display:inline-flex;align-items:center;gap:7px;font-weight:600}
+  .remap .ln{width:24px;height:0;border-top:3px solid var(--orange);display:inline-block}
+  .remap .ln.dash{border-top:3px dashed #a2acbb}
+  .remap .tg{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.06em;padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .remap .tg.local{color:var(--orange);background:var(--orange-soft);border:1px solid var(--orange-line)}
+  .remap .tg.global{color:#5b6675;background:var(--soft);border:1px solid var(--line)}
+  .remap .rmap-flow{display:grid;grid-template-columns:auto 56px 1.15fr 66px 1fr 66px .82fr;align-items:stretch;min-width:1040px}
+  .remap .rzone{border:1.5px dashed #d7dde7;border-radius:16px;padding:14px 13px 15px;background:#fcfdff}
+  .remap .rzt{font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#8792a4;margin-bottom:12px;text-align:center}
+  .remap .rzt small{display:block;font-weight:600;letter-spacing:0;text-transform:none;color:var(--muted);margin-top:3px;font-size:10px}
+  .remap .client{align-self:center;background:var(--black);color:#fff;border-radius:18px;padding:20px 16px;text-align:center;min-width:124px}
+  .remap .client .cn{font-weight:800;font-size:17px;letter-spacing:-.01em}
+  .remap .client .cs{font-size:11px;color:#c9c9c9;margin-top:5px}
+  .remap .rcard{border:1px solid var(--line);border-left-width:4px;border-radius:11px;padding:9px 11px;background:#fff;margin-bottom:9px}
+  .remap .rcard:last-child{margin-bottom:0}
+  .remap .rcard.local{border-left-color:var(--orange);background:var(--orange-soft)}
+  .remap .rcard.global{border-left-color:#c3ccda}
+  .remap .rcard.dash{border-style:dashed;border-left-style:solid}
+  .remap .rcard .rh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .remap .rcard .rn{font-size:12.5px;font-weight:800;color:#212c45}
+  .remap .rcard .rs{font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.35}
+  .remap .rarrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:0 4px}
+  .remap .rarrow .a{font-size:22px;line-height:1;color:var(--orange)}
+  .remap .rarrow.dash .a{color:#a2acbb}
+  .remap .rarrow .lbl{font-size:9.5px;font-weight:700;color:var(--muted);text-align:center;line-height:1.25;letter-spacing:.02em}
+  .remap .rop{background:var(--black);color:#fff;border-radius:13px;padding:13px 13px;margin-bottom:9px}
+  .remap .rop .rh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .remap .rop .rn{font-weight:800;font-size:14.5px}
+  .remap .rop .rs{font-size:10.5px;color:#c9c9c9;margin-top:3px;line-height:1.35}
+  .remap .rop .tg.global{color:#cfd6e0;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16)}
+  .remap .oos{margin-top:11px;font-size:10.5px;color:var(--muted);line-height:1.4}
+  .remap .oos b{color:#b45309}
+  .remap .rmap-aws{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px}
+  .remap .awsl{font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#8792a4;margin-bottom:9px}
+  .remap .awschips{display:flex;flex-wrap:wrap;gap:9px}
+  .remap .awschip{border:1px solid var(--line);border-radius:9px;background:var(--soft);padding:7px 13px;font-size:11.5px;font-weight:600;color:#3a4155}
+  .remap .rnote{margin-top:16px;padding:14px 17px;border-left:4px solid var(--orange);background:var(--orange-soft);border-radius:0 13px 13px 0;font-size:12.5px;color:#3a3f4a;line-height:1.6}
+  @media(max-width:920px){.remap .rmap-flow{grid-template-columns:1fr;min-width:0;gap:6px}.remap .rarrow{padding:8px 0}.remap .rarrow .a{transform:rotate(90deg)}}
   </style>
-
-  <div class="sysmap">
-  <div class="legend">
-    <span class="lg"><i class="dot dClient"></i>客户端 POS</span>
-    <span class="lg"><i class="dot dCore"></i>结算核心（对接 / 自建 Checkout）</span>
-    <span class="lg"><i class="dot dA"></i><b style="color:#d23a55">A</b>：必须接公司</span>
-    <span class="lg"><i class="dot dB"></i><b style="color:#0f8f6a">B</b>：可本地化 / 已本地化</span>
-    <span class="lg"><i class="dot dC"></i><b style="color:#b9790a">C</b>：解耦边界</span>
-  </div>
-  <div class="diagram">
-   <div class="diagram-inner">
-    <div class="band-label">公司数据与服务（Company / Global Master Data &amp; Enterprise Services）</div>
-    <div class="cols">
-      <div class="cat">
-        <div class="ct">Store &amp; Commerce</div>
-        <div class="node bA"><div class="n">Product Catalog<span class="tagB tA">A</span></div><div class="s">GPCR v2 · 商品主数据 · MD-PRD</div></div>
-        <div class="node bA"><div class="n">Store Views / SCS<span class="tagB tA">A</span></div><div class="s">门店配置 · feature flag · MD-STR</div></div>
-        <div class="node bA"><div class="n">Device Sessions<span class="tagB tA">A</span></div><div class="s">POS 会话管理 · MD-STR-02</div></div>
+  <div class="rmap">
+    <div class="rmap-legend">
+      <span class="k"><span class="ln"></span>直接调用 Direct</span>
+      <span class="k"><span class="ln dash"></span>间接（经 RCC）Indirect</span>
+      <span class="k"><span class="tg local">LOCAL</span> 自有 / 定制</span>
+      <span class="k"><span class="tg global">GLOBAL</span> 共享只读</span>
+    </div>
+    <div class="rmap-flow">
+      <div class="client">
+        <div class="cn">Nike POS</div>
+        <div class="cs">iPad / AIC / kiosk</div>
       </div>
-      <div class="cat">
-        <div class="ct">Pricing &amp; Promotions</div>
-        <div class="node bA"><div class="n">GPPS + RPE<span class="tagB tA">A</span></div><div class="s">价格引擎 · store×GTIN · MD-PRC</div></div>
-        <div class="node bA"><div class="n">Promotion Engine<span class="tagB tA">A</span></div><div class="s">优惠券 · campaign · MD-PROMO</div></div>
-        <div class="node bA"><div class="n">PassPlay<span class="tagB tA">A</span></div><div class="s">会员/员工折扣 · MD-MBR/EDISC</div></div>
-        <div class="node bA"><div class="n">DCN<span class="tagB tA">A</span></div><div class="s">CP &amp; 促销维护（公司级）</div></div>
+      <div class="rarrow"><span class="a">&#8594;</span></div>
+      <div class="rzone">
+        <div class="rzt">Direct NPOS Calls (8)</div>
+        <div class="rcard global"><div class="rh"><span class="rn">RAP / Workforce</span><span class="tg global">GLOBAL</span></div><div class="rs">OIDC、令牌、店员/设备身份</div></div>
+        <div class="rcard global"><div class="rh"><span class="rn">RCF</span><span class="tg global">GLOBAL</span></div><div class="rs">门店配置、打印机、原因码、WebEJ</div></div>
+        <div class="rcard local"><div class="rh"><span class="rn">RCC</span><span class="tg local">LOCAL</span></div><div class="rs">购物车、结算、PromotionEngine、收据</div></div>
+        <div class="rcard local"><div class="rh"><span class="rn">PIC</span><span class="tg local">LOCAL</span></div><div class="rs">支付发现、会话、tender delegates</div></div>
+        <div class="rcard global"><div class="rh"><span class="rn">Product / Search</span><span class="tg global">GLOBAL</span></div><div class="rs">GPCR 商品目录、商品检索</div></div>
+        <div class="rcard global"><div class="rh"><span class="rn">Membership</span><span class="tg global">GLOBAL</span></div><div class="rs">会员查询、地址、Member Pass</div></div>
+        <div class="rcard global"><div class="rh"><span class="rn">SIM</span><span class="tg global">GLOBAL</span></div><div class="rs">门店库存、bin-location 视图</div></div>
+        <div class="rcard local"><div class="rh"><span class="rn">Printing</span><span class="tg local">LOCAL</span></div><div class="rs">客户端打印、EJ、GenerateReceipts</div></div>
       </div>
-      <div class="cat">
-        <div class="ct">Orders &amp; Fulfillment</div>
-        <div class="node bA"><div class="n">Order Views<span class="tagB tA">A</span></div><div class="s">订单/退货预留（退货必需）</div></div>
-        <div class="node bA"><div class="n">DOMS Reservations<span class="tagB tA">A</span></div><div class="s">库存预留 · MD-INV-02</div></div>
-        <div class="node bA"><div class="n">Store Stock / SIM<span class="tagB tA">A</span></div><div class="s">实时库存 V5 · MD-INV-01</div></div>
+      <div class="rarrow dash"><span class="a">&#8674;</span><span class="lbl">RCC<br>cart PATCH</span></div>
+      <div class="rzone">
+        <div class="rzt">RCC-internal / Indirect<small>经 RCC 到达</small></div>
+        <div class="rcard global dash"><div class="rh"><span class="rn">GPPS / DCN</span><span class="tg global">GLOBAL</span></div><div class="rs">价格 &amp; 促销 feed &#8594; RCC</div></div>
+        <div class="rcard local dash"><div class="rh"><span class="rn">PassPlay</span><span class="tg local">LOCAL</span></div><div class="rs">passes / unlocks &#8212; RCC cart PATCH</div></div>
+        <div class="rcard local dash"><div class="rh"><span class="rn">eFapiao</span><span class="tg local">LOCAL</span></div><div class="rs">中国电子发票 &#8212; 经 RCC</div></div>
+        <div class="rcard global dash"><div class="rh"><span class="rn">DOMS Reservation</span><span class="tg global">GLOBAL</span></div><div class="rs">库存预留 / 履约（DSIS）&#8212; 经 RCC · MD-INV-02</div></div>
+        <div class="rcard local dash"><div class="rh"><span class="rn">Tender Repository</span><span class="tg local">LOCAL</span></div><div class="rs">ROP tender extract &#8594; PIC ledger</div></div>
       </div>
-      <div class="cat">
-        <div class="ct">Fiscal &amp; Compliance</div>
-        <div class="node bB"><div class="n">Fiscal / E-Fapiao<span class="tagB tB">B</span></div><div class="s">中国电子发票 · VAT</div></div>
-      </div>
-      <div class="cat">
-        <div class="ct">ID Gen &amp; Numbering</div>
-        <div class="node bB"><div class="n">Txn# / Workstation#<span class="tagB tB">B</span></div><div class="s">交易号/工作站号 · MD-STR-04</div></div>
-        <div class="node bA"><div class="n">Digital Order ID<span class="tagB tA">A</span></div><div class="s">数字订单号 · MD-ORD-01</div></div>
-      </div>
-      <div class="cat">
-        <div class="ct">Identity &amp; HR</div>
-        <div class="node bA"><div class="n">Nike OAuth / RAP<span class="tagB tA">A</span></div><div class="s">店员/设备 JWT 鉴权 · MD-EMP</div></div>
-        <div class="node bA"><div class="n">Okta / Workday<span class="tagB tA">A</span></div><div class="s">SSO · 安全等级 · MD-EMP-02/04</div></div>
-        <div class="node bB"><div class="n">POS Reasons<span class="tagB tB">B</span></div><div class="s">退货/折扣原因码 · MD-RSN-01~05</div></div>
+      <div class="rarrow"><span class="a">&#8594;</span><span class="lbl">POSLOG</span></div>
+      <div class="rzone">
+        <div class="rzt">Downstream<small>ROP 企业级 fan-out</small></div>
+        <div class="rop"><div class="rh"><span class="rn">ROP / GTS</span><span class="tg global">GLOBAL</span></div><div class="rs">POSLOG 接收 / 转换、企业级 fan-out</div></div>
+        <div class="rcard global"><div class="rh"><span class="rn">Finance / SAP</span></div><div class="rs">对账、结算、计税总账</div></div>
+        <div class="rcard global"><div class="rh"><span class="rn">SIM</span></div><div class="rs">库存回写 / 门店对账</div></div>
+        <div class="rcard global"><div class="rh"><span class="rn">LP</span></div><div class="rs">损耗防控、异常交易监控</div></div>
+        <div class="rcard global"><div class="rh"><span class="rn">WFM / Fiscal</span></div><div class="rs">工时排班、财务合规回传</div></div>
+        <div class="rcard global"><div class="rh"><span class="rn">SOR / SPR</span></div><div class="rs">报表数据源（见 3.16）</div></div>
+        <div class="rcard global"><div class="rh"><span class="rn">ED&amp;A</span></div><div class="rs">企业数据分析 / BI</div></div>
+        <div class="oos"><b>Out of GC NPOS v1 scope:</b> GlobalTax<br>（DOMS 仅 DSIS 预留 / 履约）</div>
       </div>
     </div>
-
-    <div class="arrowband">▲ 同步调用（Product / Price / Promotion / Member / Inventory / Auth）▲</div>
-
-    <div class="midrow">
-      <div class="zone client">
-        <div class="zone-title">客户端</div>
-        <div class="cnode"><div class="n">NPOS Fixed</div><div class="s">固定收银 iPad</div></div>
-        <div class="cnode"><div class="n">NPOS Mobile</div><div class="s">手持 iPhone</div></div>
-        <div class="cnode"><div class="n">Self Checkout</div><div class="s">自助结算（机会点）</div></div>
-      </div>
-      <div class="zone core">
-        <div class="zone-title">本地结算核心 <span class="build-badge">对接 / 自建</span></div>
-        <div class="core-flow">
-          <div class="cnode"><div class="n">⊙ Retail Cart</div><div class="s">购物车 · 促销/取价应用</div></div>
-          <div class="cnode"><div class="n">⊙ Cart Views</div><div class="s">只读视图 · 收据数据</div></div>
-          <div class="cnode"><div class="n">⊙ Retail Checkout</div><div class="s">成交事务核心</div></div>
-          <div class="cnode"><div class="n">Cash / Non-Merch</div><div class="s">现金 · 袋费/NBY/礼品卡 · MD-NM</div></div>
-        </div>
-      </div>
-      <div class="zone pay">
-        <div class="zone-title">支付（已本地化）</div>
-        <div class="cnode"><div class="n">Payment Sessions/Discovery</div><div class="s">支付会话/发现</div></div>
-        <div class="cnode"><div class="n">UMS<span class="tagB tB">B</span></div><div class="s">银行卡 · 扫码 · 数字RMB</div></div>
-        <div class="cnode"><div class="n">NTT<span class="tagB tB">B</span></div><div class="s">中国礼品卡</div></div>
+    <div class="rmap-aws">
+      <div class="awsl">AWS resource families (vary by service)</div>
+      <div class="awschips">
+        <span class="awschip">EC2 / ECS / Lambda</span>
+        <span class="awschip">DynamoDB</span>
+        <span class="awschip">SQS</span>
+        <span class="awschip">NSP / Kafka</span>
+        <span class="awschip">S3 / CDN</span>
+        <span class="awschip">Observability</span>
       </div>
     </div>
+  </div>
+  <div class="rnote"><b>分类维度</b>（来源 CONTEXT.md）：<b>GC NPOS 范围</b>（排除 GlobalTax；DOMS 仅限 DSIS 预留/履约）· <b>Local / Global</b>（服务归属）· <b>NPOS 调用路径</b>（实线＝直接调用；虚线＝仅经 RCC 间接）。<b>POSLOG</b> 仅由 RCC 提交至 ROP；PIC 仅向 RCC 回报支付回调（callback）；ROP 负责 POSLOG 企业级 fan-out，并将 tender extract 回喂 PIC 的 Retail Order Tender Repository（GTS sinks）。</div>
+  </div>
 
-    <div class="downstream">
-      <div class="poslog">
-        <div class="n">POSLOG</div>
-        <div class="s">规范交易格式<br>解耦边界 · Bucket C</div>
-      </div>
-      <div>
-        <div class="s" style="font-size:11.5px;color:var(--muted);margin-bottom:8px">→ 经 ROP 外发企业下游（保住 POSLOG，下游几乎不用改）</div>
-        <div class="dchips">
-          <div class="dchip"><b>ROP / GTS</b><span class="s">POSLOG→转换</span></div>
-          <div class="dchip"><b>OM 订单</b><span class="s">Order Mgmt · E-Fapiao</span></div>
-          <div class="dchip"><b>Finance / SAP</b><span class="s">对账/结算/计税</span></div>
-          <div class="dchip"><b>SIM</b><span class="s">库存回写</span></div>
-          <div class="dchip"><b>ED&amp;A</b><span class="s">分析</span></div>
-          <div class="dchip global"><b>SOR / SPR</b><span class="s">报表</span></div>
-        </div>
-      </div>
-    </div>
-   </div>
-  </div>
-  </div>
-  <p class="lead" style="margin-top:8px">架构图来源：Retail Cloud Checkout HLD · NPOS China Solution HLD (GCTEC) · 2025-07 Full Dependency Tree for NPOS · Retail Systems Landscape &amp; Onboarding Overview。</p>
+  <table>
+    <caption>服务组 → 主数据域（MD-*）对照 Service Group → Master Data Mapping</caption>
+    <thead><tr><th style="width:20%">服务组</th><th style="width:10%">调用</th><th style="width:10%">归属</th><th style="width:30%">职责</th><th>对应主数据域</th></tr></thead>
+    <tbody>
+      <tr><td><b>RAP / Workforce</b></td><td>直接</td><td>Global</td><td>OIDC、令牌、店员/设备身份</td><td>MD-EMP（员工/鉴权）</td></tr>
+      <tr><td><b>RCF</b></td><td>直接</td><td>Global</td><td>Store Views、门店配置、打印机目录、原因码、WebEJ</td><td>MD-STR（门店）、MD-RSN（原因码）</td></tr>
+      <tr><td><b>RCC</b></td><td>直接</td><td>Local</td><td>购物车 / 结算 / PromotionEngine / 收据 / POSLOG 提交</td><td>MD-PROMO（折扣促销）、MD-NM（Non-Merch）、MD-ORD（订单）</td></tr>
+      <tr><td><b>PIC</b></td><td>直接</td><td>Local</td><td>支付发现 / 会话 / tender delegates / 退款</td><td>支付（见 3.11 OP-PAY）</td></tr>
+      <tr><td><b>Product / Search</b></td><td>直接</td><td>Global</td><td>GPCR 商品目录、商品检索、价格相关商品数据</td><td>MD-PRD（商品）、MD-PRC（价格）</td></tr>
+      <tr><td><b>Membership</b></td><td>直接</td><td>Global</td><td>会员查询、地址、标识、Member Pass</td><td>MD-MBR（会员）</td></tr>
+      <tr><td><b>SIM</b></td><td>直接</td><td>Global</td><td>门店库存、bin-location 视图</td><td>MD-INV（库存）</td></tr>
+      <tr><td><b>Printing</b></td><td>直接</td><td>Local</td><td>客户端打印、EJ、RCC GenerateReceipts</td><td>收据/发票（见 3.12）、WebEJ（见 3.16）</td></tr>
+      <tr><td><b>GPPS / DCN</b></td><td>间接（经 RCC）</td><td>Global</td><td>价格与促销 feed → RCC</td><td>MD-PRC（价格）、MD-PROMO（促销）</td></tr>
+      <tr><td><b>PassPlay</b></td><td>间接（RCC cart PATCH）</td><td>Local</td><td>passes / unlocks / 员工·亲友·Comp 折扣</td><td>MD-EDISC（员工折扣）、MD-MBR</td></tr>
+      <tr><td><b>eFapiao</b></td><td>间接（经 RCC）</td><td>Local</td><td>中国电子发票</td><td>发票（见 3.12 OP-RCP）</td></tr>
+      <tr><td><b>DOMS Reservation</b></td><td>间接（经 RCC）</td><td>Global</td><td>库存预留 / 履约（DSIS 配送到家）</td><td>MD-INV-02（库存预留）、MD-ORD（数字订单）</td></tr>
+      <tr><td><b>ROP / GTS</b></td><td>下游</td><td>Global</td><td>POSLOG 接收 / 转换、企业级 fan-out</td><td>MD-ORD（订单）</td></tr>
+      <tr><td><b>下游系统</b></td><td>下游</td><td>Global</td><td>Finance/SAP（对账/结算/计税）、SIM（库存回写）、LP（损耗防控）、WFM/Fiscal（工时/合规）、SOR/SPR（报表）、ED&amp;A（数据分析）</td><td>见 3.16 报表清单</td></tr>
+    </tbody>
+  </table>
+  <p class="lead" style="margin-top:8px">架构图来源：Nike Retail Engineering Overview（Confluence 综合：Retail Engineering · Retail Orchestration Platform (ROP) · RCF · Store Payment · Checkout Domain Strategy · Workforce OIDC · 2026-03 NPOS Full Dependency Tree via Blackhole Attack）。分类依据 CONTEXT.md（Local/Global · GC NPOS scope · NPOS call path）。</p>
 </div>
 
 <!-- ============ SECTION 3 · FEATURE PARITY ============ -->
