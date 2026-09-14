@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GC Local POS RFP — Feature Parity &amp; Master Data Requirements</title>
+<style>
+  :root{
+    --ink:#1a2439; --ink2:#3a4a6c; --muted:#6b7a99; --line:#dde5f0; --line2:#e9eef6;
+    --navy:#16233d; --accent:#2f6fe0; --accent2:#1f5bc4;
+    --paper:#ffffff; --paper2:#f7fafd;
+    --A:#c0405c; --B:#0f8f6a; --C:#b9790a;
+    --must:#c0405c; --should:#b9790a; --nice:#5a6b8c;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#eef2f7;color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6;font-size:13.5px}
+  .doc{max-width:1180px;margin:24px auto;background:var(--paper);border:1px solid var(--line);
+    box-shadow:0 4px 30px rgba(22,35,61,.10)}
+  .pad{padding:40px 56px}
+
+  /* ---------- COVER ---------- */
+  .cover{min-height:92vh;display:flex;flex-direction:column;justify-content:space-between;
+    padding:52px 56px;border-bottom:1px solid var(--line);
+    background:
+      radial-gradient(900px 360px at 100% -6%,rgba(47,111,224,.10),transparent),
+      linear-gradient(180deg,#fbfcfe,#ffffff);}
+  .brandbar{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);letter-spacing:.05em}
+  .brandbar .swoosh{font-weight:800;color:var(--navy);letter-spacing:.02em}
+  .classify{display:inline-block;margin-top:2px;font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+    color:#a23; border:1px solid rgba(192,64,92,.4);background:rgba(192,64,92,.06);padding:4px 10px;border-radius:5px}
+  .cover-mid{margin:auto 0}
+  .kicker{font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:800}
+  .cover h1{font-size:40px;line-height:1.14;margin:14px 0 10px;color:var(--navy);letter-spacing:-.01em}
+  .cover h1 small{display:block;font-size:19px;font-weight:600;color:var(--ink2);margin-top:10px;letter-spacing:0}
+  .cover .desc{max-width:720px;color:var(--muted);font-size:14px}
+  .cover .part-tag{display:inline-block;margin-top:18px;background:var(--navy);color:#fff;font-weight:700;font-size:13px;
+    padding:8px 16px;border-radius:8px;letter-spacing:.02em}
+  .metagrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:30px}
+  .metagrid div{background:#fff;padding:12px 16px}
+  .metagrid .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+  .metagrid .v{font-size:13.5px;color:var(--navy);font-weight:600;margin-top:2px}
+  .confidential{margin-top:24px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px;line-height:1.5}
+
+  /* ---------- DOC CONTROL ---------- */
+  .sec-strip{background:var(--navy);color:#dfe7f5;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;padding:7px 56px}
+  h2.sec{font-size:22px;color:var(--navy);margin:6px 0 4px;padding-bottom:8px;border-bottom:2px solid var(--navy);display:flex;gap:12px;align-items:baseline;scroll-margin-top:20px}
+  h2.sec .n{color:var(--accent);font-variant-numeric:tabular-nums;font-weight:800}
+  h3.sub{font-size:15.5px;color:var(--navy);margin:24px 0 6px;display:flex;gap:10px;align-items:baseline;scroll-margin-top:20px}
+  h3.sub .n{color:var(--accent);font-weight:800;font-variant-numeric:tabular-nums;font-size:14px}
+  h4.mn{font-size:13.5px;color:var(--ink2);margin:16px 0 4px;font-weight:800}
+  p{margin:8px 0}
+  .lead{color:var(--muted);font-size:12.8px;margin:2px 0 12px}
+
+  table{width:100%;border-collapse:collapse;margin:8px 0 6px;font-size:12.3px}
+  caption{caption-side:top;text-align:left;font-size:11px;color:var(--muted);padding:2px 0 6px;font-weight:600}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+  th{background:#eef3fa;color:var(--ink2);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em}
+  tbody tr:nth-child(even){background:var(--paper2)}
+  td .rid{font-variant-numeric:tabular-nums;font-weight:800;color:var(--accent2);white-space:nowrap;font-size:11px}
+  .feat{font-weight:700;color:var(--navy)}
+  .srcnote{display:block;color:var(--muted);font-size:10.5px;margin-top:3px}
+  td b{color:var(--navy)}
+
+  .pill{display:inline-block;padding:2px 7px;border-radius:5px;font-size:10px;font-weight:800;white-space:nowrap;line-height:1.6;border:1px solid}
+  .must{color:#a3324b;background:rgba(192,64,92,.09);border-color:rgba(192,64,92,.35)}
+  .should{color:#9a6408;background:rgba(185,121,10,.10);border-color:rgba(185,121,10,.35)}
+  .nice{color:#4a5a7c;background:rgba(90,107,140,.10);border-color:rgba(90,107,140,.3)}
+  .pA{color:#a3324b;background:rgba(192,64,92,.09);border-color:rgba(192,64,92,.35)}
+  .pB{color:#0f8f6a;background:rgba(15,143,106,.10);border-color:rgba(15,143,106,.35)}
+  .pC{color:#9a6408;background:rgba(185,121,10,.10);border-color:rgba(185,121,10,.35)}
+  .mob{color:#0f8f6a;background:rgba(15,143,106,.10);border-color:rgba(15,143,106,.35)}
+  .pos{color:#1f5bc4;background:rgba(47,111,224,.09);border-color:rgba(47,111,224,.3)}
+  .todo{color:#9a6408;background:rgba(185,121,10,.10);border-color:rgba(185,121,10,.35)}
+  .sor{color:#6b40c4;background:rgba(107,64,196,.09);border-color:rgba(107,64,196,.32)}
+
+  .callout{border-left:3px solid var(--accent);background:#f2f7fe;border-radius:0 8px 8px 0;padding:11px 15px;margin:12px 0;font-size:12.4px;color:var(--ink2)}
+  .callout b{color:var(--navy)}
+
+  /* TOC */
+  .toc{columns:2;column-gap:44px}
+  .toc a{display:flex;justify-content:space-between;gap:10px;text-decoration:none;color:var(--ink2);font-size:12.6px;padding:4px 0;border-bottom:1px dotted var(--line)}
+  .toc a:hover{color:var(--accent)}
+  .toc a .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .toc a .p{color:var(--muted);font-variant-numeric:tabular-nums}
+  .toc .grp{break-inside:avoid;margin-bottom:6px}
+  .toc .grp>.h{font-weight:800;color:var(--navy);font-size:12.8px;margin:10px 0 2px}
+
+  .defs{width:100%;font-size:12.2px;border-collapse:collapse}
+  .defs td{border:1px solid var(--line);padding:6px 9px}
+  .defs td:first-child{font-weight:700;color:var(--navy);white-space:nowrap;width:130px}
+
+  .legendbox{display:flex;flex-wrap:wrap;gap:16px;font-size:11.6px;color:var(--muted);align-items:center;margin:6px 0}
+  .legendbox .lg{display:flex;align-items:center;gap:6px}
+
+  footer{padding:20px 56px 40px;color:var(--muted);font-size:11px;border-top:1px solid var(--line);line-height:1.6}
+  .pgnote{text-align:center;color:#aeb9cc;font-size:10.5px;padding:6px 0}
+
+  @media print{
+    body{background:#fff}.doc{box-shadow:none;border:none;margin:0;max-width:none}
+    .cover{min-height:96vh;page-break-after:always}
+    h2.sec{page-break-after:avoid}table{page-break-inside:auto}tr{page-break-inside:avoid}
+  }
+  @media(max-width:820px){.pad,.cover,.sec-strip,footer{padding-left:22px;padding-right:22px}.toc{columns:1}.metagrid{grid-template-columns:1fr 1fr}.cover h1{font-size:30px}}
+</style>
+</head>
+<body>
+<div class="doc">
+
+<!-- ============ COVER ============ -->
+<section class="cover">
+  <div class="brandbar">
+    <div><span class="swoosh">NIKE</span> · Greater China · Retail Technology<div class="classify">Confidential · Internal &amp; Invited Vendors</div></div>
+    <div>Doc Ref: GC-LPOS-RFP</div>
+  </div>
+
+  <div class="cover-mid">
+    <div class="kicker">Request for Proposal</div>
+    <h1>GC Local POS<small>本地销售点系统（Mobile &amp; Fixed）需求建议书 · Greater China</small></h1>
+    <p class="desc">本文件邀请供应商就 Nike 大中华区（Greater China，含<b>中国大陆、香港、澳门、台湾</b>）本地 POS 系统提交方案，以<b>端到端业务场景</b>组织需求：每个场景同时给出<b>功能对齐基线</b>（1POS Fixed + NPOS Mobile 现有能力，Must）与<b>拓展 / 超越对齐需求</b>（roadmap + GC scope，Should/Nice），并单列<b>主数据需求</b>作为所有能力的基础。</p>
+    <span class="part-tag">Feature Parity &amp; Master Data Requirements</span>
+
+    <div class="metagrid">
+      <div><div class="k">发布方 Issuer</div><div class="v">Nike GC Retail Technology</div></div>
+      <div><div class="k">范围 Scope</div><div class="v">Greater China（含港澳台）· Mobile + Fixed</div></div>
+      <div><div class="k">币种 Currency</div><div class="v">CNY / HKD / MOP / TWD</div></div>
+      <div><div class="k">文档版本 Version</div><div class="v">v0.1 (Draft)</div></div>
+      <div><div class="k">发布日期 Date</div><div class="v">2026-09-10</div></div>
+      <div><div class="k">编制 Prepared by</div><div class="v">Sabrina Chen</div></div>
+    </div>
+  </div>
+
+  <div class="confidential">
+    <b>保密声明 Confidentiality.</b> 本文件包含 Nike, Inc. 的机密与专有信息，仅供内部及受邀供应商用于评估之目的。未经书面许可，不得复制、分发或披露给第三方。收到本文件即视为同意上述约束。 · © 2026 NIKE, Inc. All rights reserved.
+  </div>
+</section>
+
+<!-- ============ DOC CONTROL ============ -->
+<div class="sec-strip">Document Control · 文档控制</div>
+<div class="pad">
+  <table>
+    <caption>版本历史 Version History</caption>
+    <thead><tr><th style="width:12%">版本</th><th style="width:16%">日期</th><th style="width:22%">作者</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>v0.1</td><td>2026-09-14</td><td>Sabrina Chen</td><td>初稿。主要内容包含：<b>§2 主数据需求</b>（商品、价格、折扣/促销、员工、员工折扣、库存、门店、会员、Non-Merch、订单、原因码 十一个数据域 + 系统对接图）；<b>§3 场景化需求</b>——端到端销售场景（普通商品 / 会员 / NBY / Swoosh 员工 / Comp 工服 / Gift Card / Non-Merch / @Wo 远程 / 门店数字销售 DSIS / 退换货）、跨场景通用能力（支付 / 收据发票 / 登录 / 现金管理 / 员工维护 / 电子日志 WebEJ / SOR 报表清单 / 硬件外设 / 离线连通）、<b>港澳台专区</b>（HK/Macau/TW 市场本地化）。范围为<b>大中华区（含中国大陆 / 香港 / 澳门 / 台湾）</b>，多市场币种与本地化；优先级：功能对齐＝Must，拓展/超越对齐＝Should，Stretch＝Nice。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ============ TOC ============ -->
+<div class="sec-strip">Table of Contents · 目录</div>
+<div class="pad">
+  <div class="toc">
+    <div class="grp">
+      <div class="h">1 &nbsp;引言 Introduction</div>
+      <a href="#s1-1"><span class="t">1.1 目的与范围</span><span class="p">1</span></a>
+      <a href="#s1-2"><span class="t">1.2 需求编写约定</span><span class="p">1</span></a>
+      <a href="#s1-3"><span class="t">1.3 优先级定义</span><span class="p">1</span></a>
+      <a href="#s1-4"><span class="t">1.4 状态与依赖分类图例</span><span class="p">2</span></a>
+      <a href="#s1-5"><span class="t">1.5 术语表</span><span class="p">2</span></a>
+      <a href="#s1-6"><span class="t">1.6 来源文件</span><span class="p">2</span></a>
+    </div>
+    <div class="grp">
+      <div class="h">2 &nbsp;主数据需求 Master Data</div>
+      <a href="#s2-1"><span class="t">2.1 商品主数据</span><span class="p">3</span></a>
+      <a href="#s2-2"><span class="t">2.2 价格主数据</span><span class="p">3</span></a>
+      <a href="#s2-3"><span class="t">2.3 折扣/促销主数据</span><span class="p">3</span></a>
+      <a href="#s2-4"><span class="t">2.4 员工主数据</span><span class="p">4</span></a>
+      <a href="#s2-5"><span class="t">2.5 员工折扣主数据</span><span class="p">4</span></a>
+      <a href="#s2-6"><span class="t">2.6 库存主数据</span><span class="p">4</span></a>
+      <a href="#s2-7"><span class="t">2.7 门店主数据</span><span class="p">5</span></a>
+      <a href="#s2-8"><span class="t">2.8 会员主数据</span><span class="p">5</span></a>
+      <a href="#s2-9"><span class="t">2.9 Non-Merch主数据</span><span class="p">5</span></a>
+      <a href="#s2-10"><span class="t">2.10 订单主数据</span><span class="p">5</span></a>
+      <a href="#s2-11"><span class="t">2.11 原因码主数据</span><span class="p">6</span></a>
+      <a href="#s2-12"><span class="t">2.12 系统对接图（目标态依赖）</span><span class="p">6</span></a>
+    </div>
+    <div class="grp">
+      <div class="h">3 &nbsp;场景化需求 Requirements by Scenario</div>
+      <a href="#s3-1"><span class="t">3.1 普通商品销售</span><span class="p">6</span></a>
+      <a href="#s3-2"><span class="t">3.2 会员销售</span><span class="p">6</span></a>
+      <a href="#s3-3"><span class="t">3.3 NBY 与 Non-Merch 项销售</span><span class="p">7</span></a>
+      <a href="#s3-4"><span class="t">3.4 Swoosh 员工销售</span><span class="p">7</span></a>
+      <a href="#s3-5"><span class="t">3.5 FF Card 销售（亲友卡）</span><span class="p">8</span></a>
+      <a href="#s3-6"><span class="t">3.6 Comp / 工服 / 赠送销售</span><span class="p">8</span></a>
+      <a href="#s3-7"><span class="t">3.7 Gift Card 销售</span><span class="p">9</span></a>
+      <a href="#s3-8"><span class="t">3.8 @Wo 远程销售</span><span class="p">9</span></a>
+      <a href="#s3-9"><span class="t">3.9 门店数字销售（DSIS）</span><span class="p">10</span></a>
+      <a href="#s3-10"><span class="t">3.10 退货与换货</span><span class="p">10</span></a>
+      <a href="#s3-11"><span class="t">3.11 支付方式（通用）</span><span class="p">11</span></a>
+      <a href="#s3-12"><span class="t">3.12 收据与发票（通用）</span><span class="p">11</span></a>
+      <a href="#s3-13"><span class="t">3.13 登录与会话（通用）</span><span class="p">12</span></a>
+      <a href="#s3-14"><span class="t">3.14 现金管理</span><span class="p">12</span></a>
+      <a href="#s3-15"><span class="t">3.15 员工维护</span><span class="p">13</span></a>
+      <a href="#s3-16"><span class="t">3.16 电子日志（WebEJ）</span><span class="p">13</span></a>
+      <a href="#s3-17"><span class="t">3.17 报表清单（SOR + 手册对齐）</span><span class="p">14</span></a>
+      <a href="#s3-18"><span class="t">3.18 硬件与外设</span><span class="p">14</span></a>
+      <a href="#s3-19"><span class="t">3.19 离线与连通</span><span class="p">15</span></a>
+      <a href="#s3-20"><span class="t">3.20 港澳台专区（HK/Macau/TW）</span><span class="p">15</span></a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SECTION 1 ============ -->
+<div class="sec-strip">Section 1</div>
+<div class="pad">
+  <h2 class="sec"><span class="n">1</span>引言 · Introduction</h2>
+
+  <h3 class="sub" id="s1-1"><span class="n">1.1</span>目的与范围 Purpose &amp; Scope</h3>
+  <p>本 RFP 旨在为 Nike <b>大中华区（Greater China）</b>遴选并建设<b>本地 POS 系统</b>，覆盖<b>中国大陆（MLC）、香港、澳门、台湾</b>四个市场与 <b>NPOS Mobile（手持）</b>、<b>NPOS Fixed（固定收银）</b>两种形态；各市场的<b>币种、税务/发票、支付方式与合规</b>按<b>市场本地化</b>差异化实现。</p>
+  <p><b>本文件构成：</b>§2 <b>主数据需求</b>——商品、价格、折扣/促销、员工、员工折扣、库存、门店、会员、Non-Merch、订单、原因码 十一个数据域，以及 §2.12 <b>系统对接图</b>；§3 <b>场景化需求</b>——§3.1–3.10 <b>端到端销售场景</b>（普通商品、会员、NBY 与 Non-Merch、Swoosh 员工、FF Card 亲友卡、Comp 工服、Gift Card、@Wo 远程、门店数字销售 DSIS、退换货），§3.11–3.19 <b>跨场景通用能力</b>（支付、收据与发票、登录、现金管理、员工维护、电子日志 WebEJ、SOR 报表清单、硬件外设、离线连通），§3.20 <b>港澳台专区</b>（HK/Macau/TW 市场本地化需求）。</p>
+  <p><b>优先级原则：</b>凡 <b>1POS Fixed / NPOS Mobile 现有能力（Feature Parity）</b>一律为 <span class="pill must">Must</span>；现有系统<b>尚未具备</b>、源自 roadmap / GC scope 的拓展项为 <span class="pill should">Should</span>（应实现）或 <span class="pill nice">Nice</span>（可选）。定义详见 §1.3。</p>
+
+  <h3 class="sub" id="s1-2"><span class="n">1.2</span>需求编写约定 Requirement Conventions</h3>
+  <p>每条需求均带<b>唯一编号</b>与<b>优先级</b>，以便追溯与后续供应商逐条应答。编号规则：</p>
+  <table class="defs">
+    <tr><td>主数据</td><td><b>MD-&lt;域&gt;-NN</b>，如 <span class="rid">MD-PRD-01</span>（商品）、<span class="rid">MD-PRC-01</span>（价格）、<span class="rid">MD-PROMO-01</span>（折扣/促销）、<span class="rid">MD-EMP-01</span>（员工）、<span class="rid">MD-EDISC-01</span>（员工折扣）、<span class="rid">MD-INV-01</span>（库存）、<span class="rid">MD-STR-01</span>（门店）、<span class="rid">MD-MBR-01</span>（会员）、<span class="rid">MD-NM-01</span>（Non-Merch）、<span class="rid">MD-ORD-01</span>（订单）、<span class="rid">MD-RSN-01</span>（原因码）</td></tr>
+    <tr><td>场景需求</td><td><b>SC-&lt;场景&gt;-NN</b>（销售场景），如 <span class="rid">SC-STD-01</span>（普通商品）、<span class="rid">SC-NBY-01</span>（NBY）、<span class="rid">SC-SWO-01</span>（Swoosh 员工）、<span class="rid">SC-COMP-01</span>（Comp 工服）、<span class="rid">SC-GC-01</span>（Gift Card）、<span class="rid">SC-WO-01</span>（@Wo 远程）、<span class="rid">SC-DSIS-01</span>（门店数字销售）、<span class="rid">SC-RET-01</span>（退换货）；<b>OP-&lt;域&gt;-NN</b>（跨场景通用能力），如 <span class="rid">OP-PAY-01</span>（支付）、<span class="rid">OP-RCP-01</span>（收据）、<span class="rid">OP-LOG-01</span>（登录）等；<b>HMT-NN</b>（港澳台专区市场本地化，见 §3.20）</td></tr>
+  </table>
+
+  <h3 class="sub" id="s1-3"><span class="n">1.3</span>优先级定义 Priority Definitions</h3>
+  <table class="defs">
+    <tr><td><span class="pill must">Must</span></td><td><b>功能对齐（Feature Parity）基线</b>。凡 1POS Fixed / NPOS Mobile 现有能力一律为 Must；上线（Go-Live）前必须满足，未满足即视为不合规、功能回退。</td></tr>
+    <tr><td><span class="pill should">Should</span></td><td><b>拓展 / 超越对齐需求（Beyond-Parity）</b>。源自 4 阶段 roadmap 与 GC Confluence scope 的增强项；应当满足，可分阶段（Pilot→Scale）交付，需说明计划与影响。</td></tr>
+    <tr><td><span class="pill nice">Nice</span></td><td><b>可选 / Stretch</b>。roadmap 中的 Stretch 或增值项；在能力允许时提供。</td></tr>
+  </table>
+
+  <h3 class="sub" id="s1-4"><span class="n">1.4</span>状态与依赖分类图例 Legend</h3>
+  <div class="legendbox">
+    <span class="lg"><span class="pill mob">Mobile ★</span> NPOS Mobile 已本地化</span>
+    <span class="lg"><span class="pill pos">1POS 现有</span> 1POS Fixed 现有能力</span>
+    <span class="lg"><span class="pill todo">Fixed 待建/评审</span> 本地 Fixed 需新建或评审</span>
+  </div>
+  <div class="legendbox">
+    <span class="lg"><span class="pill pA">A</span> 必须接公司（企业主数据/下游）</span>
+    <span class="lg"><span class="pill pB">B</span> 可本地化 / 已本地化</span>
+    <span class="lg"><span class="pill pC">C</span> 解耦边界（POSLOG 契约）</span>
+  </div>
+
+  <h3 class="sub" id="s1-5"><span class="n">1.5</span>术语表 Glossary（节选）</h3>
+  <table class="defs">
+    <tr><td>GTIN</td><td>全球交易商品号，亦即 SKU / 商品代码。</td></tr>
+    <tr><td>POSLOG</td><td>规范化交易日志格式，作为 POS 对企业下游的稳定契约（解耦边界）。</td></tr>
+    <tr><td>RCC</td><td>Retail Cloud Checkout，全球零售云结算平台。</td></tr>
+    <tr><td>UMS</td><td>集成支付服务（银行卡 / 扫码 / 数字人民币）。</td></tr>
+    <tr><td>NTT</td><td>中国礼品卡服务供应商（GC 新礼品卡服务）。</td></tr>
+    <tr><td>E-Fapiao</td><td>中国电子发票；收据打印二维码供消费者扫码开票。</td></tr>
+    <tr><td>RPE</td><td>Retail Pricing Engine，零售定价引擎（ROP-NPOS），POS / RCC 的取价入口；向 GPPS 取售价、向 GPCR 取 MSRP 回退。</td></tr>
+    <tr><td>GPPS</td><td>定价规则与售价来源，向 RPE 发布价格变更。</td></tr>
+    <tr><td>CP</td><td>Current Price，当前价（用于促销维护）。</td></tr>
+    <tr><td>DCN</td><td>公司级<b>价格与促销文件生成/维护工具</b>（Price &amp; Promotion Tool），按需生成并下发价格/促销文件。</td></tr>
+    <tr><td>DOMS</td><td>分布式订单管理（Distributed Order Management），订单 / 库存预留。</td></tr>
+    <tr><td>SIM</td><td>Store Inventory Management，门店库存管理，全球门店库存来源（服务 NSO / NFS 等）。</td></tr>
+    <tr><td>PassPlay</td><td>会员权益<b>解锁与核销</b>（Member Unlock &amp; Redemption / Member Rewards）平台。</td></tr>
+    <tr><td>EJ</td><td>电子日志（Electronic Journal），交易稽查与凭证重现（见 3.16 WebEJ）。</td></tr>
+    <tr><td>SOD</td><td>Start of Day，开店。</td></tr>
+    <tr><td>EOD</td><td>End of Day，闭店。</td></tr>
+    <tr><td>Workday</td><td>Nike 全球 HR 系统；员工岗位/角色与安全等级来源。</td></tr>
+    <tr><td>Aptos</td><td>门店零售系统/数据库，历史上作为<b>运动员登录（Athlete Login）鉴权</b>的记录源（Athlete Authentication）；RAP 正逐步解除对 Aptos 的依赖。</td></tr>
+    <tr><td>Okta</td><td>企业 SSO 身份服务（现金管理等特权鉴权）。</td></tr>
+    <tr><td>OAuth</td><td>开放授权协议，用于店员 / 设备令牌鉴权。</td></tr>
+    <tr><td>RAP</td><td>零售鉴权平台，运动员 / 设备令牌鉴权（逐步替代 Aptos 依赖）。</td></tr>
+    <tr><td>GPCR</td><td>Global Product Catalog（Retail）：零售商品目录，按 style-color / GTIN 检索，企业商品主数据/GTIN 来源，并为定价提供 MSRP 回退。</td></tr>
+    <tr><td>SCS</td><td>门店配置服务（Store Config Service），门店配置与 feature flag 主数据。</td></tr>
+    <tr><td>Store Views</td><td>门店视图/配置数据，随 SCS 提供。</td></tr>
+    <tr><td>NBY</td><td>Nike By You，个性化定制商品。</td></tr>
+    <tr><td>DSIS</td><td>Digital Sale in Store，门店数字销售：店员经 NPOS Mobile 为在店消费者代下线上订单并配送到家的全渠道能力（见 3.9）。</td></tr>
+    <tr><td>DAM</td><td>Digital Asset Management，数字资产（商品图片等）来源。</td></tr>
+    <tr><td>ROP</td><td>零售编排平台（Retail Orchestration Platform）：门店与 Nike 数字云服务间的数据管道与编排层；GC 部署于 AWS China。</td></tr>
+    <tr><td>OM</td><td>订单管理（Order Management）。</td></tr>
+    <tr><td>SAP</td><td>企业财务系统（收入确认 / 计税）。</td></tr>
+    <tr><td>ED&amp;A</td><td>Enterprise Data &amp; Analytics，企业数据与分析。</td></tr>
+    <tr><td>SOR</td><td>Store Operation Reports，门店运营报表（目标报表系统，见 3.17）。</td></tr>
+    <tr><td>SPR</td><td>实时业绩报表（Store Performance Reports，实时，见 RPT-14 / RPT-15）。</td></tr>
+    <tr><td>VAT</td><td>增值税；收据 VAT 行按 GC 税务法务要求隐藏/删除。</td></tr>
+    <tr><td>NVS</td><td>Nike Value Store，Nike 折扣/工厂店；员工折扣月度限额 ¥4,000。</td></tr>
+    <tr><td>NSO</td><td>Nike Stores Owned，Nike 直营全价店；员工折扣月度限额 ¥6,000。</td></tr>
+  </table>
+
+  <h3 class="sub" id="s1-6"><span class="n">1.6</span>来源文件 Source Documents</h3>
+  <p class="lead">1POS 用户指南 v8（GC ARO，261 页）· NPOS Mobile Checkout with QR Payment（Swoosh Standards）· NPOS 4-Phase Roadmap · NPOS 依赖树 / RCC Checkout HLD / NPOS China Solution HLD / GC NPOS Solution 简报 · GC NPOS scope (Confluence CDS/1160275807)。</p>
+</div>
+
+<!-- ============ SECTION 2 · MASTER DATA ============ -->
+<div class="sec-strip">Section 2 · Master Data Requirements</div>
+<div class="pad">
+  <h2 class="sec"><span class="n">2</span>主数据需求 · Master Data Requirements</h2>
+  <p class="lead">主数据是 POS 一切交易、定价、促销、结算、报表的基础。下表按数据域列出：<b>数据元素 → 来源系统 → 依赖分类 → 优先级 → 对接方式 → 消费场景</b>。来源系统映射自 NPOS 依赖树与 Solution 架构。</p>
+  <div class="callout"><b>基线原则：</b>本地 POS 无论采用「系统对接」或「自建 Checkout」，<span class="pill pA">A</span> 类主数据（商品/价格/促销/会员/库存/门店配置/鉴权）都<b>必须持续从公司企业主数据获取</b>；<span class="pill pB">B</span> 类（编号/原因码/Non-Merch配置/发票配置）可本地维护；对下游守住 <span class="pill pC">POSLOG</span> 契约即可最小化改造。</div>
+
+  <h3 class="sub" id="s2-1"><span class="n">2.1</span>商品主数据 · Product Master Data</h3>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:20%">数据元素</th><th style="width:16%">来源系统</th><th style="width:6%">分类</th><th style="width:7%">优先级</th><th style="width:18%">对接方式</th><th>消费场景</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">MD-PRD-01</span></td><td><b>商品标识</b>（GTIN / UPC 14位 / SKU 9位+尺码 / 式样号6位 / 颜色号3位 / 尺码）</td><td>Product Catalog（GPCR）</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>企业主数据同步（读）</td><td>扫描/手输建单、收据 SKU 显示、退货取件</td></tr>
+      <tr><td><span class="rid">MD-PRD-02</span></td><td><b>商品名称与描述</b>（商品名称、描述、品牌）</td><td>Product Catalog（GPCR）</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>企业主数据同步（读）</td><td>购物车与收据商品显示、商品查询</td></tr>
+      <tr><td><span class="rid">MD-PRD-03</span></td><td><b>商品图片</b>（主图 / 缩略图，image URL / asset）</td><td>Product Catalog（GPCR）</td><td><span class="pill pA">A</span></td><td><span class="pill should">Should</span></td><td>图片服务 / CDN（读）</td><td>POS 商品确认、消费者 iPad 展示、商品查询可视化</td></tr>
+      <tr><td><span class="rid">MD-PRD-04</span></td><td><b>商品分类属性</b>（商品类别 Category、Silo、运动 Sport、性别/年龄 男/女/童、系列 Franchise、季节 Season）</td><td>Product Catalog（GPCR）</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>企业主数据同步（读）</td><td>品类/运动维度筛选与分析、销售指标、促销适用范围</td></tr>
+      <tr><td><span class="rid">MD-PRD-05</span></td><td><b>Swoosh 不适用标记</b>（don't apply swoosh flag）</td><td>Local 系统 / Product Catalog</td><td><span class="pill pB">B</span></td><td><span class="pill should">Should</span></td><td>本地标记读取，结算判定</td><td>员工折扣结算是否应用 Swoosh</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s2-2"><span class="n">2.2</span>价格主数据 · Price Master Data</h3>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:20%">数据元素</th><th style="width:16%">来源系统</th><th style="width:6%">分类</th><th style="width:7%">优先级</th><th style="width:18%">对接方式</th><th>消费场景</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">MD-PRC-01</span></td><td><b>MSRP 吊牌价</b>（GTIN 建议零售价 / 原价，各市场币种，生效期）</td><td>GPPS</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>企业价格主数据同步（读）</td><td>建单取价、吊牌价展示、折扣率 / 降价幅度计算、退货取价、改价审计与部门分析报表（MSRP，见 RPT-06 / RPT-14）</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s2-3"><span class="n">2.3</span>折扣 / 促销主数据 · Promotion &amp; Discount Master Data</h3>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:20%">数据元素</th><th style="width:16%">来源系统</th><th style="width:6%">分类</th><th style="width:7%">优先级</th><th style="width:18%">对接方式</th><th>消费场景</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">MD-PROMO-01</span></td><td><b>折扣 Discount</b>（<b>item/SKU-level</b>（store×SKU 单品）与 <b>order-level</b>（整单/交易层）折扣；<b>同一层级支持叠加多个折扣</b>；含折扣类型（百分比 / 定额 / 买赠 BOGO）、叠加与优先级/互斥规则（L1/L2…）、门店范围与生效期）</td><td>Promotion Engine、DCN（+本地）</td><td><span class="pill pA">A</span>+本地</td><td><span class="pill must">Must</span></td><td>促销引擎同步（读）+ 本地维护/编排</td><td>item-level 与 order-level 多层折扣叠加、折前/折后合计、折扣优化（见 SC-STD-12）</td></tr>
+      <tr><td><span class="rid">MD-PROMO-02</span></td><td><b>促销规则 / Campaign</b>（自动折扣、booster、campaign 编排）</td><td>Promotion Engine、DCN</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>促销引擎同步/编排（读）</td><td>结算自动应用促销</td></tr>
+      <tr><td><span class="rid">MD-PROMO-03</span></td><td><b>CP</b>（Current Price 当前价）</td><td>Promotion Engine、DCN</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>企业维护（本地机会：自建替代 DCN）</td><td>促销维护与压测、区域 campaign</td></tr>
+      <tr><td><span class="rid">MD-PROMO-04</span></td><td><b>优惠券 Coupon</b>（券码、面额、有效期）</td><td>Promotion Engine、PassPlay</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>券码校验（读）</td><td>添加优惠券、直播&amp;促销券、会员券</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s2-4"><span class="n">2.4</span>员工主数据（含登录鉴权）· Employee Master Data</h3>
+  <p class="lead">员工档案、安全等级与 POS 登录鉴权凭证合并维护。支持多种登录方式：Aptos 运动员登录、Okta（现金管理特权）、NFC 卡（含离线登录）。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:20%">数据元素</th><th style="width:16%">来源系统</th><th style="width:6%">分类</th><th style="width:7%">优先级</th><th style="width:18%">对接方式</th><th>消费场景</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">MD-EMP-01</span></td><td><b>登录标识</b>（员工号 / 登录号 Login Number）</td><td>Workday / 员工主数据</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>登录号校验（读）</td><td>POS 登录、EJ 售货员维度</td></tr>
+      <tr><td><span class="rid">MD-EMP-02</span></td><td><b>Okta 账户 / SSO</b>（现金管理特权，9 位 PT）</td><td>Okta</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>企业 SSO</td><td>现金管理、闭店等高权限登录</td></tr>
+      <tr><td><span class="rid">MD-EMP-03</span></td><td><b>NFC 卡映射</b>（NFC 卡 UID ↔ 员工，支持离线登录）</td><td>本地 NFC 卡注册表 + 员工主数据</td><td><span class="pill pB">B</span></td><td><span class="pill should">Should</span></td><td>本地维护 + 读卡器</td><td>NFC 登录（含离线）</td></tr>
+      <tr><td><span class="rid">MD-EMP-04</span></td><td><b>安全等级</b>（POS 10–60 / 后勤办公室安全等级）</td><td>Workday（HR）+ 员工维护</td><td><span class="pill pA">A</span>+本地</td><td><span class="pill must">Must</span></td><td>Workday 同步（岗位/角色）+ 本地维护（增/改/删）</td><td>权限矩阵、两人原则、功能可见性</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s2-5"><span class="n">2.5</span>员工折扣主数据 · Employee Discount Master Data</h3>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:20%">数据元素</th><th style="width:16%">来源系统</th><th style="width:6%">分类</th><th style="width:7%">优先级</th><th style="width:18%">对接方式</th><th>消费场景</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">MD-EDISC-01</span></td><td><b>Swoosh 折扣规则</b>（适用资格、折扣率）</td><td>PassPlay / Employee Discount</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>规则同步（读）</td><td>员工 Swoosh 结算、双联签名收据</td></tr>
+      <tr><td><span class="rid">MD-EDISC-02</span></td><td><b>券种规则</b>（亲友券 F&amp;F / 访客通行证 Guest Pass / 供应商通行证 Affiliate Pass）</td><td>PassPlay</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>规则同步 + 券码/身份校验</td><td>PassPlay 结算、Pass 活动报表</td></tr>
+      <tr><td><span class="rid">MD-EDISC-03</span></td><td><b>月度限额</b>（NVS ¥4,000 / NSO ¥6,000）</td><td>Employee Discount（本地阈值配置）</td><td><span class="pill pA">A</span>+本地</td><td><span class="pill should">Should</span></td><td>限额规则同步 + 结算校验/预警</td><td>Swoosh 限额校验与超限预警</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s2-6"><span class="n">2.6</span>库存主数据 · Inventory Master Data</h3>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:20%">数据元素</th><th style="width:16%">来源系统</th><th style="width:6%">分类</th><th style="width:7%">优先级</th><th style="width:18%">对接方式</th><th>消费场景</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">MD-INV-01</span></td><td><b>门店实时库存</b>（实时库存 V5、Bin Location）</td><td>Store Stock / SIM</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>实时库存查询 + 回写</td><td>建单可售校验、库存回写、在店库存</td></tr>
+      <tr><td><span class="rid">MD-INV-02</span></td><td><b>库存预留</b>（门店+数字订单、退货预留）</td><td>DOMS Reservations</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>预留服务（读/写）</td><td>退货预留（退货必需）、数字订单履约</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s2-7"><span class="n">2.7</span>门店主数据 · Store Master Data</h3>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:20%">数据元素</th><th style="width:16%">来源系统</th><th style="width:6%">分类</th><th style="width:7%">优先级</th><th style="width:18%">对接方式</th><th>消费场景</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">MD-STR-01</span></td><td><b>门店配置 / Feature Flag</b></td><td>Store Views / SCS</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>门店配置同步（读）</td><td>功能开关、门店能力差异（直营/寄售/pop-up/license/员工店）</td></tr>
+      <tr><td><span class="rid">MD-STR-02</span></td><td><b>设备会话</b>（POS 会话管理）</td><td>Device Sessions</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>会话服务</td><td>多设备登录与购物车转移、设备鉴权</td></tr>
+      <tr><td><span class="rid">MD-STR-03</span></td><td><b>门店信息</b>（门店号、中文门店地址、门店 I/O 号）</td><td>Store Views（+本地中文地址）</td><td><span class="pill pA">A</span>+本地</td><td><span class="pill must">Must</span></td><td>门店主数据 + 本地中文化</td><td>收据中文地址、Comp Order 关联 I/O 号</td></tr>
+      <tr><td><span class="rid">MD-STR-04</span></td><td><b>收银机号/工作站号/交易号</b>（Txn# / Workstation#）</td><td>编号服务（本地）</td><td><span class="pill pB">B</span></td><td><span class="pill must">Must</span></td><td>本地生成</td><td>银箱-收银机关联、EJ 查询、报表维度</td></tr>
+      <tr><td><span class="rid">MD-STR-05</span></td><td><b>组织/部门层级</b>（事业部 Division / 部门 Department / 子部门 Sub-dept / 类别 Category）</td><td>Store Views</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>企业主数据同步（读）</td><td>部门销售分析报表、层级汇总</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s2-8"><span class="n">2.8</span>会员主数据 · Member Master Data</h3>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:20%">数据元素</th><th style="width:16%">来源系统</th><th style="width:6%">分类</th><th style="width:7%">优先级</th><th style="width:18%">对接方式</th><th>消费场景</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">MD-MBR-01</span></td><td><b>会员标识</b>（会员通行证/邮箱/手机号）</td><td>PassPlay / Member</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>会员查询与关联（读）</td><td>会员关联、会员奖励拉取</td></tr>
+      <tr><td><span class="rid">MD-MBR-02</span></td><td><b>会员奖励与有效期</b>（Reward / Unlock，24–72h 激活）</td><td>PassPlay</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>奖励拉取（读）</td><td>会员结算、奖励兑换期、免费赠礼</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s2-9"><span class="n">2.9</span>Non-Merch主数据 · Non-Merch Master Data</h3>
+  <p class="lead">Non-Merch 项与 SAP &amp; Tax 共享同一 <b>GTIN 收入确认/计税模型</b>，由 RCC 后端 Non-Merch Catalog 维护（商品名、价格、门店可售性），属 <span class="pill pB">B</span> 可本地化。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:20%">数据元素</th><th style="width:16%">来源系统</th><th style="width:6%">分类</th><th style="width:7%">优先级</th><th style="width:18%">对接方式</th><th>消费场景</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">MD-NM-01</span></td><td><b>Nike By You（NBY）</b>（GC 4 GTIN、商品名/门店可售性，含库存/GTIN 管理）</td><td>TBD</td><td><span class="pill pB">B</span></td><td><span class="pill must">Must</span></td><td>本地维护 + 收入确认/计税对齐</td><td>NBY 销售</td></tr>
+      <tr><td><span class="rid">MD-NM-02</span></td><td><b>NBY 价格阶梯</b>（4 GTIN × 20–30 价位，基础价 + 价格改写）</td><td>TBD</td><td><span class="pill pA">A</span>+本地</td><td><span class="pill must">Must</span></td><td>基础价同步 + 结算价格改写</td><td>NBY 全价位售卖</td></tr>
+      <tr><td><span class="rid">MD-NM-03</span></td><td><b>购物袋费 Bag Fee</b>（MLC 标 0 RMB，仍走Non-Merch目录计入收入）</td><td>TBD</td><td><span class="pill pB">B</span></td><td><span class="pill must">Must</span></td><td>本地维护 + 计税对齐</td><td>结算自动/手动加袋费、0 RMB 走账</td></tr>
+      <tr><td><span class="rid">MD-NM-04</span></td><td><b>礼品卡 Gift Card</b>（实体卡·新 GC 供应商、面额、卡号/余额）</td><td>TBD</td><td><span class="pill pB">B</span></td><td><span class="pill must">Must</span></td><td>本地维护 + NTT 对接</td><td>礼品卡销售/充值/查余、实体卡销售</td></tr>
+      <tr><td><span class="rid">MD-NM-05</span></td><td><b>Non-Merch收入项</b>（如快递箱回收收入等 key-in 项）</td><td>TBD</td><td><span class="pill pB">B</span></td><td><span class="pill should">Should</span></td><td>本地维护</td><td>Non-Merch收入键入（Fixed）</td></tr>
+      <tr><td><span class="rid">MD-NM-06</span></td><td><b>运费 / 附加运费</b>（Freight / Add'l Freight）</td><td>TBD</td><td><span class="pill pB">B</span></td><td><span class="pill nice">Nice</span></td><td>本地维护</td><td>银箱结算报表运费/附加运费项</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout"><b>发票 / 合规配置（补充）：</b>E-Fapiao 配置、VAT 行隐藏/删除规则、Non-Merch 配置（Non-Merch Config）属 <span class="pill pB">B</span> 可本地化；发票开具经 OM→ND E-Fapiao API，消费者扫码开票。</div>
+
+  <h3 class="sub" id="s2-10"><span class="n">2.10</span>订单主数据 · Order Master Data</h3>
+  <p class="lead">统一管理<b>数字订单</b>与<b>本地 POS 订单</b>的标识与关联，作为交易稽查、履约追踪、退货关联与下游报表/对账的<b>关联主键</b>。DSIS / 线上 / @Wo 远程使用<b>数字订单号（Digital Order ID）</b>；本地固定与移动收银使用<b>本地 POS 订单号（Fixed / Mobile）</b>；两类通过统一交易上下文（POSLOG）关联。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:20%">数据元素</th><th style="width:16%">来源系统</th><th style="width:6%">分类</th><th style="width:7%">优先级</th><th style="width:18%">对接方式</th><th>消费场景</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">MD-ORD-01</span></td><td><b>数字订单号 Digital Order ID</b>（DSIS / 线上 / @Wo 远程数字订单唯一标识，含订单状态与履约信息）</td><td>OM / DOMS / DSIS 后端</td><td><span class="pill pA">A</span></td><td><span class="pill should">Should</span></td><td>数字订单同步（读 + 关联写）</td><td>DSIS 混合购物车分流、履约追踪、Rebound 退货关联、@Wo 远程订单关联（见 3.9 / 3.8）</td></tr>
+      <tr><td><span class="rid">MD-ORD-02</span></td><td><b>本地 POS 订单号（Fixed）</b>（固定收银交易/订单号，含门店号 / 收银机 ID / 交易号 / 序号）</td><td>本地 POS（Fixed）</td><td><span class="pill pB">B</span></td><td><span class="pill must">Must</span></td><td>本地生成 / 维护</td><td>固定收银建单、收据 / EJ、报表交易维度</td></tr>
+      <tr><td><span class="rid">MD-ORD-03</span></td><td><b>本地 POS 订单号（Mobile）</b>（移动收银交易/订单号，含门店号 / 设备 ID / 交易号 / 序号）</td><td>本地 POS（Mobile）</td><td><span class="pill pB">B</span></td><td><span class="pill must">Must</span></td><td>本地生成 / 维护</td><td>移动收银建单、收据 / EJ、报表交易维度</td></tr>
+      <tr><td><span class="rid">MD-ORD-04</span></td><td><b>订单关联与状态</b>（数字订单号 ↔ 本地 POS 订单号 ↔ 收据号 ↔ 支付 / 履约状态）</td><td>本地 POS + POSLOG</td><td><span class="pill pC">C</span></td><td><span class="pill must">Must</span></td><td>POSLOG 下游契约（解耦边界）</td><td>混合单对账、交易稽查、退货追溯、下游报表 / SAP 关联</td></tr>
+      <tr><td><span class="rid">MD-ORD-05</span></td><td><b>退货订单 / 退货数据 Return Order</b>（退货交易号、<b>关联原交易号 / 原收据号 / 原订单号</b>、退货类型（有/无收据 · 瑕疵 · 换货 · DSIS Rebound）、退货原因码、退货取价、退款支付方式、退货金额、缺陷类型）</td><td>本地 POS + POSLOG（含 DSIS 后端）</td><td><span class="pill pC">C</span></td><td><span class="pill must">Must</span></td><td>本地生成 + POSLOG 下游契约</td><td>退换货（见 3.10）、DSIS Rebound 退货（见 3.9）、门店退货报表（RPT-07）、礼品卡退货追踪（SC-RET-11）</td></tr>
+      <tr><td><span class="rid">MD-ORD-06</span></td><td><b>历史订单迁移 Order History Migration</b>（自 1POS 迁移<b>近 13 个月</b>历史交易/订单：交易号、日期、商品明细、金额、支付、开票状态）</td><td>1POS（历史）→ 本地 POS</td><td><span class="pill pA">A</span></td><td><span class="pill must">Must</span></td><td>数据迁移（一次性 + 增量）</td><td>满足税务<b>13 个月开票窗口</b>：为消费者对历史订单补开 / 查询 E-Fapiao；历史交易查询、退货取原单</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s2-11"><span class="n">2.11</span>原因码主数据 · Reason Code Master Data</h3>
+  <p class="lead">POS 原因码（POS Reasons）为<b>本地维护</b>的主数据（<span class="pill pB">B</span>），覆盖折扣、退货/换货、改价、提款/回款、撤销、Comp 用途等操作的原因归类，驱动稽核与异常/对帐报表。台湾反馈要求<b>精简至门店常用项并设「其它」</b>（见 HMT-11），并与折扣/促销主数据（§2.3）解耦独立维护。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:20%">数据元素</th><th style="width:16%">来源系统</th><th style="width:6%">分类</th><th style="width:7%">优先级</th><th style="width:18%">对接方式</th><th>消费场景</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">MD-RSN-01</span></td><td><b>折扣原因码</b>（Discount Reasons）</td><td>POS Reasons（本地）</td><td><span class="pill pB">B</span></td><td><span class="pill must">Must</span></td><td>本地维护</td><td>折扣/促销选择原因、POS 异常报表（折扣页）；精简常用项 + 其它（HMT-11）</td></tr>
+      <tr><td><span class="rid">MD-RSN-02</span></td><td><b>退货 / 换货原因码</b>（Return / Exchange Reasons，含缺陷类型）</td><td>POS Reasons（本地）</td><td><span class="pill pB">B</span></td><td><span class="pill must">Must</span></td><td>本地维护</td><td>退货/换货/瑕疵原因、门店退货报表（RPT-07）</td></tr>
+      <tr><td><span class="rid">MD-RSN-03</span></td><td><b>改价原因码</b>（Price Override Reasons）</td><td>POS Reasons（本地）</td><td><span class="pill pB">B</span></td><td><span class="pill must">Must</span></td><td>本地维护</td><td>价格改写原因、改价审计报表（RPT-06）、POS 异常报表（改价页）</td></tr>
+      <tr><td><span class="rid">MD-RSN-04</span></td><td><b>提款 / 回款原因码</b>（Payout / Paid-In Reasons）</td><td>POS Reasons（本地）</td><td><span class="pill pB">B</span></td><td><span class="pill must">Must</span></td><td>本地维护</td><td>现金提款/回款支出原因、回款/提款报表（RPT-16）</td></tr>
+      <tr><td><span class="rid">MD-RSN-05</span></td><td><b>撤销原因码</b>（Void / Cancel Reasons）</td><td>POS Reasons（本地）</td><td><span class="pill pB">B</span></td><td><span class="pill should">Should</span></td><td>本地维护</td><td>撤销交易原因、POS 异常报表（撤销页）</td></tr>
+      <tr><td><span class="rid">MD-RSN-06</span></td><td><b>Comp 用途原因码</b>（Comp / Complimentary Reasons，含工服 / 赠送 / 亲友赠送等用途）</td><td>POS Reasons（本地）</td><td><span class="pill pB">B</span></td><td><span class="pill must">Must</span></td><td>本地维护</td><td>Comp / 工服 / 赠送销售（见 3.6）、赠送销售报告（RPT-03）</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s2-12"><span class="n">2.12</span>系统对接图（目标态依赖）· Target-State Dependency Map</h3>
+  <p class="lead">下图以数据域展示本地 POS（无论「系统对接」或「自建 Checkout」）与公司企业主数据、支付、下游系统的对接关系，并标注依赖分类 <span class="pill pA">A</span> 必须接公司 / <span class="pill pB">B</span> 可本地化 / <span class="pill pC">C</span> 解耦边界（POSLOG）。节点对应 §2 主数据域（MD-*）。</p>
+
+  <style>
+  .sysmap{--panel:#fff;--panel2:#f2f7fd;--line:#e2e9f3;--muted:#6b7a99;--accent:#2f7ff0;--chip:#eef4fc;--bucketA:#ec5a72;--bucketB:#18b184;--bucketC:#f2a71b}
+  .sysmap .legend{display:flex;flex-wrap:wrap;gap:14px;margin:6px 0 10px;font-size:12px;color:var(--muted);align-items:center}
+  .sysmap .lg{display:flex;align-items:center;gap:6px}
+  .sysmap .dot{width:12px;height:12px;border-radius:3px;display:inline-block}
+  .sysmap .dClient{background:#2f7ff0}.sysmap .dCore{background:#2064c9}
+  .sysmap .dA{background:var(--bucketA)}.sysmap .dB{background:var(--bucketB)}.sysmap .dC{background:var(--bucketC)}
+  .sysmap .diagram{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 20px 24px;overflow-x:auto;box-shadow:0 6px 24px rgba(31,43,69,.06)}
+  .sysmap .diagram-inner{min-width:1000px}
+  .sysmap .band-label{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .sysmap .cols{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+  .sysmap .cat{border:1px solid var(--line);border-radius:12px;padding:9px 9px 11px;background:var(--panel2)}
+  .sysmap .cat>.ct{font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#7d8cad;margin-bottom:7px;text-align:center}
+  .sysmap .node{border-radius:9px;padding:7px 9px;margin-bottom:7px;border:1px solid var(--line);background:#fff;box-shadow:0 1px 2px rgba(31,43,69,.04)}
+  .sysmap .node:last-child{margin-bottom:0}
+  .sysmap .node .n{font-size:12px;font-weight:700;line-height:1.2;color:#22314f}
+  .sysmap .node .s{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.25}
+  .sysmap .bA{border-left:4px solid var(--bucketA)}
+  .sysmap .bB{border-left:4px solid var(--bucketB)}
+  .sysmap .tagB{display:inline-block;font-size:9px;font-weight:800;padding:1px 5px;border-radius:4px;margin-left:5px;vertical-align:middle}
+  .sysmap .tA{background:rgba(236,90,114,.12);color:#d23a55;border:1px solid rgba(236,90,114,.35)}
+  .sysmap .tB{background:rgba(24,177,132,.12);color:#0f8f6a;border:1px solid rgba(24,177,132,.35)}
+  .sysmap .arrowband{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;font-weight:600;margin:8px 0}
+  .sysmap .midrow{display:grid;grid-template-columns:0.9fr 2.6fr 1.5fr;gap:12px;align-items:stretch;margin-top:12px}
+  .sysmap .zone{border-radius:14px;padding:12px;border:1px dashed var(--line)}
+  .sysmap .zone-title{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin-bottom:9px;text-align:center}
+  .sysmap .zone.client{border-color:rgba(47,127,240,.4);background:rgba(47,127,240,.05)}
+  .sysmap .zone.core{border-color:var(--accent);background:rgba(47,127,240,.07);border-style:solid;box-shadow:0 4px 14px rgba(47,127,240,.12)}
+  .sysmap .zone.pay{border-color:rgba(138,107,255,.4);background:rgba(138,107,255,.05)}
+  .sysmap .zone.client .zone-title{color:#2f7ff0}
+  .sysmap .zone.core .zone-title{color:#2064c9}
+  .sysmap .zone.pay .zone-title{color:#7458e6}
+  .sysmap .cnode{background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 10px;margin-bottom:8px;box-shadow:0 1px 2px rgba(31,43,69,.04)}
+  .sysmap .cnode:last-child{margin-bottom:0}
+  .sysmap .cnode .n{font-size:12px;font-weight:700;color:#22314f}
+  .sysmap .cnode .s{font-size:10px;color:var(--muted);margin-top:2px}
+  .sysmap .core-flow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .sysmap .core-flow .cnode{margin-bottom:0}
+  .sysmap .build-badge{display:inline-block;font-size:9.5px;font-weight:800;color:#0f8f6a;background:rgba(24,177,132,.12);border:1px solid rgba(24,177,132,.35);border-radius:4px;padding:1px 6px;margin-left:6px}
+  .sysmap .downstream{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center}
+  .sysmap .poslog{border:2px solid var(--bucketC);border-radius:12px;padding:10px 14px;background:rgba(242,167,27,.10);text-align:center}
+  .sysmap .poslog .n{font-size:14px;font-weight:800;color:#b9790a}
+  .sysmap .poslog .s{font-size:10.5px;color:var(--muted);margin-top:2px}
+  .sysmap .dchips{display:flex;flex-wrap:wrap;gap:8px}
+  .sysmap .dchip{background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:7px 11px;font-size:11.5px}
+  .sysmap .dchip b{color:#2b3a5c}
+  .sysmap .dchip .s{font-size:10px;color:var(--muted);display:block}
+  .sysmap .dchip.global{background:rgba(47,127,240,.08);border-color:rgba(47,127,240,.35)}
+  .sysmap .dchip.global b{color:#2064c9}
+  </style>
+
+  <div class="sysmap">
+  <div class="legend">
+    <span class="lg"><i class="dot dClient"></i>客户端 POS</span>
+    <span class="lg"><i class="dot dCore"></i>结算核心（对接 / 自建 Checkout）</span>
+    <span class="lg"><i class="dot dA"></i><b style="color:#d23a55">A</b>：必须接公司</span>
+    <span class="lg"><i class="dot dB"></i><b style="color:#0f8f6a">B</b>：可本地化 / 已本地化</span>
+    <span class="lg"><i class="dot dC"></i><b style="color:#b9790a">C</b>：解耦边界</span>
+  </div>
+  <div class="diagram">
+   <div class="diagram-inner">
+    <div class="band-label">公司数据与服务（Company / Global Master Data &amp; Enterprise Services）</div>
+    <div class="cols">
+      <div class="cat">
+        <div class="ct">Store &amp; Commerce</div>
+        <div class="node bA"><div class="n">Product Catalog<span class="tagB tA">A</span></div><div class="s">GPCR v2 · 商品主数据 · MD-PRD</div></div>
+        <div class="node bA"><div class="n">Store Views / SCS<span class="tagB tA">A</span></div><div class="s">门店配置 · feature flag · MD-STR</div></div>
+        <div class="node bA"><div class="n">Device Sessions<span class="tagB tA">A</span></div><div class="s">POS 会话管理 · MD-STR-02</div></div>
+      </div>
+      <div class="cat">
+        <div class="ct">Pricing &amp; Promotions</div>
+        <div class="node bA"><div class="n">GPPS + RPE<span class="tagB tA">A</span></div><div class="s">价格引擎 · store×GTIN · MD-PRC</div></div>
+        <div class="node bA"><div class="n">Promotion Engine<span class="tagB tA">A</span></div><div class="s">优惠券 · campaign · MD-PROMO</div></div>
+        <div class="node bA"><div class="n">PassPlay<span class="tagB tA">A</span></div><div class="s">会员/员工折扣 · MD-MBR/EDISC</div></div>
+        <div class="node bA"><div class="n">DCN<span class="tagB tA">A</span></div><div class="s">CP &amp; 促销维护（公司级）</div></div>
+      </div>
+      <div class="cat">
+        <div class="ct">Orders &amp; Fulfillment</div>
+        <div class="node bA"><div class="n">Order Views<span class="tagB tA">A</span></div><div class="s">订单/退货预留（退货必需）</div></div>
+        <div class="node bA"><div class="n">DOMS Reservations<span class="tagB tA">A</span></div><div class="s">库存预留 · MD-INV-02</div></div>
+        <div class="node bA"><div class="n">Store Stock / SIM<span class="tagB tA">A</span></div><div class="s">实时库存 V5 · MD-INV-01</div></div>
+      </div>
+      <div class="cat">
+        <div class="ct">Fiscal &amp; Compliance</div>
+        <div class="node bB"><div class="n">Fiscal / E-Fapiao<span class="tagB tB">B</span></div><div class="s">中国电子发票 · VAT</div></div>
+      </div>
+      <div class="cat">
+        <div class="ct">ID Gen &amp; Numbering</div>
+        <div class="node bB"><div class="n">Txn# / Workstation#<span class="tagB tB">B</span></div><div class="s">交易号/工作站号 · MD-STR-04</div></div>
+        <div class="node bA"><div class="n">Digital Order ID<span class="tagB tA">A</span></div><div class="s">数字订单号 · MD-ORD-01</div></div>
+      </div>
+      <div class="cat">
+        <div class="ct">Identity &amp; HR</div>
+        <div class="node bA"><div class="n">Nike OAuth / RAP<span class="tagB tA">A</span></div><div class="s">店员/设备 JWT 鉴权 · MD-EMP</div></div>
+        <div class="node bA"><div class="n">Okta / Workday<span class="tagB tA">A</span></div><div class="s">SSO · 安全等级 · MD-EMP-02/04</div></div>
+        <div class="node bB"><div class="n">POS Reasons<span class="tagB tB">B</span></div><div class="s">退货/折扣原因码 · MD-RSN-01~05</div></div>
+      </div>
+    </div>
+
+    <div class="arrowband">▲ 同步调用（Product / Price / Promotion / Member / Inventory / Auth）▲</div>
+
+    <div class="midrow">
+      <div class="zone client">
+        <div class="zone-title">客户端</div>
+        <div class="cnode"><div class="n">NPOS Fixed</div><div class="s">固定收银 iPad</div></div>
+        <div class="cnode"><div class="n">NPOS Mobile</div><div class="s">手持 iPhone</div></div>
+        <div class="cnode"><div class="n">Self Checkout</div><div class="s">自助结算（机会点）</div></div>
+      </div>
+      <div class="zone core">
+        <div class="zone-title">本地结算核心 <span class="build-badge">对接 / 自建</span></div>
+        <div class="core-flow">
+          <div class="cnode"><div class="n">⊙ Retail Cart</div><div class="s">购物车 · 促销/取价应用</div></div>
+          <div class="cnode"><div class="n">⊙ Cart Views</div><div class="s">只读视图 · 收据数据</div></div>
+          <div class="cnode"><div class="n">⊙ Retail Checkout</div><div class="s">成交事务核心</div></div>
+          <div class="cnode"><div class="n">Cash / Non-Merch</div><div class="s">现金 · 袋费/NBY/礼品卡 · MD-NM</div></div>
+        </div>
+      </div>
+      <div class="zone pay">
+        <div class="zone-title">支付（已本地化）</div>
+        <div class="cnode"><div class="n">Payment Sessions/Discovery</div><div class="s">支付会话/发现</div></div>
+        <div class="cnode"><div class="n">UMS<span class="tagB tB">B</span></div><div class="s">银行卡 · 扫码 · 数字RMB</div></div>
+        <div class="cnode"><div class="n">NTT<span class="tagB tB">B</span></div><div class="s">中国礼品卡</div></div>
+      </div>
+    </div>
+
+    <div class="downstream">
+      <div class="poslog">
+        <div class="n">POSLOG</div>
+        <div class="s">规范交易格式<br>解耦边界 · Bucket C</div>
+      </div>
+      <div>
+        <div class="s" style="font-size:11.5px;color:var(--muted);margin-bottom:8px">→ 经 ROP 外发企业下游（保住 POSLOG，下游几乎不用改）</div>
+        <div class="dchips">
+          <div class="dchip"><b>ROP / GTS</b><span class="s">POSLOG→转换</span></div>
+          <div class="dchip"><b>OM 订单</b><span class="s">Order Mgmt · E-Fapiao</span></div>
+          <div class="dchip"><b>Finance / SAP</b><span class="s">对账/结算/计税</span></div>
+          <div class="dchip"><b>SIM</b><span class="s">库存回写</span></div>
+          <div class="dchip"><b>ED&amp;A</b><span class="s">分析</span></div>
+          <div class="dchip global"><b>SOR / SPR</b><span class="s">报表</span></div>
+        </div>
+      </div>
+    </div>
+   </div>
+  </div>
+  </div>
+  <p class="lead" style="margin-top:8px">架构图来源：Retail Cloud Checkout HLD · NPOS China Solution HLD (GCTEC) · 2025-07 Full Dependency Tree for NPOS · Retail Systems Landscape &amp; Onboarding Overview。</p>
+</div>
+
+<!-- ============ SECTION 3 · FEATURE PARITY ============ -->
+<div class="sec-strip">Section 3 · Feature Parity Requirements</div>
+<div class="pad">
+  <h2 class="sec"><span class="n">3</span>场景化需求 · Requirements by Scenario</h2>
+  <p class="lead">本节以<b>端到端业务场景</b>组织需求。<b>3.1–3.10</b> 为销售场景（普通商品 / 会员 / NBY 与 Non-Merch 项 / Swoosh 员工 / FF Card 亲友卡 / Comp 工服 / Gift Card / @Wo 远程 / 门店数字销售 DSIS / 退换货）；<b>3.11–3.19</b> 为跨场景通用能力（支付 / 收据发票 / 登录 / 现金管理 / 员工 / 电子日志 WebEJ / 报表清单 / 硬件 / 离线）；<b>3.20</b> 为<b>港澳台专区</b>（香港 / 澳门 / 台湾市场本地化需求）。每条含<b>编号 / 步骤或能力 / 描述（含来源）/ 要求 / 优先级 / 状态</b>。</p>
+  <div class="callout"><b>优先级读法：</b><span class="pill must">Must</span> = 功能对齐基线（1POS Fixed / NPOS Mobile 现有能力，必备、不得回退）；<span class="pill should">Should</span> = 拓展 / 超越对齐需求（4 阶段 roadmap 与 GC Confluence scope 增强，Pilot→Scale 分阶段）；<span class="pill nice">Nice</span> = Stretch / 可选。状态标签：<span class="pill mob">Mobile ★</span> 已本地化 · <span class="pill pos">1POS 现有</span> · <span class="pill todo">Fixed 待建 / 拓展 / 评审</span>。</div>
+  <table>
+    <caption>场景总览 Scenario Overview（主场景 → 关键能力 → 主要来源）</caption>
+    <thead><tr><th style="width:6%">#</th><th style="width:18%">销售场景</th><th style="width:40%">关键能力</th><th style="width:16%">对齐基线来源</th><th>拓展来源</th></tr></thead>
+    <tbody>
+      <tr><td>3.1</td><td><b>普通商品销售</b></td><td>扫描建单 · 调整器 · 自动促销 · 结算取整 · 袋费</td><td>Mobile ★ / 手册</td><td>多层促销叠加、折前合计、<b>销售员业绩归属</b></td></tr>
+      <tr><td>3.2</td><td><b>会员销售</b></td><td>会员关联 · 会员奖励 · 优惠券 · 忽略/移除促销</td><td>手册 / Mobile ★</td><td>免费赠礼、奖励兑换期</td></tr>
+      <tr><td>3.3</td><td><b>NBY 与 Non-Merch 项销售</b></td><td>NBY 定制 · 小物装饰定制（pin/鞋带/搭扣）· Non-Merch 目录销售行 · GTIN 收入确认/计税 · 袋费/纸箱/运费 · 库存</td><td>Mobile ★ / 手册</td><td>NBY 价格改写增强、小物装饰定制、门店可售性、纸箱/袋费/运费 key-in、期初库存与销售/退货实时更新</td></tr>
+      <tr><td>3.4</td><td><b>Swoosh 员工销售</b></td><td>员工图标识别 · PassPlay 全券种 · 类目应用 · 重整授权 · 折扣结算 · 员工购买报告</td><td>Mobile ★ / 手册 p16–19</td><td>双联收据、月度限额、跨店用量、防自批自售、Swoosh 识别/限制</td></tr>
+      <tr><td>3.5</td><td><b>FF Card 销售（亲友卡）</b></td><td>PassPlay 亲友券识别/应用 · 折扣结算 · 重整授权</td><td>手册 p16–19</td><td>券有效期/范围校验、一券一票、Pass 活动报表</td></tr>
+      <tr><td>3.6</td><td><b>Comp / 工服 / 赠送销售</b></td><td>Comp 付款 · 赠品详情</td><td>手册</td><td>Comp 原因码（工服/赠送）、关联门店 I/O 号</td></tr>
+      <tr><td>3.7</td><td><b>Gift Card 销售</b></td><td>礼品卡销售/充值/查余 · 兑付</td><td>Mobile ★ / 手册</td><td>实体礼品卡销售（新 GC 供应商 / NTT）</td></tr>
+      <tr><td>3.8</td><td><b>@Wo 远程销售</b></td><td>远程支付（顾客设备完成）</td><td>手册</td><td>SMS 支付、远程建单流程</td></tr>
+      <tr><td>3.9</td><td><b>门店数字销售 DSIS</b></td><td>无限货架建单 · 混合购物车 · 配送到家 · 支付分流</td><td>—（GC 待建）</td><td>NPOS Mobile DSIS、本地化 discovery、Rebound 退货</td></tr>
+      <tr><td>3.10</td><td><b>退货与换货</b></td><td>有/无收据退货 · 瑕疵 · 换货 · 取价规则</td><td>手册</td><td>未验证退货、换货后退货、礼品卡/替代支付退货</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-1"><span class="n">3.1</span>普通商品销售 · Standard Merchandise Sale</h3>
+  <p class="lead">端到端主流程：登录（见 3.13）→ 智能扫描/建单 → 商品与交易调整器 → 自动促销 → 结算/取整 → 支付（见 3.11）→ 收据 / E-Fapiao（见 3.12）。会员与优惠券见 3.2。本场景为其余销售场景的公共基线。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:14%">步骤 / 能力</th><th style="width:32%">描述（含来源）</th><th style="width:20%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">SC-STD-01</span></td><td class="feat">智能扫描 Smart Scan</td><td>自动识别多种条码：商品 UPC、会员通行证、退货条码，无需先选类型。<span class="srcnote">来源：Mobile 程序</span></td><td>支持智能扫描并自动区分条码类型。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-STD-02</span></td><td class="feat">添加商品</td><td>扫描或手输 GTIN 加入购物车（GTIN=SKU/商品代码）。<span class="srcnote">来源：Mobile / 手册 p8</span></td><td>支持扫描/手输建单。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-STD-03</span></td><td class="feat">商品调整器·价格改写</td><td>手动更改单品价格（需原因码）。<span class="srcnote">来源：Mobile / 手册 p25</span></td><td>支持价格改写 + 原因码。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-STD-04</span></td><td class="feat">商品调整器·价格折扣</td><td>按百分比/金额降低单品价格（需原因码）。<span class="srcnote">来源：Mobile / 手册 p28</span></td><td>支持单品折扣（%/金额）+ 原因码。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-STD-05</span></td><td class="feat">商品调整器·撤销/移除</td><td>删除购物车中商品（点击或左滑移除）。<span class="srcnote">来源：Mobile / 手册 p34</span></td><td>支持撤销/移除商品。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-STD-06</span></td><td class="feat">交易调整器·整单折扣</td><td>对整单按百分比/金额打折（需原因码）；所有调整器作用于税后价。<span class="srcnote">来源：Mobile / 手册 p7/p23</span></td><td>支持整单折扣（%/金额）+ 原因码，作用税后价。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-STD-07</span></td><td class="feat">礼品标记 / 礼品收据</td><td>为单品或整单标记礼品并打印礼品收据。<span class="srcnote">来源：Mobile / 手册 p31</span></td><td>支持礼品标记与礼品收据。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-STD-08</span></td><td class="feat">作废整车 Void Bag</td><td>作废整个购物车/交易。<span class="srcnote">来源：Mobile 程序</span></td><td>支持作废整单。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-STD-09</span></td><td class="feat">暂停与恢复 Suspend &amp; Resume</td><td>命名并暂停购物车，稍后恢复。<span class="srcnote">来源：Mobile 程序</span></td><td>支持暂停/恢复购物车。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-STD-10</span></td><td class="feat">寄售店暂停小票</td><td>寄售店暂停交易时打印暂停小票。<span class="srcnote">来源：Fixed roadmap（Pilot）</span></td><td>Fixed 支持寄售店暂停小票。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Fixed</span></td></tr>
+      <tr><td><span class="rid">SC-STD-11</span></td><td class="feat">自动促销应用</td><td>结算自动应用促销 / campaign（item-level 多层 L1/L2）。<span class="srcnote">来源：手册 / Promotion Engine</span></td><td>支持自动促销应用。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">SC-STD-12</span></td><td class="feat">多层促销叠加优化</td><td>优化多层促销叠加逻辑与压测，须同时覆盖 <b>item-level（单品层）</b> 与 <b>order-level（整单/交易层）</b> 的多层折扣（L1/L2）叠加与优先级/互斥规则。<span class="srcnote">来源：Fixed roadmap（P0，EO 影响显著）</span></td><td>支持单品层与整单层多层折扣叠加增强。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · P0</span></td></tr>
+      <tr><td><span class="rid">SC-STD-13</span></td><td class="feat">结算与取整</td><td>合计向下取整至 0.1 RMB（1POS 与 NPOS Mobile 一致）；营业税按税后价计算。<span class="srcnote">来源：Mobile ★ / 手册 p23</span></td><td>本地 POS 采用一致取整与计税逻辑。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-STD-14</span></td><td class="feat">购物袋费 Bag Fee</td><td>结算自动提示袋数（或手动添加）；MLC 标 0 RMB 仍走Non-Merch目录计入收入。<span class="srcnote">来源：Mobile 程序</span></td><td>支持袋费作为Non-Merch 项、0 RMB 走账计税。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-STD-15</span></td><td class="feat">Non-Merch收入键入</td><td>键入Non-Merch收入项（如快递箱回收收入）。<span class="srcnote">来源：Fixed roadmap（Pilot）</span></td><td>Fixed 支持Non-Merch收入键入。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Fixed</span></td></tr>
+      <tr><td><span class="rid">SC-STD-16</span></td><td class="feat">买单状态双屏可视化（消费者屏 + 运动员屏）</td><td>买单/结算状态在<b>消费者交互屏</b>（顾客侧 iPad）与<b>运动员交互屏</b>（店员 POS 端）<b>双屏实时同步</b>可视化：购物车商品/数量/价格、折扣与促销、折前合计与应付合计、支付进度与结果，供消费者与店员同时确认。<span class="srcnote">来源：GC 新增需求 / roadmap（Scale）</span></td><td>支持消费者屏与运动员屏双屏实时同步展示买单/结算状态。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · 新增</span></td></tr>
+      <tr><td><span class="rid">SC-STD-17</span></td><td class="feat">录入销售店员工号（销售归属）</td><td>收银结算时录入<b>实际销售店员/导购工号</b>（可不同于登录收银员，支持多导购分摊/主导购），随交易写入 EJ / POSLOG，用于业绩归属。校验工号有效性（对接员工主数据 MD-EMP-01）。<span class="srcnote">来源：GC 新增需求 / MD-EMP-01</span></td><td>支持结算录入销售员工号并写入交易，供绩效报表（见 RPT-02 运动员绩效报告）。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · 新增</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-2"><span class="n">3.2</span>会员销售 · Member Sale</h3>
+  <p class="lead">在普通商品销售流程（3.1）基础上叠加会员关联与权益。会员关联需在付款前完成。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:14%">步骤 / 能力</th><th style="width:32%">描述（含来源）</th><th style="width:20%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">SC-MBR-01</span></td><td class="feat">会员关联 Nike Member</td><td>扫描会员通行证或输入邮箱/手机号关联会员，付款前均可关联。<span class="srcnote">来源：手册 p12</span></td><td>支持会员关联。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">SC-MBR-02</span></td><td class="feat">会员奖励 Member Rewards</td><td>关联后从 PassPlay 拉取并应用会员可用奖励，可增删。<span class="srcnote">来源：手册 p13</span></td><td>支持会员奖励拉取与应用。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">SC-MBR-03</span></td><td class="feat">优惠券 Coupon</td><td>菜单添加优惠券，扫描/输入券码后应用。<span class="srcnote">来源：Mobile 程序</span></td><td>支持优惠券添加与应用。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-MBR-04</span></td><td class="feat">忽略/移除促销</td><td>在商品层忽略或移除促销/折扣，可手动重新应用。<span class="srcnote">来源：Mobile 程序</span></td><td>支持忽略/恢复促销、移除/重加折扣。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-MBR-05</span></td><td class="feat">免费赠礼 Free of Charge Gift</td><td>会员/活动免费赠礼作为奖励项加入交易。<span class="srcnote">来源：roadmap（Stretch）</span></td><td>支持免费赠礼。</td><td><span class="pill nice">Nice</span></td><td><span class="pill todo">拓展 · Stretch</span></td></tr>
+      <tr><td><span class="rid">SC-MBR-06</span></td><td class="feat">奖励兑换期 Reward Redeem Period</td><td>会员奖励 / unlock 需 24–72h 激活后方可兑换，结算按兑换期校验。<span class="srcnote">来源：roadmap（Stretch）</span></td><td>支持奖励兑换期校验。</td><td><span class="pill nice">Nice</span></td><td><span class="pill todo">拓展 · Stretch</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-3"><span class="n">3.3</span>NBY 与 Non-Merch 项销售 · Nike By You &amp; Non-Merch Sale</h3>
+  <p class="lead">NBY 与 Non-Merch 项均作为<b>销售行</b>结算，与 SAP &amp; Tax 共享同一 <b>GTIN 收入确认/计税模型</b>（见主数据 MD-NM-01~06）。NBY 为个性化定制商品（GC 4 GTIN，价格改写覆盖 20–30 价位阶梯），另含<b>小物装饰定制</b>（pin / 鞋带 / 搭扣等装饰物）；Non-Merch 项含<b>购物袋费、纸箱费、运费</b>等 key-in 收入项。实体 Non-Merch 项须支持<b>期初门店库存建账</b>与<b>销售/退货库存实时更新</b>。礼品卡见 3.7；购物袋费自动提示见 3.1（SC-STD-14）。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:14%">步骤 / 能力</th><th style="width:32%">描述（含来源）</th><th style="width:20%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">SC-NBY-01</span></td><td class="feat">NBY 建单</td><td>NBY 作为Non-Merch 项加入购物车，含库存/GTIN 管理；GC 仅 4 GTIN。<span class="srcnote">来源：Mobile 程序</span></td><td>支持 NBY Non-Merch建单。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-NBY-02</span></td><td class="feat">NBY 价格改写增强</td><td>优化 NBY 价格改写体验/校验（Price Override）。<span class="srcnote">来源：roadmap（Scale，P0）</span></td><td>支持 NBY 价格改写增强。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Scale</span></td></tr>
+      <tr><td><span class="rid">SC-NBY-03</span></td><td class="feat">小物装饰定制销售</td><td>门店小物<b>装饰物定制</b>销售，包含 <b>pin（徽章）、鞋带、搭扣</b>等装饰物的个性化定制/加装，作为定制商品项建单结算。<span class="srcnote">来源：GC scope / 定制服务</span></td><td>支持 pin / 鞋带 / 搭扣等装饰物定制销售建单。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td><span class="rid">SC-NM-01</span></td><td class="feat">Non-Merch 项销售（总纲）</td><td>从 <b>Non-Merch Catalog</b> 选择 Non-Merch 项作为销售行加入购物车结算，走 GTIN 收入确认/计税（与 SAP &amp; Tax 一致）。<span class="srcnote">来源：Mobile 程序 / RCC Non-Merch Catalog</span></td><td>支持Non-Merch 项作为销售行加入购物车并计税走账。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-NM-02</span></td><td class="feat">Non-Merch 项门店可售性</td><td>按门店控制Non-Merch 项可售范围（store availability），仅可售项可加入购物车。<span class="srcnote">来源：RCC Non-Merch Catalog / MD-NM</span></td><td>支持Non-Merch 项门店可售性控制。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td><span class="rid">SC-NM-03</span></td><td class="feat">纸箱录入</td><td>结算时手动录入<b>纸箱 / 快递箱费用</b>（或回收收入）作为 Non-Merch 收入项走账。<span class="srcnote">来源：手册 / MD-NM-05</span></td><td>支持纸箱费 key-in 走 Non-Merch 收入。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td><span class="rid">SC-NM-04</span></td><td class="feat">购物袋录入</td><td>结算时录入<b>购物袋费</b>（MLC 标 0 RMB，仍走 Non-Merch 目录计入收入）。<span class="srcnote">来源：Mobile / MD-NM-03</span></td><td>支持购物袋费 key-in 走 Non-Merch 收入。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-NM-05</span></td><td class="feat">运费 / 附加运费 Freight</td><td>Non-Merch 项销售运费/附加运费（Freight / Add'l Freight），纳入银箱结算报表。<span class="srcnote">来源：手册 / MD-NM-06</span></td><td>支持运费/附加运费Non-Merch 项。</td><td><span class="pill nice">Nice</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td><span class="rid">SC-NM-06</span></td><td class="feat">期初门店库存管理</td><td>对 NBY / 小物装饰物等<b>实体 Non-Merch 项</b>支持<b>期初库存建账</b>（初始入库 / 盘点 / 门店级库存维护），与库存主数据同步。<span class="srcnote">来源：GC scope / MD-INV / MD-NM</span></td><td>支持实体 Non-Merch 项的期初门店库存建账与维护。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td><span class="rid">SC-NM-07</span></td><td class="feat">库存实时更新（销售 / 退货）</td><td>销售与退货发生时，对上述实体 Non-Merch 项库存<b>实时增减更新</b>（销售扣减 / 退货回补），与库存主数据实时同步。<span class="srcnote">来源：GC scope / MD-INV</span></td><td>支持销售/退货触发的实体 Non-Merch 项库存实时更新。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-4"><span class="n">3.4</span>Swoosh 员工销售 · Employee Swoosh Sale</h3>
+  <p class="lead">员工本人及<b>亲友 / 访客 / 供应商</b>通过 <b>PassPlay</b> 券种享受员工折扣（Swoosh）。标准流程（手册 p16–19）：①扫描商品 GTIN → ②选择<b>员工图标</b>（识别员工及亲友身份）→ ③扫描/输入<b>持卡人姓名或券码 / 员工姓名或工号</b>并确认本人使用 → ④点选对应<b>类目</b>并「应用」→ ⑤如需更改折扣选「重整」，选择对应折扣并<b>输入授权重整的员工编号</b> → ⑥确认折扣应用成功，选「合计」结算。<b>员工店</b>不可使用员工图标按钮，须从<b>解锁界面</b>操作。月度限额与<b>员工购买报告</b>用于防止「自批自售」。资格规则见主数据 MD-EDISC-01~03；亲友卡（FF Card）见 3.5。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:14%">步骤 / 能力</th><th style="width:32%">描述（含来源）</th><th style="width:20%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">SC-SWO-01</span></td><td class="feat">员工 / 身份识别（员工图标）</td><td>选择<b>员工图标</b>识别员工及<b>亲友 / 访客 / 供应商</b>身份；扫码或按<b>工号 / 姓名 / 邮箱</b>搜索并确认为本人使用。<b>员工店</b>场景员工图标不可用，须从解锁界面操作。<span class="srcnote">来源：手册 p13 / p16–17</span></td><td>支持员工图标识别与身份搜索，含员工店解锁界面路径。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-SWO-02</span></td><td class="feat">PassPlay 券种覆盖</td><td>支持 PassPlay <b>全券种</b>：员工 Swoosh / 亲友券（FF Card）/ 员工店访客通行证（Guest Pass）/ 供应商通行证（Affiliate Pass）。<span class="srcnote">来源：Mobile / 手册 p16</span></td><td>支持 PassPlay 全券种识别与应用。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-SWO-03</span></td><td class="feat">类目选择与折扣应用</td><td>点选对应商品<b>类目</b>并选择「应用」，将 Swoosh 折扣应用至交易。<span class="srcnote">来源：手册 p17</span></td><td>支持按类目应用 Swoosh 折扣。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">SC-SWO-04</span></td><td class="feat">折扣重整与授权</td><td>如需更改折扣，选择「重整」→ 选择对应折扣 → <b>输入授权重整的员工编号</b>后生效。<span class="srcnote">来源：手册 p18–19</span></td><td>支持折扣重整并强制授权员工编号。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">SC-SWO-05</span></td><td class="feat">员工 Swoosh 折扣结算</td><td>按资格与折扣率结算 Swoosh；<b>不适用商品不打折</b>。<span class="srcnote">来源：手册 / PassPlay</span></td><td>支持员工 Swoosh 折扣结算。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">SC-SWO-06</span></td><td class="feat">双联签名收据 2 Receipts</td><td>员工购买打印两份收据供签名留存。<span class="srcnote">来源：roadmap（Scale）</span></td><td>支持双联签名收据。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Scale</span></td></tr>
+      <tr><td><span class="rid">SC-SWO-07</span></td><td class="feat">月度限额校验</td><td>按门店类型校验月度限额（NVS ¥4,000 / NSO ¥6,000）并超限预警。<span class="srcnote">来源：GC scope</span></td><td>支持 Swoosh 月度限额校验。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td><span class="rid">SC-SWO-08</span></td><td class="feat">跨店月度用量</td><td>跨门店累计员工 Swoosh 月度用量（跨店限额）。<span class="srcnote">来源：GC scope</span></td><td>支持跨店月度用量累计。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td><span class="rid">SC-SWO-09</span></td><td class="feat">员工购买报告 / 防自批自售</td><td>记录员工购买交易（员工编号 / 姓名 / 交易 ID / 收银机 ID / <b>批准 ID</b> / 销售数量 / 金额 / 式样 / 颜色 / 商品号 + 员工购买总额），经 CASHMAN 出具，供教练每月核查防止<b>自批自售</b>（须<b>安全等级 40</b> 方可运行）。<span class="srcnote">来源：手册（员工购买报告 p211–218）。报表见 3.17（CMR）</span></td><td>支持员工购买报告与批准人留痕。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td><span class="rid">SC-SWO-10</span></td><td class="feat">Swoosh 不适用商品识别</td><td>自动识别 don't-apply-swoosh 商品并排除折扣。<span class="srcnote">来源：roadmap（Stretch）</span></td><td>支持 Swoosh 不适用商品识别。</td><td><span class="pill nice">Nice</span></td><td><span class="pill todo">拓展 · Stretch</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-5"><span class="n">3.5</span>FF Card 销售（亲友卡）· Family &amp; Friends Card Sale</h3>
+  <p class="lead">耐克<b>亲友券（Family &amp; Friends Card，FF Card）</b>经 <b>PassPlay</b> 为员工亲友提供折扣，流程与 Swoosh 员工销售类似（见 3.4）：扫描/输入持卡人姓名或券码 → 确认本人使用 → 点选对应类目 → 应用折扣。券含<b>使用截止日期</b>，一个券码对应一张小票，折扣重整需授权员工编号；销售数据经 <b>Pass 活动报表</b>出具（见 3.17）。<span class="srcnote">来源：1POS 手册 p16–19 / Pass 活动报表</span></p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:14%">步骤 / 能力</th><th style="width:32%">描述（含来源）</th><th style="width:20%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">SC-FF-01</span></td><td class="feat">亲友券识别 / 应用</td><td>选择员工图标后，扫描或输入<b>持卡人姓名或券码</b>，确认为本人使用，点选对应类目并应用 FF Card 折扣（PassPlay）。<span class="srcnote">来源：手册 p16–19 / PassPlay</span></td><td>支持 FF Card 识别与折扣应用。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">SC-FF-02</span></td><td class="feat">亲友折扣结算</td><td>按 FF Card 资格与折扣率结算；不适用商品不打折。<span class="srcnote">来源：手册 / PassPlay</span></td><td>支持 FF Card 折扣结算。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">SC-FF-03</span></td><td class="feat">折扣重整授权</td><td>如需更改折扣，选择「重整」并<b>输入授权员工编号</b>后重选折扣。<span class="srcnote">来源：手册 p18–19</span></td><td>支持折扣重整与员工授权。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">SC-FF-04</span></td><td class="feat">券有效期 / 范围校验</td><td>校验券<b>使用截止日期</b>与适用范围（显示为「Family and Friends Card + 使用截止日期」），超期/超范围拒绝使用。<span class="srcnote">来源：手册（Pass 活动报表）</span></td><td>支持 FF Card 有效期与适用范围校验。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td><span class="rid">SC-FF-05</span></td><td class="feat">一券一票 / Pass 报表</td><td>一个券码（Pass ID，唯一值）对应一张小票，销售数据纳入 <b>Pass 活动报表</b>。<span class="srcnote">来源：手册（Pass 活动报表）</span></td><td>支持一券一票与 Pass 活动报表归集。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-6"><span class="n">3.6</span>Comp / 工服 / 赠送销售 · Comp, Uniform &amp; Give-away Sale</h3>
+  <p class="lead">以赠品付款（Comp）方式出账，用于员工工服、赠送、Find Next You 等；按原因码归类并关联门店 I/O 号。Comp 付款不可与其他 tender 混用。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:14%">步骤 / 能力</th><th style="width:32%">描述（含来源）</th><th style="width:20%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">SC-COMP-01</span></td><td class="feat">赠品付款 Comp</td><td>赠品付款方式，填写赠品详情完成；不可与多种付款混用。<span class="srcnote">来源：手册 p46</span></td><td>支持赠品付款（Comp）。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">SC-COMP-02</span></td><td class="feat">Comp 原因码</td><td>按用途归类：工服 Uniforms / 赠送 Give Away / Find Next You 等原因码。<span class="srcnote">来源：GC scope / POS Reasons</span></td><td>支持 Comp 用途原因码。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td><span class="rid">SC-COMP-03</span></td><td class="feat">关联门店 I/O 号</td><td>Comp/工服交易关联门店 I/O 号（Store I/O Number）以对账。<span class="srcnote">来源：GC scope / MD-STR-03</span></td><td>支持关联门店 I/O 号。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-7"><span class="n">3.7</span>Gift Card 销售 · Gift Card Sale</h3>
+  <p class="lead">礼品卡激活 / 销售 / 充值 / 查余作为Non-Merch 项；GC 采用新供应商（NTT）。兑付见 3.11（OP-PAY-05），退货见 3.10（SC-RET-09）。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:14%">步骤 / 能力</th><th style="width:32%">描述（含来源）</th><th style="width:20%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">SC-GC-01</span></td><td class="feat">礼品卡激活 / 销售 / 充值 / 查余</td><td>Non-Merch 项选礼品卡，完成<b>激活（Activation）</b>、销售、充值或查余；实体卡销售时于 POS 激活并绑定卡号/余额。<span class="srcnote">来源：Mobile / 手册 p42</span></td><td>支持礼品卡激活/销售/充值/查余。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">SC-GC-02</span></td><td class="feat">实体礼品卡销售</td><td>实体礼品卡销售（新 GC 供应商，经 NTT）。<span class="srcnote">来源：roadmap（Fixed Pilot）</span></td><td>Fixed 支持实体礼品卡销售。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Fixed</span></td></tr>
+      <tr><td><span class="rid">SC-GC-03</span></td><td class="feat">礼品卡退卡退款</td><td>受理礼品卡<b>退卡退款</b>：核验卡号/余额与购买记录，<b>停用/冲销卡余额</b>并按原支付方式退款；经 NTT 同步余额，写入退货订单（MD-ORD-05）。<span class="srcnote">来源：GC scope / NTT</span></td><td>支持礼品卡退卡退款与余额停用。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-8"><span class="n">3.8</span>@Wo 远程销售 · @Wo Remote Sale</h3>
+  <p class="lead">面向 @Wo 等远程/离柜场景：店员建单后由顾客在自己的设备上完成支付（远程支付 / SMS 支付）。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:14%">步骤 / 能力</th><th style="width:32%">描述（含来源）</th><th style="width:20%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">SC-WO-01</span></td><td class="feat">远程支付</td><td>输入顾客手机号，顾客在其设备完成支付。<span class="srcnote">来源：手册 p20</span></td><td>支持远程支付。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">SC-WO-02</span></td><td class="feat">SMS 支付</td><td>通过短信向顾客推送支付链接完成支付（SMS Payment）。<span class="srcnote">来源：roadmap（Fixed Scale）</span></td><td>支持 SMS 支付。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Scale</span></td></tr>
+      <tr><td><span class="rid">SC-WO-03</span></td><td class="feat">@Wo 远程建单流程</td><td>远程建单 + 远程支付端到端流程编排（含状态回传）。<span class="srcnote">来源：GC scope / roadmap</span></td><td>支持 @Wo 远程销售全流程。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-9"><span class="n">3.9</span>门店数字销售（DSIS）· Digital Sales in Store</h3>
+  <p class="lead">面向<b>店内无货 / 断码</b>的<b>无限货架（Endless Aisle）</b>补充销售：店员通过 <b>NPOS Mobile</b> 为在店消费者检索线上全量库存、代客建立数字订单并<b>配送到家</b>（可选到店）。支持<b>混合购物车（Seamless / Mixed Cart）</b>——同一单内店内即时履约商品与 DSIS 配送商品分流处理。<b>GC 现状：暂未上线 DSIS，需先完成 GC 本地化 discovery 后方可部署</b>，故本场景整体为拓展项。<span class="srcnote">来源：Confluence NAO2O「Digital Sale in Store (DSIS)」（pageId 1034415142）、PIE「Mixed Cart / Seamless Cart (DSIS)」（pageId 1393492802）、QED（pageId 766991527）、SOR KPI UAT（pageId 1743028290，DSIS 现标注 Not Related with GC）</span></p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:14%">步骤 / 能力</th><th style="width:32%">描述（含来源）</th><th style="width:20%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">SC-DSIS-01</span></td><td class="feat">无限货架建单 Endless Aisle</td><td>店内无货/断码时，店员在 NPOS Mobile 检索<b>线上全量库存</b>（含 PDP：颜色/尺码/可得性），代客建立数字订单。<span class="srcnote">来源：NAO2O DSIS 定义 / QED</span></td><td>支持店员代客检索线上库存并建立数字订单。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · GC 待建（需 AIC）</span></td></tr>
+      <tr><td><span class="rid">SC-DSIS-02</span></td><td class="feat">混合购物车 Seamless / Mixed Cart</td><td>同一购物车含<b>店内即时履约</b>商品与 <b>DSIS 配送</b>商品；按<b>履约类型</b>标记购物车行（Store / DSIS），分别驱动配送选项、计价与计税。<span class="srcnote">来源：PIE Mixed Cart（CartChangedEvent / CartLineSelectedEvent）</span></td><td>支持单一购物车混合店内 + DSIS 商品并按行分流。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · GC 待建</span></td></tr>
+      <tr><td><span class="rid">SC-DSIS-03</span></td><td class="feat">消费者与配送信息</td><td>录入并校验消费者<b>收货地址</b>（地址联想 Type-Ahead / 地址校验 Validation）、联系方式与<b>配送方式</b>。<span class="srcnote">来源：NAO2O DSIS（Checkout / Address Validation）</span></td><td>支持收货地址联想与校验、配送方式选择。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · GC 待建</span></td></tr>
+      <tr><td><span class="rid">SC-DSIS-04</span></td><td class="feat">统一收银与支付分流</td><td>整单<b>一次支付</b>；内部分流：<b>店内商品→本地 POS 过账</b>，<b>DSIS 商品→DSIS 后端生成销售订单</b>。<span class="srcnote">来源：PIE Mixed Cart（Tendering & Payment）</span></td><td>支持整单一次支付并按履约类型分流过账。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · GC 待建</span></td></tr>
+      <tr><td><span class="rid">SC-DSIS-05</span></td><td class="feat">销售过账与履约</td><td>店内商品即时扣减库存并过账 SAP；DSIS 商品经 <b>MFIS / DOMS → DC / SAP</b> 创建销售订单，由仓库<b>拣配发货（Ship to Home，可选 Ship to Store）</b>。<span class="srcnote">来源：PIE（Sales Posting / Fulfillment）、NAO2O</span></td><td>支持店内即时履约与 DSIS 配送履约的分别过账。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · GC 待建</span></td></tr>
+      <tr><td><span class="rid">SC-DSIS-06</span></td><td class="feat">统一收据</td><td>统一收据同时展示店内与 DSIS 商品，<b>配送/履约信息按行区分</b>。<span class="srcnote">来源：PIE（Customer Receipt）</span></td><td>支持店内 + DSIS 混合统一收据。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · GC 待建</span></td></tr>
+      <tr><td><span class="rid">SC-DSIS-07</span></td><td class="feat">DSIS 退货（Rebound）</td><td>DSIS 订单退货经<b>数字网络（Rebound）</b>处理，交易<b>归属发起门店</b>；实时报表中 DSIS 退货应为<b>负值、每商品独立行</b>（对齐 RPT-07 / RPT-15）。<span class="srcnote">来源：Confluence NSP-DSIS Rebound / NSI DSIS 计算口径</span></td><td>支持 DSIS 订单退货并正确归属门店与报表口径。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · GC 待建</span></td></tr>
+      <tr><td><span class="rid">SC-DSIS-08</span></td><td class="feat">购后通知 Post-Purchase Comms</td><td>消费者收到与线上订单一致的邮件：订单确认 / 发货确认 / 送达通知。<span class="srcnote">来源：NAO2O DSIS（Post Purchase Comms）</span></td><td>支持与线上一致的购后通知。</td><td><span class="pill nice">Nice</span></td><td><span class="pill todo">拓展 · GC 待建</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-10"><span class="n">3.10</span>退货与换货 · Returns &amp; Exchange</h3>
+  <p class="lead">覆盖有/无收据、瑕疵、换货、离线及取价规则（对齐基线），并叠加未验证、换货后、礼品卡与替代支付退货等拓展项。退货预留见主数据 MD-INV-02。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:14%">步骤 / 能力</th><th style="width:32%">描述（含来源）</th><th style="width:20%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">SC-RET-01</span></td><td class="feat">有收据退货</td><td>扫描收据条码→确认→选退货原因→按原支付方式退款。<span class="srcnote">来源：手册 p52</span></td><td>支持有收据退货，退款回原支付方式。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">SC-RET-02</span></td><td class="feat">无收据退货</td><td>输入 GTIN + 零售价→选原因→退款。<span class="srcnote">来源：手册 p56</span></td><td>支持无收据退货。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">SC-RET-03</span></td><td class="feat">瑕疵退货（有/无收据）</td><td>瑕疵退货，选择缺陷类型（剥离/开裂/变色/召回等）。<span class="srcnote">来源：手册 p60/64</span></td><td>支持瑕疵退货与缺陷类型。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">SC-RET-04</span></td><td class="feat">换货 Exchange</td><td>先退货再将新品加入同一交易，选合计；流程同标准销售+退货。<span class="srcnote">来源：手册 p51</span></td><td>支持换货流程。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">SC-RET-05</span></td><td class="feat">离线退货</td><td>有收据但系统查不到交易时按离线退货处理（含 EJ 查原单重打）。<span class="srcnote">来源：手册 p51 / EJ</span></td><td>支持离线退货。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">SC-RET-06</span></td><td class="feat">退货取价规则</td><td>无收据/无验证退货取价：手动输入零售价，或采用该商品<b>近 6 个月最低价</b>（价格历史 / EJ）。<span class="srcnote">来源：手册 p57 / GC scope</span></td><td>支持无收据退货取价规则。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">SC-RET-07</span></td><td class="feat">未验证退货 Unverified Returns</td><td>无法验证原单的退货流程与风控。<span class="srcnote">来源：roadmap（Fixed Pilot）</span></td><td>支持未验证退货。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Fixed</span></td></tr>
+      <tr><td><span class="rid">SC-RET-08</span></td><td class="feat">换货后退货 After-Exchange Return</td><td>对换货后商品的再次退货处理。<span class="srcnote">来源：roadmap（Fixed Pilot）</span></td><td>支持换货后退货。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Fixed</span></td></tr>
+      <tr><td><span class="rid">SC-RET-09</span></td><td class="feat">礼品卡退货</td><td>退款至礼品卡；本地原生支持（Mobile + Fixed 一致），作为退货兜底 tender。<span class="srcnote">来源：roadmap（Fixed Pilot）</span></td><td>本地原生支持礼品卡退货。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Fixed</span></td></tr>
+      <tr><td><span class="rid">SC-RET-10</span></td><td class="feat">替代支付退货 Alternative Tender Return</td><td>对以替代支付方式（商场券/电汇/店内 credit 等）购买的商品退款。<span class="srcnote">来源：roadmap（Fixed Pilot）</span></td><td>支持替代支付退货。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Fixed</span></td></tr>
+      <tr><td><span class="rid">SC-RET-11</span></td><td class="feat">礼品卡退货追踪报表</td><td>礼品卡退货追踪与对账报表（Gift Card Return Tracking Report）；由 SOR 门店退货报告承载。<span class="srcnote">来源：roadmap（Scale）/ 见 RPT-07</span></td><td>支持礼品卡退货追踪报表。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-11"><span class="n">3.11</span>支付方式（通用）· Tender / Payment</h3>
+  <p class="lead">跨所有销售场景的支付能力。各市场币种与支付体系不同（中国大陆 CNY，香港 HKD，澳门 MOP，台湾 TWD）；中国大陆以 QR（AliPay/WeChat）、集成 UMS 为主力，港澳台按当地卡组织/钱包本地化。替代支付、直播促销券等为拓展项。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:14%">支付方式</th><th style="width:32%">描述（含来源）</th><th style="width:20%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">OP-PAY-01</span></td><td class="feat">现金 Cash</td><td>现金支付（CNY），含付款预测、找零；与现金管理集成、现金退款。<span class="srcnote">来源：Mobile / 手册 p37</span></td><td>支持现金支付与现金管理集成。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">OP-PAY-02</span></td><td class="feat">QR 扫码支付</td><td>扫描顾客设备二维码：支付宝 / 微信 / UMS / 数字人民币。<span class="srcnote">来源：Mobile 程序</span></td><td>支持 GC QR 支付全渠道。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">OP-PAY-03</span></td><td class="feat">信用/借记卡（集成 UMS）</td><td>集成 UMS：信用卡、借记卡、Apple Pay、Samsung Pay。<span class="srcnote">来源：1POS 现有</span></td><td>Fixed 支持集成 UMS 卡支付。</td><td><span class="pill must">Must</span></td><td><span class="pill todo">Fixed 待建</span></td></tr>
+      <tr><td><span class="rid">OP-PAY-04</span></td><td class="feat">非集成信用/借记卡</td><td>选卡类别→终端刷卡→批准后确认完成（备份路径）。<span class="srcnote">来源：手册 p39</span></td><td>支持非集成卡支付。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-PAY-05</span></td><td class="feat">礼品卡兑付</td><td>扫描/刷卡兑换，输入扣减金额完成。<span class="srcnote">来源：手册 p42</span></td><td>支持礼品卡兑付。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-PAY-06</span></td><td class="feat">多种付款拆分</td><td>依次选择多支付方式，输入金额累计至合计。<span class="srcnote">来源：手册 p48</span></td><td>支持多 tender 拆分支付。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-PAY-07</span></td><td class="feat">支付方式更换 Tender Exchange</td><td>将礼券/购物券/礼品卡更换为其他支付方式（管理功能）。<span class="srcnote">来源：手册 p175</span></td><td>支持支付方式更换。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-PAY-08</span></td><td class="feat">替代支付 Alternative Tenders</td><td>商场券、其他借记、电汇、店内 credit 等替代支付方式。<span class="srcnote">来源：roadmap（Fixed Pilot）</span></td><td>支持替代支付方式。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Fixed</span></td></tr>
+      <tr><td><span class="rid">OP-PAY-09</span></td><td class="feat">直播 &amp; 促销券支付</td><td>直播 & 促销券作为支付/抵扣（Livestream & Promo Voucher）。<span class="srcnote">来源：roadmap（Fixed Scale）</span></td><td>支持直播 & 促销券支付。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Scale</span></td></tr>
+      <tr><td><span class="rid">OP-PAY-10</span></td><td class="feat">寄售店支付方式</td><td>寄售店（Consignment）特定支付方式与结算。<span class="srcnote">来源：roadmap（Fixed Scale）</span></td><td>支持寄售店支付方式。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Scale</span></td></tr>
+      <tr><td><span class="rid">OP-PAY-11</span></td><td class="feat">多市场币种 Currency</td><td>按门店所属市场使用对应<b>本位币</b>结算、找零与退款：<b>中国大陆 CNY / 香港 HKD / 澳门 MOP / 台湾 TWD</b>；币种符号与金额格式、<b>取整规则</b>、可用支付通道、税务/发票均随市场本地化；<b>单笔交易单一币种</b>，报表与对账按币种/市场归集。<span class="srcnote">来源：GC 大中华区多市场范围（含港澳台）</span></td><td>支持按市场本位币结算/找零/退款，格式与取整本地化，单笔单一币种。</td><td><span class="pill must">Must</span></td><td><span class="pill todo">GC 多市场</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-12"><span class="n">3.12</span>收据与发票（通用）· Receipt &amp; Invoice</h3>
+  <p class="lead">跨所有场景的收据打印与中国电子发票（E-Fapiao）。VAT 行按 GC 税务法务要求处理。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:14%">能力</th><th style="width:32%">描述（含来源）</th><th style="width:20%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">OP-RCP-01</span></td><td class="feat">打印收据</td><td>Zebra 打印机，GC 字体与格式；可选电子邮件收据。<span class="srcnote">来源：Mobile 程序</span></td><td>支持 Zebra 打印（GC 字体/格式）+ 邮件收据。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">OP-RCP-02</span></td><td class="feat">E-Fapiao 电子发票</td><td>收据打印发票二维码，消费者扫码开票（经 OM→ND E-Fapiao API）。<span class="srcnote">来源：Mobile 程序</span></td><td>支持 E-Fapiao 二维码。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">OP-RCP-03</span></td><td class="feat">礼品收据</td><td>为单品或整单打印礼品收据。<span class="srcnote">来源：Mobile / 手册 p31</span></td><td>支持礼品收据。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">OP-RCP-04</span></td><td class="feat">重打收据</td><td>从 EJ 查原始交易并重打收据（用于无收据退货）。<span class="srcnote">来源：手册 p183</span></td><td>支持从 EJ 重打收据。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-RCP-05</span></td><td class="feat">VAT 行隐藏/删除</td><td>按 GC 税务法务要求隐藏或删除收据 VAT 行。<span class="srcnote">来源：Mobile（对齐中）</span></td><td>支持收据 VAT 行隐藏/删除。</td><td><span class="pill must">Must</span></td><td><span class="pill todo">对齐中</span></td></tr>
+      <tr><td><span class="rid">OP-RCP-06</span></td><td class="feat">收据用 SKU 替换 UPC</td><td>收据商品行以 SKU（9 位+尺码）替换 UPC 展示。<span class="srcnote">来源：roadmap（Scale）</span></td><td>支持收据 SKU 展示。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Scale</span></td></tr>
+      <tr><td><span class="rid">OP-RCP-07</span></td><td class="feat">收据显示中文门店地址</td><td>收据展示中文门店地址（Chinese Store Address）。<span class="srcnote">来源：roadmap（Scale）/ MD-STR-03</span></td><td>支持收据中文门店地址。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Scale</span></td></tr>
+      <tr><td><span class="rid">OP-RCP-08</span></td><td class="feat">收据排版优化</td><td>收据增加行间距 / 版式优化（Add More Space）。<span class="srcnote">来源：roadmap（Scale）</span></td><td>支持收据排版优化。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Scale</span></td></tr>
+      <tr><td><span class="rid">OP-RCP-09</span></td><td class="feat">退货条款双面打印（省纸）</td><td>将<b>退货 / 换货条款</b>双面打印于收据<b>背面</b>，替代单独加印条款纸，以<b>节约纸张</b>；支持双面打印机与背面模板配置。<span class="srcnote">来源：GC 可持续 / 降本机会项</span></td><td>支持退货条款双面打印于收据背面。</td><td><span class="pill nice">Nice</span></td><td><span class="pill todo">机会项</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-13"><span class="n">3.13</span>登录与会话（通用）· Login &amp; Session</h3>
+  <p class="lead">跨所有场景的登录鉴权与设备会话。凭证与安全等级见主数据 MD-EMP-01~04。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:14%">能力</th><th style="width:32%">描述（含来源）</th><th style="width:20%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">OP-LOG-01</span></td><td class="feat">Athlete Login</td><td>Aptos Athlete Logins，员工号/登录号登录 POS；沿用企业 OAuth/RAP 鉴权。<span class="srcnote">来源：Mobile / 手册 p71</span></td><td>支持 Aptos 运动员登录。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">OP-LOG-02</span></td><td class="feat">Okta Login</td><td>Okta 登录用于现金管理等高权限操作（需解决 9 位 PT 问题）。<span class="srcnote">来源：1POS 现有</span></td><td>Fixed 支持 Okta 登录，覆盖现金管理特权动作。</td><td><span class="pill must">Must</span></td><td><span class="pill todo">Fixed 待建</span></td></tr>
+      <tr><td><span class="rid">OP-LOG-03</span></td><td class="feat">NFC Login（含离线）</td><td>NFC 卡贴近设备顶部快速登录，支持离线登录。<span class="srcnote">来源：Mobile 程序</span></td><td>支持 NFC 登录；场景与成本待评审。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">评审中</span></td></tr>
+      <tr><td><span class="rid">OP-LOG-04</span></td><td class="feat">多设备登录 / 购物车转移</td><td>可多设备登录，一次仅一台可加购；第二台加购提示转移或登出。<span class="srcnote">来源：Mobile 程序</span></td><td>支持多设备登录与购物车转移。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">OP-LOG-05</span></td><td class="feat">语言切换</td><td>菜单内切换显示语言。<span class="srcnote">来源：手册 p4</span></td><td>支持简体中文界面与语言切换。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-14"><span class="n">3.14</span>现金管理 · Cash Management</h3>
+  <p class="lead">全流程遵守<b>两人原则</b>（安全等级 ≥40）；含差异处理流程。与 Nike Cash Management（HP/APG 模型）端到端集成。均为对齐基线（Must），部署推广（Rollout）为拓展项。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:14%">功能</th><th style="width:38%">描述（含来源）</th><th style="width:20%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">OP-CASH-01</span></td><td class="feat">开店 SOD</td><td>确认保险柜备用金→银箱关联收银机→确认银箱备用金→打开/接受银箱。<span class="srcnote">来源：手册 p69</span></td><td>支持开店程序。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-CASH-02</span></td><td class="feat">闭店 EOD</td><td>关闭收银机→银箱结算→银行解款存款→保险柜对账→执行 EOD。<span class="srcnote">来源：手册 p93</span></td><td>支持闭店程序（含最终解款）。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-CASH-03</span></td><td class="feat">手动开店/闭店</td><td>系统错误时的 SOD-only / EOD-only 手动流程。<span class="srcnote">来源：手册 p125/142</span></td><td>支持手动开店/闭店。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-CASH-04</span></td><td class="feat">调整保险柜备用金</td><td>确认并更改保险柜备用金额（需管理审批）。<span class="srcnote">来源：手册 p78</span></td><td>支持保险柜备用金调整。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-CASH-05</span></td><td class="feat">调整银箱备用金</td><td>调整个别银箱现金备用金。<span class="srcnote">来源：手册 p82</span></td><td>支持银箱备用金调整。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-CASH-06</span></td><td class="feat">借调现金 / 接受借调金</td><td>从保险柜借调现金至银箱，收银机上清点接受。<span class="srcnote">来源：手册 p87</span></td><td>支持借调与接受借调金。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-CASH-07</span></td><td class="feat">保险柜接收 / 对账</td><td>将现金收入保险柜；清点核对保险柜金额。<span class="srcnote">来源：手册 p109/154</span></td><td>支持保险柜接收与对账。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-CASH-08</span></td><td class="feat">银行解款与存款</td><td>存款袋追踪号、存款单号、按支付方式清点，差异处理。<span class="srcnote">来源：手册 p151</span></td><td>支持银行解款存款流程。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-CASH-09</span></td><td class="feat">提款 / 回款</td><td>从银箱取出/放回现金并记录原因（回款原因须与提款一致）。<span class="srcnote">来源：手册 p162/165</span></td><td>支持提款/回款。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-CASH-10</span></td><td class="feat">无销售 No Sale</td><td>不处理销售打开现金抽屉（需原因）。<span class="srcnote">来源：手册 p168</span></td><td>支持无销售开抽屉。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-CASH-11</span></td><td class="feat">事后撤销 Post Void</td><td>撤销已完成交易（原因+交易号+金额）。<span class="srcnote">来源：手册 p171</span></td><td>支持事后撤销。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-CASH-12</span></td><td class="feat">银箱审核 Till Audit</td><td>清点银箱现金核对差异，正差退还找零。<span class="srcnote">来源：手册 p179</span></td><td>支持银箱审核。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-CASH-13</span></td><td class="feat">现金管理部署推广</td><td>现金管理能力向 Fixed / 更多门店推广（Cash Management Rollout）。<span class="srcnote">来源：roadmap（Scale）</span></td><td>支持现金管理推广。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Scale</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-15"><span class="n">3.15</span>员工维护 · Employee Maintenance</h3>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:14%">功能</th><th style="width:38%">描述（含来源）</th><th style="width:20%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">OP-EMP-01</span></td><td class="feat">新增/修改/删除员工</td><td>教练（≥40）对更低安全等级员工执行维护，设定 POS 与后勤办公室安全等级。<span class="srcnote">来源：手册 p113</span></td><td>支持员工维护与安全等级设定。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-EMP-02</span></td><td class="feat">安全等级矩阵 10–60</td><td>各等级可执行操作（商品查询→销售/退货→抽屉放取/员工销售→现金管理/开闭店→…）。<span class="srcnote">来源：手册 p114</span></td><td>沿用/映射 GC 安全等级权限矩阵。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-EMP-03</span></td><td class="feat">安全等级与 Workday 同步</td><td>员工岗位/角色与安全等级与 Workday（HR）同步（见 MD-EMP-04）。<span class="srcnote">来源：GC scope / Workday</span></td><td>支持安全等级 Workday 同步。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-16"><span class="n">3.16</span>电子日志（WebEJ）· Electronic Journal</h3>
+  <p class="lead">WebEJ 用于交易稽查、查询与凭证重现（重打收据）。各类业务报表见 3.17 报表清单。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:14%">功能</th><th style="width:38%">描述（含来源）</th><th style="width:20%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">OP-EJ-01</span></td><td class="feat">电子日志 EJ 查询</td><td>按商店/收银机/售货员/交易号/金额/文本查询交易；稽查。<span class="srcnote">来源：手册 p182</span></td><td>支持 EJ 查询（≥20 权限）。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-EJ-02</span></td><td class="feat">查找交易 / 导出 / 打印 / 重打收据</td><td>执行查询→打印或保存记录（.xml）；从 EJ 查原始交易重打收据（用于无收据退货，另见 OP-RCP-04）。<span class="srcnote">来源：手册 p183/p188</span></td><td>支持查找交易、导出/打印、重打收据。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-17"><span class="n">3.17</span>报表清单（SOR 目标态 · 1POS 手册对齐）· Reports Catalog</h3>
+  <p class="lead"><b>SOR（Store Operation Reports）</b>为本地 POS 的<b>目标报表系统</b>，与 <b>SPR</b>（实时业绩）配合承接 1POS 手册（GC ARO）现有报表。本清单以 <b>SOR UAT 现有 15 张报表</b>（<b>7 POS · 6 CMR · 2 SPR</b>）为主干，与 1POS 手册报表<b>逐一对齐并去重</b>：功能相同者合并为同一条并标注「对齐 1POS…」，1POS 手册中<b>暂无 SOR 对应</b>者（回款/提款、员工维护、Pass 活动）保留并经原渠道出具。<b>模块：POS（运营/员工）· CMR（现金/财务，原 CASHMAN）· SPR（实时业绩）· Pass（经 DA 门户）· 通用。</b>通用规则见 RPT-19；电子日志（WebEJ）见 3.16。<span class="srcnote">来源：SOR UAT（Confluence pageId 1743028271，15 张子报表签核页）+ 1POS 手册</span></p>
+  <div class="callout"><b>口径提示（UAT 发现）：</b>SOR 报表的 <b>Gross Sales</b> 实际口径为「销售减退货（Sales-Less-Returns）」，存在命名差异；退货金额在实时报表中应为<b>负值</b>、每商品<b>独立成行</b>（与 P7 对齐）；SOR 仅识别<b>登录 NPOS 的账号</b>，无法自动记录结账时手工录入的销售员工号，须结合 <b>SC-STD-17</b> 补齐（见 RPT-02）。导出统一为 <b>Excel（.xlsx）</b>，文件名 <code>&lt;report&gt;_&lt;store&gt;_&lt;tab&gt;_&lt;yyyymmdd&gt;</code>。</div>
+  <table>
+    <thead><tr><th style="width:8%">编号</th><th style="width:17%">报表</th><th style="width:40%">内容摘要（关键字段 / 来源）</th><th style="width:7%">模块</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td colspan="6" style="background:#f2f7fd;font-weight:800;color:#1f5bc4">POS 模块（运营 / 员工）· 7 张</td></tr>
+      <tr><td><span class="rid">RPT-01</span></td><td class="feat">门店 KPI 报告 KPI</td><td>KPI 选择器三类：<b>Digital</b>（BOPIS/DORIS/DSIS/SFS，GC 多不适用）、<b>Member Linked</b>（会员关联交易数/占比、ASSIST/KIOSK/POS 会员交易）、<b>Store</b>（客单价 ADPT/平均单价/UPT/结账体验/转化率/客流/交易数/净件数/毛销售额/退货）；可自选并拖拽排序。<span class="srcnote">对齐 1POS 销售指标报告 Sales Metrics（手册 p242+）。注：Gross Sales 口径=销售减退货。</span></td><td>POS</td><td><span class="pill must">Must</span></td><td><span class="pill sor">SOR（UAT）</span></td></tr>
+      <tr><td><span class="rid">RPT-02</span></td><td class="feat">运动员绩效报告 Athlete Performance</td><td>按<b>运动员（工号）</b>统计：销售（笔数/金额/净件数/净销售/UPT/ADPT/交易数）、异常（撤销/折扣/改价/挂单恢复/无销售 计数与金额）、会员（会员交易/占比/新增会员/注册率）、退货（件数/金额/含退货交易数）；KPI 可自选。<span class="srcnote">来源：SOR UAT。⚠ SOR 仅识别登录 NPOS 账号，须结合结算录入销售员工号（SC-STD-17）方能准确归属。</span></td><td>POS</td><td><span class="pill must">Must</span></td><td><span class="pill sor">SOR（UAT）</span></td></tr>
+      <tr><td><span class="rid">RPT-03</span></td><td class="feat">赠送销售报告 Complimentary Sales</td><td>日期 / 赠送单号 / 交易号 / 收银机ID / 运动员ID / 审批人ID / 原因 / 部门 / 申请人 / 顾客姓名 / 总金额；日期（默认 Today）与赠送单号筛选、列排序、导出。<span class="srcnote">来源：SOR UAT。关联 Comp 工服（3.6）/ 亲友赠送。</span></td><td>POS</td><td><span class="pill must">Must</span></td><td><span class="pill sor">SOR（UAT）</span></td></tr>
+      <tr><td><span class="rid">RPT-04</span></td><td class="feat">POS 异常报告 POS Exceptions</td><td>4 页签：<b>折扣 / 促销 / 改价（多一列日期时间）/ 撤销（列更简，无原价新价与原因）</b>；字段 员工ID / 收银机ID / 交易-项目号 / 商品 / 数量 / 原价-新价 / 差异额-% / 原因；各页 Total 行；按原因码筛选（撤销页无）。<span class="srcnote">来源：SOR UAT。稽核折扣/促销/改价/撤销异常。</span></td><td>POS</td><td><span class="pill must">Must</span></td><td><span class="pill sor">SOR（UAT）</span></td></tr>
+      <tr><td><span class="rid">RPT-05</span></td><td class="feat">Non-Merch活动报告 Non Merchandise Activity</td><td>员工ID / 日期时间 / 收银机ID / 交易号 / 销售数量 / 金额；按员工汇总 + Grand Total；Non-Merch类型筛选（礼品卡 / 服务 / 费用 / 捐赠 / 付款）。<span class="srcnote">来源：SOR UAT。关联 NBY 与 Non-Merch 项销售（3.3）。</span></td><td>POS</td><td><span class="pill must">Must</span></td><td><span class="pill sor">SOR（UAT）</span></td></tr>
+      <tr><td><span class="rid">RPT-06</span></td><td class="feat">改价审计报告 Price Change Audit</td><td>三区：<b>按事业部 KPI 卡</b>（鞋/服/器材 占比+数量）、<b>商品明细表</b>（商品/尺码/原价-新价+差异%/日期/选择）、<b>按商品变动列表</b>（缩略图/差异额/变动% ↑↓）；搜索 + 事业部/部门/幅度筛选。<span class="srcnote">来源：SOR UAT（SOR 新增分析）。</span></td><td>POS</td><td><span class="pill should">Should</span></td><td><span class="pill sor">SOR（UAT）</span></td></tr>
+      <tr><td><span class="rid">RPT-07</span></td><td class="feat">门店退货报告 Store Returns</td><td>3 页签：<b>汇总</b>（次品/常规 卡片+时序图）、<b>次品</b>、<b>常规</b>；明细 10 列 员工ID / 日期时间 / 收银机ID / 交易-项目号 / 商品描述 / 数量 / 购买天数 / 是否有小票 / 退货金额 / 原因；Total Returns 行；原因码/事业部筛选。<span class="srcnote">来源：SOR UAT。覆盖退换货（3.10），含礼品卡退货追踪（SC-RET-11）。</span></td><td>POS</td><td><span class="pill must">Must</span></td><td><span class="pill sor">SOR（UAT）</span></td></tr>
+      <tr><td colspan="6" style="background:#f2f7fd;font-weight:800;color:#1f5bc4">CMR 模块（现金 / 财务，原 CASHMAN）· 6 张</td></tr>
+      <tr><td><span class="rid">RPT-08</span></td><td class="feat">银行存款报告 Banking Deposit</td><td>两图卡：<b>Over/Short Total</b>（按星期折线）、<b>Banking Deposit Total</b>（按小时柱 + DtD 对比%）；差异明细表 Tender / 收银机ID / 差异原因 / 时间 / 预期-清点 / 差异额；金额区间/状态/Tender 筛选。<span class="srcnote">对齐 1POS 银行存款报告 Bank Deposit（手册 p199+）。来源：SOR UAT。</span></td><td>CMR</td><td><span class="pill must">Must</span></td><td><span class="pill sor">SOR（UAT）</span></td></tr>
+      <tr><td><span class="rid">RPT-09</span></td><td class="feat">银箱结算报告 Till Settlement <span style="font-size:9px;color:#9a6408">Beta</span></td><td>每 till 一行 11 列：Till / 操作员ID / 预期合计 / 实际合计 / 超缺 / 现金 / 借记贷记 / 现金浮存 / 销售 / 销售税 / 免税销售 + Grand Total；附 <b>Operators Per Till</b>、<b>Till Float Log</b> 视图。<span class="srcnote">对齐 1POS 银箱结算报告 Till Settlement（手册 p236+）。来源：SOR UAT（UI 现标 Beta）。</span></td><td>CMR</td><td><span class="pill must">Must</span></td><td><span class="pill sor">SOR（UAT）</span></td></tr>
+      <tr><td><span class="rid">RPT-10</span></td><td class="feat">银箱汇总报告 Till Totals</td><td>层级 <b>Total → 日期 → Till → Tender 类型</b>；列 日期 / Till / Tender 类型 / 金额；逐级展开对账。<span class="srcnote">对齐 1POS 付款合计报告 Tender Totals（手册 p231+）。来源：SOR UAT。</span></td><td>CMR</td><td><span class="pill must">Must</span></td><td><span class="pill sor">SOR（UAT）</span></td></tr>
+      <tr><td><span class="rid">RPT-11</span></td><td class="feat">保险柜对账报告 Safe Reconciliation</td><td>两图卡：<b>Variance Rate</b>（总数/差异数/差异率 组合图）、<b>Variance Reasons</b>（Bank Short / Previous Miscount / Cash Short / Other 堆叠）；按日期分组明细 状态 / 运动员ID / 授权人ID / 预期-实际 / 差异额+% / 原因 / 时间。<span class="srcnote">对齐 1POS 保险柜对账报告 Safe Reconciliation。来源：SOR UAT。</span></td><td>CMR</td><td><span class="pill must">Must</span></td><td><span class="pill sor">SOR（UAT）</span></td></tr>
+      <tr><td><span class="rid">RPT-12</span></td><td class="feat">差异报告 Variance Report</td><td>集中 Over/Short 视图，5 页签：<b>汇总 / 银箱结算 / 保险柜对账 / 银行存款 / Tender Totals</b>（层级：Picked Up；Settled → CreditDebit → MasterCard/Visa/OtherCredit、OnlinePayment → AliPay/WeChatPay + Grand Total）；与各明细报表交叉对账。<span class="srcnote">来源：SOR UAT（SOR 新增，集中差异分析）。</span></td><td>CMR</td><td><span class="pill should">Should</span></td><td><span class="pill sor">SOR（UAT）</span></td></tr>
+      <tr><td><span class="rid">RPT-13</span></td><td class="feat">员工购买报告 Employee Purchases</td><td>按员工汇总 5 列：员工 / 销售减退货 / 交易数 / 消费合计 / 折扣合计 + 下钻至交易明细；筛选 日期 / 门店 / 员工类型 / 员工ID；导出遵守 PII 政策。<span class="srcnote">对齐 1POS 员工购买报告 Employee Purchase。来源：SOR UAT。</span></td><td>CMR</td><td><span class="pill must">Must</span></td><td><span class="pill sor">SOR（UAT）</span></td></tr>
+      <tr><td colspan="6" style="background:#f2f7fd;font-weight:800;color:#1f5bc4">SPR 模块（实时业绩）· 2 张</td></tr>
+      <tr><td><span class="rid">RPT-14</span></td><td class="feat">部门分析报告（实时）SPR Department Analysis</td><td>层级 pivot <b>Store Cd → Department → Product Line → Division → Class → Style-Color</b>；14 列（5 维度 + Style-Color / Color / QC / Season / %Sell Thru / Current Price / MSRP / SOH / Net Am）；10 项筛选（门店/部门/日期/交易小时/区域/事业部/子部门/Style-Color/Class/Season）；用于<b>小时级在店调整与日闭店</b>，要求实时（SLA 待定）。<span class="srcnote">对齐 1POS 部门销售分析报告（手册 p248+）+ 实时化。来源：SOR UAT / SPR。</span></td><td>SPR</td><td><span class="pill must">Must</span></td><td><span class="pill sor">SOR（UAT）</span></td></tr>
+      <tr><td><span class="rid">RPT-15</span></td><td class="feat">商品明细报告（实时）SPR Item Details</td><td>交易级 + 商品行级 14 列：门店 / 时间 / 工作站 / 交易号 / 员工ID / 会员交易 + 单价 / 数量 / 项目序号 / GTIN / SKU / 尺码 / 是否退货 / 是否 NBY；Is NBY 筛选；实时（退货为负、每商品独立行，与 P7 对齐）。<span class="srcnote">来源：SOR UAT / SPR（实时新增）。</span></td><td>SPR</td><td><span class="pill should">Should</span></td><td><span class="pill sor">SOR（UAT）</span></td></tr>
+      <tr><td colspan="6" style="background:#f2f7fd;font-weight:800;color:#1f5bc4">1POS 手册保留（暂无 SOR 对应，经原渠道）· 3 张</td></tr>
+      <tr><td><span class="rid">RPT-16</span></td><td class="feat">回款/提款报告 Payout / Paid-In</td><td>提款/回款明细，可按支出原因筛选（多选）。<span class="srcnote">来源：1POS 手册（回款/提款报告）。SOR 暂无对应。</span></td><td>CMR</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">RPT-17</span></td><td class="feat">员工维护报告 Employee Maintenance</td><td>员工增改删与安全等级维护记录（可选起止日期）。<span class="srcnote">来源：1POS 手册 p113+。SOR 暂无对应。</span></td><td>POS</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">RPT-18</span></td><td class="feat">Pass 活动报表 Pass Activity</td><td>亲友券 / 员工店访客通行证 / 供应商通行证使用明细；Pass ID（券码，一券一票）；折前/折后总金额；经 <b>DA 门户</b>查询、下载 Excel（最多 3 个月）。<span class="srcnote">来源：1POS 手册 p258+。</span></td><td>Pass</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td colspan="6" style="background:#f2f7fd;font-weight:800;color:#1f5bc4">通用</td></tr>
+      <tr><td><span class="rid">RPT-19</span></td><td class="feat">报表通用规则 Reporting Standards</td><td>运行权限<b>安全等级 ≥40</b>；<b>导出 Excel（.xlsx）</b>，文件名 <code>&lt;report&gt;_&lt;store&gt;_&lt;tab&gt;_&lt;yyyymmdd&gt;</code>，并可<b>打印</b>到门店打印机；日期（默认 Today，24 小时制）/ 详细程度（展开/折叠）/ 语言切换（注意 zh-Hans / zh-Hant）；<b>数据权限</b>门店用户仅见本店、管理者见全店、HQ/Finance/LP 见全部；金额口径统一为销售减退货（Sales-Less-Returns）。<span class="srcnote">来源：1POS 手册 p230+ 与 SOR UAT（CEF-11157 文件名规范）。</span></td><td>通用</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-18"><span class="n">3.18</span>硬件与外设 · Hardware &amp; Peripherals</h3>
+  <p class="lead">须支持中国可售外设型号。取整逻辑与税务处理见 3.1（SC-STD-13）与 3.12（OP-RCP-05）。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:14%">功能</th><th style="width:38%">描述（含来源）</th><th style="width:20%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">OP-HW-01</span></td><td class="feat">打印机</td><td>Zebra / Epson（中国可售型号 TM-m30IIIC）小票打印。<span class="srcnote">来源：Mobile / BOM</span></td><td>支持中国可售打印机型号。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+      <tr><td><span class="rid">OP-HW-02</span></td><td class="feat">扫码枪</td><td>Zebra DS9908 等扫码枪。<span class="srcnote">来源：BOM</span></td><td>支持扫码枪外设。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">OP-HW-03</span></td><td class="feat">钱箱 Cash Drawer</td><td>APG 钱箱（Fixed）；与现金管理集成。<span class="srcnote">来源：BOM</span></td><td>Fixed 支持钱箱（可评估本地钱箱降本）。</td><td><span class="pill must">Must</span></td><td><span class="pill todo">Fixed 待建</span></td></tr>
+      <tr><td><span class="rid">OP-HW-04</span></td><td class="feat">NFC 读卡器</td><td>外接 NFC 读卡器（登录用）。<span class="srcnote">来源：BOM</span></td><td>支持 NFC 读卡器（成本/场景评审中）。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">评审中</span></td></tr>
+      <tr><td><span class="rid">OP-HW-05</span></td><td class="feat">Fixed 双客显（运动员 + 消费者）</td><td>Fixed 固定收银配置<b>双屏客显</b>：<b>运动员（收银员）交互屏</b>与<b>消费者交互屏</b>（如 iPad / 触控屏），实时呈现购物车、价格、折扣与支付进度。<span class="srcnote">来源：GC roadmap / 买单状态可视化（见 SC-STD-16）</span></td><td>Fixed 支持运动员屏 + 消费者屏双客显硬件。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Scale</span></td></tr>
+      <tr><td><span class="rid">OP-HW-06</span></td><td class="feat">Mobile 移动收银终端</td><td>Mobile 形态的<b>终端用户移动收银</b>设备（手持机 / 平板），支持移动扫描、结算与移动支付，门店内随处收银。<span class="srcnote">来源：Mobile 程序 / BOM</span></td><td>支持 Mobile 移动收银终端。</td><td><span class="pill must">Must</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-19"><span class="n">3.19</span>离线与连通 · Offline &amp; Connectivity</h3>
+  <p class="lead">保障断网/弱网下的交易连续性与移动性。离线退货见 3.10（SC-RET-05），离线登录见 3.13（OP-LOG-03）。</p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:14%">能力</th><th style="width:38%">描述（含来源）</th><th style="width:20%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rid">OP-OFF-01</span></td><td class="feat">离线模式 Offline Mode</td><td>断网时可继续完成交易并排队回传（Fixed）。<span class="srcnote">来源：roadmap（Fixed Pilot）</span></td><td>Fixed 支持离线模式。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展 · Fixed</span></td></tr>
+      <tr><td><span class="rid">OP-OFF-02</span></td><td class="feat">离线登录</td><td>NFC 卡在断网下登录 POS。<span class="srcnote">来源：Mobile 程序</span></td><td>支持离线登录（含 NFC）。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">评审中</span></td></tr>
+      <tr><td><span class="rid">OP-OFF-03</span></td><td class="feat">Pop-Up 5G SIM</td><td>NPOS Mobile 设备支持 5G SIM 蜂窝联网，支撑 pop-up 场景。<span class="srcnote">来源：Mobile（测试中）</span></td><td>支持 5G SIM 联网。</td><td><span class="pill should">Should</span></td><td><span class="pill mob">Mobile ★</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub" id="s3-20"><span class="n">3.20</span>港澳台专区 · Hong Kong / Macau / Taiwan Localization</h3>
+  <p class="lead">大中华区除中国大陆外，<b>香港（HKD）、澳门（MOP）、台湾（TWD）</b>三市场在<b>支付通道、收据/发票、促销文案、员工/权限与帐务对帐</b>上存在差异化诉求。本专区汇总来自 <b>1POS HKMCTW</b> 与 <b>TW NDS FY26 POS &amp; SIM 反馈</b>的市场需求，供本地 POS 按市场本地化实现；支付通道对齐 1POS 现有能力（Must），其余优化项为 Should / Nice。部分手持库存项属 <b>SIM</b> 范围，一并列出供协同。<span class="srcnote">来源：1POS HKMCTW（港澳支付/收据/促销/权限）、TW NDS FY26 POS &amp; SIM 优化反馈</span></p>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:16%">项目</th><th style="width:38%">描述（含来源）</th><th style="width:18%">要求</th><th style="width:7%">优先级</th><th style="width:12%">状态</th></tr></thead>
+    <tbody>
+      <tr><td colspan="6" style="background:#f2f7fd;font-weight:800;color:#1f5bc4">支付通道（按市场本地化）</td></tr>
+      <tr><td><span class="rid">HMT-01</span></td><td class="feat">香港支付方式 HK Tenders</td><td>香港（HKD）支持：<b>Visa / Mastercard / American Express / JCB / Diners / 银联 UnionPay / PayMe / AliPay / WeChat Pay / 八达通 Octopus</b>。<span class="srcnote">来源：1POS HKMCTW（Payment tender in 1POS · HK）</span></td><td>支持香港全部本地卡组织与钱包/八达通。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">HMT-02</span></td><td class="feat">澳门支付方式 Macau Tenders</td><td>澳门（MOP）支持：<b>Visa / Mastercard / American Express / JCB / Diners / 银联 UnionPay / 澳门通 MacauPass（MPay）/ AliPay / WeChat Pay</b>。<span class="srcnote">来源：1POS HKMCTW（Payment tender in 1POS · Macau）</span></td><td>支持澳门全部本地卡组织与 MPay/钱包。</td><td><span class="pill must">Must</span></td><td><span class="pill pos">1POS 现有</span></td></tr>
+      <tr><td><span class="rid">HMT-03</span></td><td class="feat">台湾支付方式 TW Tenders</td><td>台湾（TWD）本地卡组织与电子支付（清单以 TW NDS 最终确认为准）。<span class="srcnote">来源：TW NDS FY26（支付方式待明确）</span></td><td>按台湾本地支付通道结算（清单待明确）。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">待明确</span></td></tr>
+      <tr><td colspan="6" style="background:#f2f7fd;font-weight:800;color:#1f5bc4">收据 / 发票 / 促销文案</td></tr>
+      <tr><td><span class="rid">HMT-04</span></td><td class="feat">收据以 SKU 取代 UPC</td><td>收据不显示 UPC，改以 <b>SKU 号</b>展示商品行（港澳诉求，与 OP-RCP-06 一致）。<span class="srcnote">来源：1POS HKMCTW（Receipt optimization · No UPC / use SKU）</span></td><td>收据以 SKU 取代 UPC 展示。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td><span class="rid">HMT-05</span></td><td class="feat">促销文案本地化</td><td>修正促销描述文案问题，按市场语言（<b>繁体中文</b>）与法务口径本地化显示于屏幕/收据。<span class="srcnote">来源：1POS HKMCTW（Promotion wording problem）</span></td><td>促销文案繁体本地化且表述正确。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td><span class="rid">HMT-06</span></td><td class="feat">同商品合并行显示</td><td>相同商品在购物车/小票<b>同一行显示数量</b>（如 SKU ×2），避免大量购买时明细过长。<span class="srcnote">来源：TW NDS（小票问题）</span></td><td>相同商品合并为单行显示数量。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td><span class="rid">HMT-07</span></td><td class="feat">重打小票不重印发票</td><td>选择列印上一笔小票时<b>不应同时重印发票</b>（自营店重复列印发票需作废）。<span class="srcnote">来源：TW NDS（设备逻辑）</span></td><td>重打小票与发票列印解耦。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td colspan="6" style="background:#f2f7fd;font-weight:800;color:#1f5bc4">员工 / 权限</td></tr>
+      <tr><td><span class="rid">HMT-08</span></td><td class="feat">员工登录号位数</td><td>员工 ID 登录号长度（当前 <b>9 位</b>）按港澳台工号规则评审与适配。<span class="srcnote">来源：1POS HKMCTW（Employee ID login number limit · 9 digits）</span></td><td>支持港澳台工号位数规则。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">评审中</span></td></tr>
+      <tr><td><span class="rid">HMT-09</span></td><td class="feat">收银员权限审阅</td><td>按港澳台角色审阅并调整收银员权限矩阵（Cashier permission review）。<span class="srcnote">来源：1POS HKMCTW（Cashier permission review）</span></td><td>提供可配置的港澳台权限矩阵。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">评审中</span></td></tr>
+      <tr><td colspan="6" style="background:#f2f7fd;font-weight:800;color:#1f5bc4">帐务 / 对帐（TW）</td></tr>
+      <tr><td><span class="rid">HMT-10</span></td><td class="feat">二次退换货逻辑一致</td><td>二次退换货应与首次退换货<b>逻辑一致</b>，<b>不产生现金额度券</b>、无需转换付款别，避免帐差。<span class="srcnote">来源：TW NDS（帐务问题）</span></td><td>二次退换货不产生现金额度券。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td><span class="rid">HMT-11</span></td><td class="feat">原因码精简</td><td>精简<b>信用卡对帐原因码</b>与<b>折扣原因码</b>，仅保留门店常用 Promotion 选项并设「其它」，减少财务对帐负担。<span class="srcnote">来源：TW NDS（帐务问题）。关联 MD-RSN-01（原因码主数据）</span></td><td>原因码按门店常用项精简 + 其它。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td><span class="rid">HMT-12</span></td><td class="feat">付款选项界面精简</td><td>付款选项并入主页、移除财务未使用选项，减少操作步骤。<span class="srcnote">来源：TW NDS（帐务问题）</span></td><td>精简付款选项界面与步骤。</td><td><span class="pill nice">Nice</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td colspan="6" style="background:#f2f7fd;font-weight:800;color:#1f5bc4">性能 / 数据时效（TW）</td></tr>
+      <tr><td><span class="rid">HMT-13</span></td><td class="feat">结帐/退货性能优化</td><td>优化设备内存/性能，降低销售高峰期<b>结帐与退货等待</b>时长。<span class="srcnote">来源：TW NDS（数据延迟）</span></td><td>提升结帐/退货响应性能。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td><span class="rid">HMT-14</span></td><td class="feat">到货价格同步时效</td><td>新品到货时价格常不正确、修复耗时较长，优化<b>到货数据/价格同步时效</b>，避免延迟上架。<span class="srcnote">来源：TW NDS（数据延迟）</span></td><td>提升到货价格同步时效。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">拓展</span></td></tr>
+      <tr><td colspan="6" style="background:#f2f7fd;font-weight:800;color:#1f5bc4">手持库存 SIM（TW · 协同）</td></tr>
+      <tr><td><span class="rid">HMT-15</span></td><td class="feat">一次查询多色号库存</td><td>手持查询输入货号可<b>同时显示不同色号库存</b>，快速准确答复顾客。<span class="srcnote">来源：TW NDS（SIM 反馈）。属 SIM 范围</span></td><td>手持支持多色号库存一次查询。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">SIM · 协同</span></td></tr>
+      <tr><td><span class="rid">HMT-16</span></td><td class="feat">手持连续查询免退出</td><td>商品显示画面增加查询入口，<b>无需退出</b>即可再次查询。<span class="srcnote">来源：TW NDS（SIM 反馈）。属 SIM 范围</span></td><td>手持支持免退出连续查询。</td><td><span class="pill nice">Nice</span></td><td><span class="pill todo">SIM · 协同</span></td></tr>
+      <tr><td><span class="rid">HMT-17</span></td><td class="feat">手持显示当日收货</td><td>手持设备显示<b>当日已收单号与数量</b>，收单后即时核对。<span class="srcnote">来源：TW NDS（SIM 反馈）。属 SIM 范围</span></td><td>手持显示当日收货数据。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">SIM · 协同</span></td></tr>
+      <tr><td><span class="rid">HMT-18</span></td><td class="feat">补货画面显示 CRP</td><td>补货画面增加显示 <b>CRP（现价）</b>，加速补货出场，无需切换查询画面。<span class="srcnote">来源：TW NDS（SIM 反馈）。属 SIM 范围</span></td><td>补货画面显示 CRP 价格。</td><td><span class="pill nice">Nice</span></td><td><span class="pill todo">SIM · 协同</span></td></tr>
+      <tr><td><span class="rid">HMT-19</span></td><td class="feat">店转单条码化</td><td>店转（店间调拨）转货单在 SIM 打印时<b>生成条码</b>，免手动输入纸箱 ID 接收。<span class="srcnote">来源：TW NDS（SIM 反馈）。属 SIM 范围</span></td><td>转货单生成条码支持扫码接收。</td><td><span class="pill should">Should</span></td><td><span class="pill todo">SIM · 协同</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<footer>
+  <b>GC Local POS · Request for Proposal · 场景化需求 &amp; 主数据需求</b> · Draft v0.1 · 2026-09-14<br>
+  Confidential — Internal &amp; Invited Vendors Only. © 2026 NIKE, Inc.  编制：Sabrina Chen · Nike Greater China Retail Technology.<br>
+  来源：1POS 用户指南 v8 · NPOS Mobile Checkout（Swoosh Standards）· NPOS 依赖树 / RCC Checkout HLD / NPOS China Solution HLD · GC NPOS Solution 简报。
+  <div class="pgnote">— End —</div>
+</footer>
+
+</div>
+</body>
+</html>
