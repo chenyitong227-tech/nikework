@@ -487,23 +487,23 @@
     </div>
     <div class="kpi k-mobile-scale">
       <div class="label">Phase 2 · Mobile Scale</div>
-      <div class="value">14</div>
+      <div class="value">16</div>
       <div class="sub">capabilities · 200+ stores · beyond‑parity enhancements</div>
     </div>
     <div class="kpi k-fixed-pilot">
       <div class="label">Phase 3 · Fixed Pilot</div>
-      <div class="value">13</div>
+      <div class="value">14</div>
       <div class="sub">capabilities · core retail flows ready for fixed rollout</div>
     </div>
     <div class="kpi k-fixed-scale">
       <div class="label">Phase 4 · Fixed Scale</div>
-      <div class="value">5</div>
+      <div class="value">6</div>
       <div class="sub">capabilities · full GC scale of NPOS Fixed</div>
     </div>
     <div class="kpi k-total">
       <div class="label">Total Scoped Features</div>
-      <div class="value">45</div>
-      <div class="sub">across 4 phases · 9 functional categories</div>
+      <div class="value">49</div>
+      <div class="sub">across 4 phases · 10 functional categories</div>
     </div>
   </div>
 
@@ -511,9 +511,109 @@
   <div class="changelog">
     <div class="changelog-head">
       <span class="changelog-title">Latest Update · Change Log</span>
+      <span class="changelog-date">HK · Macau Payment Alignment · Sep 17, 2026</span>
+    </div>
+    <p class="changelog-lede">Reorganized the <b>Hong Kong &amp; Macau payment scope</b> in Section 03: both markets move to <b>integrated‑mode payment</b> via a direct connection to <b>Global Payments</b> (Macau additionally direct‑connects <b>MacauPass / MPay</b>), a fixed <b>tender selection order</b> is defined for the offline / manual tender list, and <b>Replace‑UPC‑with‑SKU</b> is confirmed <b>realized</b>.</p>
+    <div class="changelog-list">
+      <div class="changelog-item">
+        <span class="cl-tag edited">Edited</span>
+        <div class="cl-body"><b>HK · Payment Integrated Mode</b> — HK connects <b>directly to Global Payments</b>, so all card &amp; e‑wallet tenders (Visa / Mastercard / Amex / JCB / Diners / UnionPay / PayMe / AliPay / WeChat Pay / Octopus) settle through one integrated connection with no manual key‑in.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag edited">Edited</span>
+        <div class="cl-body"><b>Macau · Payment Integrated Mode</b> — Macau runs <b>two direct connections</b>: <b>Global Payments</b> plus <b>MacauPass 澳门通 (MPay)</b>, covering all Macau (MOP) tenders through direct integration.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><b>Tender Selection Order (HK · MC)</b> — the tender list now follows a fixed display order by actual usage: AliPay → WeChat Pay → Tele Transfer → Mall Certificate → Landlord Card → Foreign Tenders → Store Credit → Promo Voucher → Samsung Pay → HK Voucher.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag edited">Status</span>
+        <div class="cl-body"><b>Replace UPC with SKU (HK · MC)</b> — marked <b>Realized</b> (already implemented).</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag moved">Removed</span>
+        <div class="cl-body"><b>Handheld Inventory · SIM (TW)</b> — the 5 handheld / SIM inventory items (multi‑colorway query, continuous query, today's receiving, CRP on replenishment, barcoded transfer docs) are <b>removed</b> from this roadmap as they sit in the separate SIM workstream.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><b>Original‑Tender Return (HK · MC)</b> — new requirement to enable <b>original‑route tender return</b> for tenders that currently cannot be returned directly; the exact tender types are <b>pending Business input</b>.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag moved">Split</span>
+        <div class="cl-body"><b>Localization split by market</b> — the former combined <b>HK · Macau · TW</b> section is now two dedicated sections: <b>03 · Hong Kong · Macau</b> (8 requirements) and <b>04 · Taiwan</b> (11 requirements). The 3 shared items (Promotion Wording Localization, Employee Login Number Length, Cashier Permission Review) appear in both and are tagged <b>HK · MC · TW</b>. Alignment &amp; Legend renumbered to 05 / 06.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><b>Phase 02 · NPOS Mobile Scale (GC)</b> — added <b>Consignment Non‑Integrated Tenders</b> (Scale Must). Supports consignment payment methods as <b>non‑integrated (offline / manual) tenders</b> to enable <b>consignment store scale‑up</b>. Phase 02 → <b>16</b>, total scoped features → <b>49</b>.</div>
+      </div>
+    </div>
+
+    <div class="changelog-head" style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(15,23,42,0.08);">
+      <span class="changelog-title" style="font-size: 15px; color: var(--text-dim);">Previous Update</span>
+      <span class="changelog-date">GC RFP Alignment · Sep 15, 2026</span>
+    </div>
+    <p class="changelog-lede">Added a dedicated <b>Hong Kong · Macau · Taiwan (HK/Macau/TW) localization scope</b> to this roadmap — migrated out of the <b>GC Local POS RFP</b> so that all <b>Greater China</b> market‑specific requirements live in one place. Sources: <b>1POS HKMCTW</b> (tender / receipt / promotion / permission asks) and <b>TW NDS FY26 POS</b> optimization feedback.</p>
+    <div class="changelog-list">
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><b>Section 03 · HK · Macau · TW Localization</b> — new section for market requirements across payment tenders, receipt/invoice &amp; promotion wording, employee/permissions, accounting/reconciliation and performance.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><b>Payment tenders</b> — <b>HK</b> (Octopus, PayMe, UnionPay, AliPay/WeChat…) and <b>Macau</b> (MacauPass / MPay…) confirmed as <b>1POS parity · Must</b>; the <b>TW</b> tender list remains pending TW NDS confirmation.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><b>TW NDS feedback</b> — receipt line‑merge, reprint‑without‑fapiao, reason‑code simplification, consistent 2nd return/exchange, checkout/return performance, and inbound price‑sync brought into scope.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag scope">Scope</span>
+        <div class="cl-body">Program scope acknowledged to span <b>Greater China (Mainland China · HK · Macau · TW)</b>. Mainland four‑phase plan is unchanged; HK/Macau/TW localization is tracked in the new Section 03.</div>
+      </div>
+    </div>
+
+    <div class="changelog-head" style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(15,23,42,0.08);">
+      <span class="changelog-title" style="font-size: 15px; color: var(--text-dim);">Previous Update</span>
+      <span class="changelog-date">Alignment Meeting · Jul 14, 2026</span>
+    </div>
+    <p class="changelog-lede">Based on the <b>Jul 14 alignment</b> plus additional <b>cross‑functional agreements</b> with <b>Finance, Retail Ops and Loss Prevention</b>: (1) the <b>NPOS Fixed Pilot</b> tender scope has been refined to cover the full spectrum of alternative tenders used in license &amp; pop‑up stores, plus a <b>Store Credit</b> fallback for gift card returns; and (2) a complete <b>gift card return lifecycle</b> has been formalized across Phases 02 → 03 → 04.</p>
+    <div class="changelog-list">
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><b>Phase 03 · NPOS Fixed Pilot</b> — introduced <b>Store Credit</b> as a new alternative tender. Acts as the <b>fallback tender when a gift card return is not possible</b> (issuance/return channel unavailable, tender‑exchange scenario, etc.).</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag edited">Merged</span>
+        <div class="cl-body"><b>Phase 03 · NPOS Fixed Pilot</b> — consolidated <b>License Store Tenders + Store Credit</b> into a single <b>"Alternative Tenders"</b> row covering <b>Mall Certificate, Other Debit, Tele Transfer</b> and <b>Store Credit</b>, with expandable per‑tender usage scenarios.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag edited">Edited</span>
+        <div class="cl-body"><b>Phase 03 · NPOS Fixed Pilot</b> — renamed <b>Tender Return → Alternative Tender Return</b>, now covering returns for all four alternative tenders. Mall Certificate &amp; Tele Transfer returns follow the same <b>manual key‑in mechanism as Other Debit</b>; Store Credit itself is the gift card return fallback.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag edited">Edited</span>
+        <div class="cl-body"><b>Alternative Tenders · Usage scenarios</b> — embedded concrete GC context for each tender so global can see the full picture on demand: <b>Mall Certificate</b> (mall joint promos, e.g. Douyin "¥450 → ¥500", reconciled via Blackline · <b>~5% of total business</b>), <b>Other Debit</b> (backup for integrated UMS payment when UnionPay direct collection fails · share not statistically measurable), <b>Tele Transfer</b> (corporate group‑buying · <b>~5% of total business</b>), <b>Store Credit</b> (gift card return fallback).</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><b>Phase 02 · NPOS Mobile Scale</b> — added <b>Gift Card Return Tracking Report</b> (Scale Must). <i>Cross‑functional agreement · Reporting.</i> Interim <b>monthly report</b> for Finance, Retail Ops and LP to track gift card return activity across stores while NPOS Fixed doesn't yet support gift card returns. Sunsets once Phase 03 native capability ships.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><b>Phase 03 · NPOS Fixed Pilot</b> — added <b>Gift Card Return</b> (Pilot Must). <i>Cross‑functional agreement · Product.</i> NPOS Fixed must include <b>native gift card return at go‑live</b> — no ongoing dependency on tender exchange — so returns are natively supported across both Mobile and Fixed.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><b>Phase 04 · NPOS Fixed Scale</b> — added <b>Retire Mobile Gift Card Return</b> (Scale Must). <i>Cross‑functional agreement · Lifecycle.</i> Once NPOS Fixed is fully deployed, <b>disable the gift card return function on NPOS Mobile</b> — consolidating returns on Fixed as the <b>single point of service</b>.</div>
+      </div>
+    </div>
+
+    <div class="changelog-head" style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(15,23,42,0.08);">
+      <span class="changelog-title" style="font-size: 15px; color: var(--text-dim);">Previous Update</span>
       <span class="changelog-date">Alignment Meeting · Jul 7, 2026</span>
     </div>
-    <p class="changelog-lede">Based on the <b>Jul 7 alignment meeting</b>, this roadmap has been updated to formally scope the program for <b>mainland China</b> and to adjust / add three requirements. Details below.</p>
+    <p class="changelog-lede">Based on the <b>Jul 7 alignment meeting</b>, this roadmap was updated to formally scope the program for <b>mainland China</b> and to adjust / add three requirements.</p>
     <div class="changelog-list">
       <div class="changelog-item">
         <span class="cl-tag scope">Scope</span>
@@ -629,7 +729,7 @@
           </div>
         </div>
         <div class="r">
-          <div class="metric"><div class="l1">Scope · Capabilities</div><div class="v1">14</div></div>
+          <div class="metric"><div class="l1">Scope · Capabilities</div><div class="v1">16</div></div>
           <div class="metric"><div class="l1">Footprint</div><div class="v1">200+ Stores</div></div>
         </div>
       </div>
@@ -642,6 +742,7 @@
             <tr><td class="cat">Non‑Merch</td><td class="feature">Bag Fee</td><td class="desc">Support bag fee as a non‑merch item at NPOS Mobile checkout. In mainland China the bag fee is intentionally marked as <b>0 RMB</b> — no consumer charge — but the item must still flow through the non‑merch catalog for revenue.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P1 / P0</span><span class="tag global">Global Feedback · P0</span></div><p><b>Bag Fees</b> — add bag fee as non‑merch items.</p><p><b>GC context:</b> In mainland China the bag fee is priced at <b>0 RMB</b> (consumer pays nothing), but we still key it through the non‑merch catalog so SAP &amp; Tax can recognize revenue and calculate taxes on the same GTIN model shared with NBY, gift cards and other non‑merch items.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Employee Purchase</td><td class="feature">2 Pieces of Receipts</td><td class="desc">When the transaction uses employee discount, NPOS automatically prints two receipts with a signature area.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P1</span><span class="tag global">Global Feedback · P1</span></div><p>If the transaction uses the employee discount, NPOS can automatically print 2 pieces of receipts which have the signature area.</p><div class="pain"><b>Pain point:</b> Currently using the "print last transaction receipt" functionality to support this business need — would like a proper feature for Swoosh orders.</div><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">SPR</td><td class="feature">Department Analysis Report</td><td class="desc">Realize this report in SPR as real time.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p>Maps to the Confluence reporting items <b>Store Management report</b> and <b>GSS reports including NPOS mobile transactions</b>, plus <b>GC ED&amp;A adaption</b> — necessary GSS + P7 report capability. GC requires the Department Analysis dimension realized in SPR as a real‑time report.</p><p>Confluence open items referenced:</p><p>1. ATT for GC from ROP — done from global in Q1<br>2. Store Ingest — Global TBD, potentially Q2<br>3. Any necessary update from 1POS<br>4. Any necessary update from P7</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
+            <tr><td class="cat">Reporting</td><td class="feature">Gift Card Return Tracking Report</td><td class="desc">Interim <b>monthly gift card return tracking report</b> — while NPOS Mobile is live but NPOS Fixed has not yet shipped gift card returns, provide a monthly report so <b>Finance, Retail Ops and Loss Prevention</b> can track gift card return activity across stores and monitor any risk. Sunsets once NPOS Fixed ships native gift card return.<details class="src"><summary>View source · Cross‑functional agreement</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Cross‑functional · Finance · Retail Ops · LP</span></div><p><b>Additional requirement agreed with cross‑functional partners</b> (Reporting):</p><p>While <b>NPOS Mobile is live</b> but <b>NPOS Fixed has not yet shipped gift card returns</b>, we will provide a <b>monthly report</b> so <b>Finance, Retail Ops, and Loss Prevention</b> can <b>track gift card return activity across stores</b> and monitor any risk.</p><p><b>Sunset trigger:</b> automatically retired once NPOS Fixed ships native Gift Card Return (Phase 03) and Mobile gift card return is disabled (Phase 04).</p></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Employee Purchase</td><td class="feature">Swoosh Products Identification</td><td class="desc">NPOS directly identifies which products are ineligible for the Swoosh discount.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P1</span></div><p>Some products are flagged as "don't apply swoosh" in the local system. We want NPOS to retrieve this flag and reflect it in the checkout process:</p><p>1) Without the flag → continue checkout with swoosh discount.<br>2) With the flag → checkout without swoosh discount.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri stretch">Stretch</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Employee Purchase</td><td class="feature">Swoosh Discount Monthly Usage</td><td class="desc">Employee Swoosh discount monthly usage can be checked across all stores.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0 / P3</span><span class="tag global">Global Feedback · P1</span></div><p>The employee Swoosh discount monthly usage can be checked across all stores.</p><div class="pain"><b>Pain point:</b> Store athletes can only check the Swoosh-account usage for a certain employee at this certain store. There is no visibility into overall monthly usage across stores.</div><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri stretch">Stretch</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Employee Purchase</td><td class="feature">Swoosh Limitation</td><td class="desc">Add limitation rules for employee discount with alerting.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P3</span><span class="tag global">Global Feedback · P1</span></div><p>Add a limitation cap for employee discount, with an alert when the cap is about to be exceeded.</p><p><b>Example:</b> If the monthly employee discount cap is ￥3,000 and the employee has used ￥2,800 by 6/28, when they try to use the employee discount again on 6/30 for ￥300 worth of products, NPOS will alert that only ￥200 remaining for June.</p><p><b>GC monthly caps:</b> NVS ￥4,000 · NSO ￥6,000.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri stretch">Stretch</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
@@ -651,6 +752,7 @@
             <tr><td class="cat">Receipt</td><td class="feature">Show Chinese Store Address</td><td class="desc">Show store address in Simplified Chinese for mainland China.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p>Show store address in Chinese (Simplified) for mainland China stores.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Receipt</td><td class="feature">Add More Space</td><td class="desc">Add more spacing between each product line on the receipt.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p>Add more space between each product line on the printed receipt to improve readability for GC consumers.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Cash Mgmt</td><td class="feature">Cash Management Rollout</td><td class="desc">Roll out Cash &amp; Cash Return with Cash Management integration to all 200+ scale stores.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p>Integration with as‑is GC physical cashier and Cash Management system (HP / APG model). Uses <b>Nike Cash Management</b> end‑to‑end.</p><p><b>Assumption from Confluence:</b> "We'll be using 1POS Cash Management since we're only replacing 1 or just half the registers with NPOS."</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">Tender Type</td><td class="feature">Consignment Non‑Integrated Tenders</td><td class="desc">Support <b>consignment tenders as non‑integrated tenders</b> at NPOS Mobile checkout — enabling <b>consignment store scale‑up</b>. These tenders do <b>not</b> settle through the integrated payment connection; athletes select them manually so consignment (department‑store / landlord) transactions can be captured for revenue &amp; reconciliation.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P1</span></div><p><b>Consignment store scale‑up</b> — as NPOS Mobile expands to consignment / department‑store doors, the consignment payment methods must be available as <b>non‑integrated (offline / manual) tenders</b> since settlement happens with the landlord / department store rather than through Nike's integrated payment path.</p><p>Relates to the Confluence tender placeholder items (offline tenders for consignment stores). The concrete consignment tender list is coordinated with Finance.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -673,7 +775,7 @@
           </div>
         </div>
         <div class="r">
-          <div class="metric"><div class="l1">Scope · Capabilities</div><div class="v1">13</div></div>
+          <div class="metric"><div class="l1">Scope · Capabilities</div><div class="v1">14</div></div>
           <div class="metric"><div class="l1">Exit Criterion</div><div class="v1">Run a full store day</div></div>
         </div>
       </div>
@@ -687,13 +789,14 @@
             <tr><td class="cat">Payment</td><td class="feature">Cash &amp; Cash Return</td><td class="desc">Cash payment (GC = CNY) integrated with Cash Management.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p><b>Cash:</b> Payment with Cash (GC = CNY), integrated with Cash Management.</p><p><b>Cash returns:</b> Return cash as refund.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td><span class="pri must">Pilot Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
             <tr><td class="cat">Return</td><td class="feature">Unverified Returns</td><td class="desc">Support unverified returns at the fixed POS.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · ?</span></div><p>In some countries we allow returns even if the consumer lost their receipt, is not a member (so we cannot find the order in Member Order History), and the order isn't in the Electronic Journal (EJ) either — there's no way to verify the consumer's original order.</p><p>For an <b>unverified return</b> we can still add the item to the cart and use the <b>lowest price of that item in the last 6 months</b>. For unverified returns the only refund tender we allow is <b>gift card</b>.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td><span class="pri must">Pilot Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
             <tr><td class="cat">Return</td><td class="feature">Realize After‑Exchange Return</td><td class="desc">Solution to handle a return of an item that was previously exchanged.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p>Solution to handle a return of an item that was exchanged. It's a problem in 1POS today: if a consumer on visit 1 buys an item, comes back on visit 2 to exchange it, and then on visit 3 decides to return that exchanged item — we don't have any payment details from visit 2 because the original payment was taken in visit 1.</p><p>1POS today only allows refund to a <b>gift card</b> in this case; if the consumer wants cash or bank card refund, 1POS does a <b>tender exchange</b>: exchange that gift card for cash, then refund to the bank card.</p><p>This quarter we're trying to find a better solution than tender exchange. If not, we'll build tender exchange. (Global double‑confirm needed.)</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td><span class="pri must">Pilot Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">Return</td><td class="feature">Gift Card Return</td><td class="desc">NPOS Fixed must include <b>native gift card return capability at go‑live</b> — so returns are natively supported across both NPOS Mobile and NPOS Fixed with <b>no ongoing dependency on tender exchange</b>. Required to ensure the fixed rollout does not create a functional regression vs. NPOS Mobile.<details class="src"><summary>View source · Cross‑functional agreement</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Cross‑functional · Finance · Retail Ops · LP</span></div><p><b>Additional requirement agreed with cross‑functional partners</b> (Product):</p><p>When <b>NPOS Fixed rolls out</b>, the release <b>must include gift card return capability</b> — so returns are natively supported across both NPOS Mobile and NPOS Fixed with <b>no ongoing dependency on tender exchange</b>.</p><p>Paired with Phase 02 interim reporting and Phase 04 Mobile retirement to form the complete gift card return lifecycle.</p></div></details></td><td><span class="pri must">Pilot Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
             <tr><td class="cat">Offline</td><td class="feature">Offline Mode</td><td class="desc">Offline cart creation, login, order submission, payment and receipt printing when network is degraded.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P3</span></div><p>Enable NPOS to work in offline mode. If the store loses network connectivity, NPOS can still create a cart and submit it downstream when NPOS is back online. Includes:</p><p>· <b>Offline Cart Creation</b> · <b>Offline Login</b> (incl. NFC login) · <b>Offline Order Submission</b><br>· <b>Offline Payment for Cash</b> · <b>Offline Payment for Credit Card / eWallet (UMS)</b><br>· <b>Offline Receipt Printing</b></p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td><span class="pri must">Pilot Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
             <tr><td class="cat">Login</td><td class="feature">Okta Login</td><td class="desc">Solve the 9‑digit PT issue and enable Okta login on fixed POS.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p><b>Using Aptos Athlete Logins + OKTA (for Cash Management)</b> — two different login methods supported in NPOS:</p><p>1. Aptos Athlete Logins<br>2. OKTA (for Cash Management privilege actions)</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td><span class="pri must">Pilot Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
             <tr><td class="cat">Login</td><td class="feature">NFC Login</td><td class="desc"><b>Latest (Yoci · Jun 18):</b> More efficient with OKTA login is acknowledged, but usage scenarios &amp; necessity in <b>NSO and NVS</b> still under validation. Local team to source more cost‑effective NFC cards / readers in parallel. Final decision pending — see Decisions Required #02.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0 (offline)</span><span class="tag global">Global Feedback · P3</span></div><p>Confluence lists NFC log‑in under <b>Offline → Offline Log in → NFC log in</b>. Global indicated NFC supports offline mode and previously suggested it seems mandatory, which is why this is back under review for GC.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td><span class="pri nice">Under Review</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Promotion Flexibility</td><td class="feature">Support Multi‑Layer Promotion</td><td class="desc">Support stacking and ordering of multiple promotion layers at checkout.<details class="src"><summary>View source · GC Pricing &amp; Promo One‑Pager</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Need · Item‑Level Stacking</span><span class="tag global">EO · ~$5M / yr (FTW)</span></div><p><b>Promotion Flexibility — Greater China (MLC, HK, TW) Item‑Level Discount Stacking.</b> GC needs the promotion engine to natively stack <b>≥ 2 discount rules at item level</b>, eliminating manual reprice across MLC · HK · MC · TW.</p><p><b>Current state:</b> TW has already proven the two‑layer model (L1 base auto + L2 booster manual), but MLC's 200+ doors are blocked at the system layer — the pricing engine only supports a single base discount today.</p><p><b>Evidence (same SKU pool · WK52, TW 10 doors vs MLC 200+ doors):</b></p><p>· FTW — TW Final MKD% <b>−3.0 pts</b> vs MLC, AUR <b>+$7.4</b> → margin protection<br>· APP‑Pant — TW Final MKD% <b>+10.4 pts</b>, WOS <b>~8 wk faster</b> → accelerated liquidation</p><p><b>EO:</b> ~$5M / year on FTW alone (AUR Gap $7.4 × ~55K units; 2 stacking events / month × 3‑day weekend). Broader upside on APP &amp; seasonal categories.</p><p><b>Next step (from one‑pager):</b> Global team to assess feasibility and propose a solution for item‑level multi‑layer discount stacking across MLC · HK · MC · TW.</p><div class="src-link"><a href="file:///Users/SCh387/Documents/cursor/agent/gc-promotion-flexibility-onepager/gc-promotion-flexibility-onepager - standalone.html" target="_blank" rel="noopener">Open full one‑pager ↗</a></div></div></details></td><td><span class="pri must">Pilot Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
             <tr><td class="cat">Non‑Merch</td><td class="feature">Non‑Merch Products Income Keyin</td><td class="desc">Key in non‑merch items, e.g. delivery box recycle income, at NPOS Fixed checkout.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P1</span><span class="tag global">Global Feedback · P0</span></div><p>Non‑merch items like delivery box recycle income keyin NPOS.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td><span class="pri must">Pilot Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
-            <tr><td class="cat">Tender Type</td><td class="feature">License Store Tenders</td><td class="desc">Add tender types for license stores: Mall Certificate, Other Debit, Tele Transfer.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P1</span></div><p><b>Other Debit / tender for NPOS manually keyin</b> — finance requirement (财务需求) for license stores. Pairs with the related Confluence item:</p><p><b>Add 3 more tenders as placeholder</b> — to support future business innovation as offline tenders.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td><span class="pri must">Pilot Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
-            <tr><td class="cat">Tender Return</td><td class="feature">Mall Cert. / Tele Transfer Return</td><td class="desc">Tender return for Mall Certificate and Tele Transfer via original channel. Prioritized into Pilot — license stores (avg 30/month) rely on Mall Certificate tender for LL special promotions; needs alignment with Finance team.</td><td><span class="pri must">Pilot Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">Tender Type</td><td class="feature">Alternative Tenders</td><td class="desc">Add alternative tender types at NPOS Fixed checkout — <b>Mall Certificate, Other Debit, Tele Transfer</b> (license &amp; pop‑up store operations) and <b>Store Credit</b> (gift card return backup). Expand below for the concrete usage scenario of each tender.<details class="src"><summary>View details · Tender usage scenarios &amp; Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P1</span></div><p><b>1. Mall Certificate · 商场券</b></p><p>· Used for mall‑run joint promotions with tenants — e.g. Douyin (抖音) campaigns like <b>"pay ¥450 get ¥500 value"</b>.<br>· The consumer's payment does <b>NOT</b> clear via UnionPay — funds sit with the mall.<br>· Athletes ring the transaction under the <b>Mall Certificate</b> tender at NPOS; later reconciled with the mall via <b>Blackline</b>.<br>· <b>Share of total business: ~5%.</b></p><p><b>2. Other Debit · Backup for integrated UMS payment</b></p><p>· Used as the <b>backup solution for integrated UMS payment</b> whenever UnionPay cannot directly collect the transaction — e.g. pop‑up stores using hand‑held UnionPay mobile POS terminals that cannot sync book inventory back to the main system, or other cases where the standard integrated UMS path fails.<br>· Athletes must <b>key the transaction into NPOS under the "Other Debit" tender before store closing</b> so revenue and inventory can be captured.<br>· <b>Share of total business: cannot be statistically measured</b> (case‑by‑case backup usage).</p><p><b>3. Tele Transfer · 电汇 · 团购</b></p><p>· Used for corporate group‑buying (团购) orders.<br>· The counterparty company wire‑transfers the payment via bank.<br>· Athletes ring the transaction under the <b>Tele Transfer</b> tender at NPOS.<br>· <b>Share of total business: ~5%.</b></p><p><b>4. Store Credit</b></p><p>· <b>Backup solution when a Gift Card return is not possible</b> — e.g. the gift card issuance / return channel is temporarily unavailable, or a tender‑exchange scenario prevents a clean refund back to the original tender.<br>· Consumer receives an in‑store credit balance redeemable at any GC store for future purchases.</p><p><b>Confluence references:</b> <b>Other Debit / tender for NPOS manually keyin</b> (finance requirement · 财务需求 for license stores) and <b>Add 3 more tenders as placeholder</b> (offline tenders).</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td><span class="pri must">Pilot Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">Tender Return</td><td class="feature">Alternative Tender Return</td><td class="desc">Tender return support for <b>all alternative tender types</b> introduced in Fixed Pilot — <b>Mall Certificate, Other Debit, Tele Transfer</b> and <b>Store Credit</b> — via original channel. Returns for Mall Certificate &amp; Tele Transfer follow the <b>same manual key‑in mechanism as Other Debit</b> (退换 same as Other Debit). Store Credit itself acts as the fallback tender when a gift card cannot be refunded. Prioritized into Pilot — license stores (avg 30/month) rely on Mall Certificate for LL special promotions; needs alignment with Finance team.</td><td><span class="pri must">Pilot Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -712,11 +815,11 @@
           <h3>Close the long‑tail. Reach full GC scale.</h3>
           <div class="target">
             <b>Target:</b> Achieve <b>full scale of NPOS Fixed</b> across GC by delivering the remaining long‑tail capabilities —
-            alternative tender types, consignment SFTP, livestream &amp; promo voucher, SMS payment and customer‑facing UI refinements.
+            alternative tender types, consignment SFTP, livestream &amp; promo voucher, SMS payment, customer‑facing UI refinements, and retiring the NPOS Mobile gift card return once Fixed is the single point of service.
           </div>
         </div>
         <div class="r">
-          <div class="metric"><div class="l1">Scope · Capabilities</div><div class="v1">5</div></div>
+          <div class="metric"><div class="l1">Scope · Capabilities</div><div class="v1">6</div></div>
           <div class="metric"><div class="l1">Footprint</div><div class="v1">Full GC</div></div>
         </div>
       </div>
@@ -729,6 +832,7 @@
             <tr><td class="cat">Payment</td><td class="feature">Livestream &amp; Promo Voucher</td><td class="desc">Go‑live Livestream &amp; Promo Voucher with integrated mode (SAP condition ZP24, tender typeid 13, account key blank).</td><td><span class="pri must">Scale Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
             <tr><td class="cat">Tender Type</td><td class="feature">Consignment Store Tenders</td><td class="desc">Add tender types for consignment stores: Store Credit, Coupon, Landlord Card.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P1</span><span class="tag global">Global Feedback · P1</span></div><p>Maps to the Confluence item <b>"Add 3 more tenders as placeholder"</b> — add three new tenders as placeholder to support future business innovation as offline tenders for consignment stores.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td><span class="pri must">Scale Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
             <tr><td class="cat">Consignment</td><td class="feature">Consignment SFTP to Landlord</td><td class="desc">Revenue‑share mode · UnionPay direct collection — SFTP data transfer to landlord for revenue sharing.</td><td><span class="pri must">Scale Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">Lifecycle</td><td class="feature">Retire Mobile Gift Card Return</td><td class="desc">Once <b>NPOS Fixed is fully deployed</b> and its native gift card return capability is proven live, <b>disable the gift card return function on NPOS Mobile</b> — consolidating returns on NPOS Fixed as the <b>single point of service</b>. Removes duplicate paths and simplifies Finance / LP reconciliation.<details class="src"><summary>View source · Cross‑functional agreement</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Cross‑functional · Finance · Retail Ops · LP</span></div><p><b>Additional requirement agreed with cross‑functional partners</b> (Lifecycle):</p><p>Once <b>NPOS Fixed is fully deployed</b> and the required gift card return functionality is available, we will <b>disable the gift card return function on NPOS Mobile</b> — consolidating returns on NPOS Fixed as the single point of service.</p><p>Also triggers the sunset of the Phase 02 interim monthly report.</p></div></details></td><td><span class="pri must">Scale Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -738,10 +842,113 @@
     </div>
   </div>
 
+  <!-- ===== HK · Macau Localization ===== -->
+  <div class="section">
+    <div class="section-head">
+      <h2>03 · Hong Kong · Macau Localization</h2>
+      <span class="hint">Migrated from the GC Local POS RFP · source: 1POS HKMCTW</span>
+    </div>
+    <div class="phase" style="--c:#0ea5e9; --c-soft:#e6f6fd;">
+      <div class="phase-head">
+        <div class="l">
+          <span class="tag"><span class="dot"></span>Greater China · Hong Kong &amp; Macau</span>
+          <h3>Hong Kong · Macau market localization.</h3>
+          <div class="target">
+            <b>Target:</b> Consolidate all <b>HK (HKD) · Macau (MOP)</b> market‑specific requirements — payment (integrated‑mode direct connect), tender selection order &amp; returns, receipt/promotion wording and employee/permissions.
+            Payment aligns to <b>1POS parity (Must)</b>; the remaining optimizations are <b>Should</b>. Items tagged <b>HK · MC · TW</b> are shared with the Taiwan section.
+          </div>
+        </div>
+        <div class="r">
+          <div class="metric"><div class="l1">Scope · Requirements</div><div class="v1">8</div></div>
+          <div class="metric"><div class="l1">Markets</div><div class="v1">HK · MC</div></div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="features">
+          <thead><tr><th style="width:11%">Market</th><th style="width:20%">Requirement</th><th>Description</th><th style="width:11%">Priority</th><th style="width:12%">Status</th></tr></thead>
+          <tbody>
+            <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Payment Tenders · localized by market</td></tr>
+            <tr><td class="cat">HK</td><td class="feature">HK Payment · Integrated Mode</td><td class="desc">HK runs payment in <b>integrated mode</b> — NPOS connects <b>directly to Global Payments</b>, so every card &amp; e‑wallet tender settles through the Global Payments direct connection with <b>no manual key‑in</b>: <b>Visa / Mastercard / Amex / JCB / Diners / UnionPay 銀聯 / PayMe / AliPay (+ AliPay HK) / WeChat Pay (+ WeChat Pay HK) / Octopus 八达通</b>. <i>Source: 1POS HKMCTW.</i></td><td><span class="pri must">Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">Macau</td><td class="feature">Macau Payment · Integrated Mode</td><td class="desc">Macau runs payment in <b>integrated mode</b> with <b>two direct connections</b> — <b>Global Payments</b> and <b>MacauPass 澳门通 (MPay)</b>. All tenders settle through these direct integrations with <b>no manual key‑in</b>: <b>Visa / Mastercard / Amex / JCB / Diners / UnionPay 銀聯 / MacauPass (MPay) / AliPay / WeChat Pay</b>. <i>Source: 1POS HKMCTW.</i></td><td><span class="pri must">Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">HK · MC</td><td class="feature">Tender Selection Order</td><td class="desc">At checkout the <b>tender list must follow a fixed display order</b> matching stores' actual usage frequency: <b>1. AliPay · 2. WeChat Pay · 3. Tele Transfer · 4. Mall Certificate · 5. Landlord Card · 6. Foreign Tenders · 7. Store Credit · 8. Promo Voucher · 9. Samsung Pay · 10. HK Voucher</b>. Speeds athlete selection and reduces mis‑taps at the counter. <i>Source: HK/Macau actual usage.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">HK · MC</td><td class="feature">Original‑Tender Return</td><td class="desc">Enable <b>original‑route tender return (原路 tender return)</b> for tenders that currently <b>cannot be returned directly</b> to the original tender, so refunds go back via the same tender used at purchase. The <b>specific tender types that need tender return enabled are to be provided by Business</b>. <i>Source: 1POS HKMCTW · pending biz input.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status disc"><span class="d"></span>Pending Biz</span></td></tr>
+
+            <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Receipt / Invoice / Promotion Wording</td></tr>
+            <tr><td class="cat">HK · MC</td><td class="feature">Replace UPC with SKU</td><td class="desc">Receipt shows the <b>SKU number</b> instead of UPC on item lines (HK/Macau ask; consistent with mainland Replace‑UPC‑with‑SKU). <i>Source: 1POS HKMCTW.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status done"><span class="d"></span>Realized</span></td></tr>
+            <tr><td class="cat">HK · MC · TW</td><td class="feature">Promotion Wording · Full Receipt Display</td><td class="desc">Long promotion descriptions are currently <b>truncated to a single line</b> on the printed receipt — any wording beyond the first line is dropped. HK/Macau ask the receipt to <b>wrap long promotion text onto multiple lines and display it in full</b>. <i>Shared with Taiwan · Source: 1POS HKMCTW.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+
+            <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Employee / Permissions</td></tr>
+            <tr><td class="cat">HK · MC · TW</td><td class="feature">Employee Login Number Length</td><td class="desc">1POS currently only supports <b>9‑digit employee‑ID login</b>; staff whose employee ID <b>exceeds 9 digits cannot log in</b>. Extend login to support employee IDs <b>longer than 9 digits</b>. <i>Shared with Taiwan · Source: 1POS HKMCTW.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">HK · MC · TW</td><td class="feature">Cashier Permission Review</td><td class="desc">Review &amp; adjust the <b>cashier permission matrix</b> for HK/Macau/TW roles — specifically, <b>lower the price modification (price override) permission threshold from the current level 40+ to level 20+</b>, so athletes at level 20 and above can override prices. <i>Shared with Taiwan · Source: 1POS HKMCTW.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="legend-row">
+        <span class="li"><span class="sw" style="background:var(--info)"></span>Payment · 1POS parity (Must)</span>
+        <span class="li">Items tagged HK · MC · TW are shared with the Taiwan section</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Taiwan Localization ===== -->
+  <div class="section">
+    <div class="section-head">
+      <h2>04 · Taiwan (TW) Localization</h2>
+      <span class="hint">Sources: TW NDS FY26 (POS) &amp; 1POS HKMCTW (shared items)</span>
+    </div>
+    <div class="phase" style="--c:#14b8a6; --c-soft:#e0f7f4;">
+      <div class="phase-head">
+        <div class="l">
+          <span class="tag"><span class="dot"></span>Greater China · Taiwan</span>
+          <h3>Taiwan market localization.</h3>
+          <div class="target">
+            <b>Target:</b> Consolidate all <b>Taiwan (TWD)</b> market‑specific requirements — payment tenders, receipt/invoice (fapiao) &amp; promotion wording, employee/permissions, accounting reconciliation and performance/data latency.
+            Items tagged <b>HK · MC · TW</b> are <b>shared</b> with the Hong Kong · Macau section.
+          </div>
+        </div>
+        <div class="r">
+          <div class="metric"><div class="l1">Scope · Requirements</div><div class="v1">11</div></div>
+          <div class="metric"><div class="l1">Markets</div><div class="v1">TW</div></div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="features">
+          <thead><tr><th style="width:11%">Market</th><th style="width:20%">Requirement</th><th>Description</th><th style="width:11%">Priority</th><th style="width:12%">Status</th></tr></thead>
+          <tbody>
+            <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Payment Tenders</td></tr>
+            <tr><td class="cat">TW</td><td class="feature">TW Tenders</td><td class="desc">Taiwan (TWD) local card schemes &amp; e‑payments — final list pending TW NDS confirmation. <i>Source: TW NDS FY26.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+
+            <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Receipt / Invoice / Promotion Wording</td></tr>
+            <tr><td class="cat">TW</td><td class="feature">Merge Identical Items to One Line</td><td class="desc">Show identical items on a <b>single line with quantity</b> (e.g. SKU ×2) to avoid overly long detail on bulk purchases. <i>Source: TW NDS.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">TW</td><td class="feature">Reprint Receipt ≠ Reprint Fapiao</td><td class="desc">Reprinting the last receipt must <b>not</b> also reprint the fapiao (duplicate fapiao at self‑run stores must be voided). <i>Source: TW NDS.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">HK · MC · TW</td><td class="feature">Promotion Wording · Full Receipt Display</td><td class="desc">Long promotion descriptions are currently <b>truncated to a single line</b> on the printed receipt — any wording beyond the first line is dropped. HK/Macau ask the receipt to <b>wrap long promotion text onto multiple lines and display it in full</b>. <i>Shared with Hong Kong · Macau · Source: 1POS HKMCTW.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+
+            <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Employee / Permissions</td></tr>
+            <tr><td class="cat">HK · MC · TW</td><td class="feature">Employee Login Number Length</td><td class="desc">1POS currently only supports <b>9‑digit employee‑ID login</b>; staff whose employee ID <b>exceeds 9 digits cannot log in</b>. Extend login to support employee IDs <b>longer than 9 digits</b>. <i>Shared with Hong Kong · Macau · Source: 1POS HKMCTW.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">HK · MC · TW</td><td class="feature">Cashier Permission Review</td><td class="desc">Review &amp; adjust the <b>cashier permission matrix</b> for HK/Macau/TW roles — specifically, <b>lower the price modification (price override) permission threshold from the current level 40+ to level 20+</b>, so athletes at level 20 and above can override prices. <i>Shared with Hong Kong · Macau · Source: 1POS HKMCTW.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+
+            <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Accounting / Reconciliation</td></tr>
+            <tr><td class="cat">TW</td><td class="feature">Consistent 2nd Return/Exchange</td><td class="desc">A second return/exchange must follow the <b>same logic</b> as the first — <b>no cash‑value voucher</b> generated, no tender conversion — avoiding ledger discrepancies. <i>Source: TW NDS.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">TW</td><td class="feature">Reason Code Simplification</td><td class="desc">Simplify <b>credit‑card reconciliation</b> &amp; <b>discount</b> reason codes to store‑common Promotion options plus an <b>“Other”</b>, reducing finance reconciliation burden. <i>Source: TW NDS · links to POS Reason master data.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">TW</td><td class="feature">Payment Options UI Simplification</td><td class="desc">Merge payment options into the home page; remove options unused by finance to reduce steps. <i>Source: TW NDS.</i></td><td><span class="pri nice">Nice‑to‑Have</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+
+            <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Performance / Data Latency</td></tr>
+            <tr><td class="cat">TW</td><td class="feature">Checkout / Return Performance</td><td class="desc">Optimize device memory/performance to reduce <b>checkout &amp; return wait</b> time during sales peaks. <i>Source: TW NDS.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">TW</td><td class="feature">Inbound Price Sync Timeliness</td><td class="desc">New arrivals often have wrong prices with slow fixes; improve <b>inbound data / price sync timeliness</b> to avoid delayed floor availability. <i>Source: TW NDS.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="legend-row">
+        <span class="li"><span class="sw" style="background:#14b8a6"></span>TW NDS feedback · optimization opportunities</span>
+        <span class="li">Items tagged HK · MC · TW are shared with the Hong Kong · Macau section</span>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== Decisions Required ===== -->
   <div class="section">
     <div class="section-head">
-      <h2>03 · Alignment</h2>
+      <h2>05 · Alignment</h2>
       <span class="hint">Latest update from Yoci · email Jun 18, 2026 18:55</span>
     </div>
     <div class="phase" style="margin-top:0;">
@@ -783,7 +990,7 @@
   <!-- ===== Legend ===== -->
   <div class="section">
     <div class="section-head">
-      <h2>04 · Legend</h2>
+      <h2>06 · Legend</h2>
       <span class="hint">Aligned with the source deck (yellow = Must, orange = Stretch)</span>
     </div>
     <div class="panel">
