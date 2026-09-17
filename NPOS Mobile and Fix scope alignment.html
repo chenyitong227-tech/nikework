@@ -490,7 +490,7 @@
     </div>
     <div class="kpi k-mobile-scale">
       <div class="label">Phase 2 · Mobile Scale</div>
-      <div class="value">15</div>
+      <div class="value">16</div>
       <div class="sub">capabilities · 200+ stores · beyond‑parity enhancements</div>
     </div>
     <div class="kpi k-fixed-pilot">
@@ -505,7 +505,7 @@
     </div>
     <div class="kpi k-total">
       <div class="label">Total Scoped Features</div>
-      <div class="value">48</div>
+      <div class="value">49</div>
       <div class="sub">across 4 phases · 10 functional categories</div>
     </div>
   </div>
@@ -514,6 +514,70 @@
   <div class="changelog">
     <div class="changelog-head">
       <span class="changelog-title">Latest Update · Change Log</span>
+      <span class="changelog-date">HK · Macau Payment Alignment · Sep 17, 2026</span>
+    </div>
+    <p class="changelog-lede">Reorganized the <b>Hong Kong &amp; Macau payment scope</b> in Section 03: both markets move to <b>integrated‑mode payment</b> via a direct connection to <b>Global Payments</b> (Macau additionally direct‑connects <b>MacauPass / MPay</b>), a fixed <b>tender selection order</b> is defined for the offline / manual tender list, and <b>Replace‑UPC‑with‑SKU</b> is confirmed <b>realized</b>.</p>
+    <div class="changelog-list">
+      <div class="changelog-item">
+        <span class="cl-tag edited">Edited</span>
+        <div class="cl-body"><b>HK · Payment Integrated Mode</b> — HK connects <b>directly to Global Payments</b>, so all card &amp; e‑wallet tenders (Visa / Mastercard / Amex / JCB / Diners / UnionPay / PayMe / AliPay / WeChat Pay / Octopus) settle through one integrated connection with no manual key‑in.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag edited">Edited</span>
+        <div class="cl-body"><b>Macau · Payment Integrated Mode</b> — Macau runs <b>two direct connections</b>: <b>Global Payments</b> plus <b>MacauPass 澳门通 (MPay)</b>, covering all Macau (MOP) tenders through direct integration.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><b>Tender Selection Order (HK · MC)</b> — the tender list now follows a fixed display order by actual usage: AliPay → WeChat Pay → Tele Transfer → Mall Certificate → Landlord Card → Foreign Tenders → Store Credit → Promo Voucher → Samsung Pay → HK Voucher.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag edited">Status</span>
+        <div class="cl-body"><b>Replace UPC with SKU (HK · MC)</b> — marked <b>Realized</b> (already implemented).</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag moved">Removed</span>
+        <div class="cl-body"><b>Handheld Inventory · SIM (TW)</b> — the 5 handheld / SIM inventory items (multi‑colorway query, continuous query, today's receiving, CRP on replenishment, barcoded transfer docs) are <b>removed</b> from this roadmap as they sit in the separate SIM workstream.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><b>Original‑Tender Return (HK · MC)</b> — new requirement to enable <b>original‑route tender return</b> for tenders that currently cannot be returned directly; the exact tender types are <b>pending Business input</b>.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag moved">Split</span>
+        <div class="cl-body"><b>Localization split by market</b> — the former combined <b>HK · Macau · TW</b> section is now two dedicated sections: <b>03 · Hong Kong · Macau</b> (8 requirements) and <b>04 · Taiwan</b> (11 requirements). The 3 shared items (Promotion Wording Localization, Employee Login Number Length, Cashier Permission Review) appear in both and are tagged <b>HK · MC · TW</b>. Alignment &amp; Legend renumbered to 05 / 06.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><b>Phase 02 · NPOS Mobile Scale (GC)</b> — added <b>Consignment Non‑Integrated Tenders</b> (Scale Must). Supports consignment payment methods as <b>non‑integrated (offline / manual) tenders</b> to enable <b>consignment store scale‑up</b>. Phase 02 → <b>16</b>, total scoped features → <b>49</b>.</div>
+      </div>
+    </div>
+
+    <div class="changelog-head" style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(15,23,42,0.08);">
+      <span class="changelog-title" style="font-size: 15px; color: var(--text-dim);">Previous Update</span>
+      <span class="changelog-date">GC RFP Alignment · Sep 15, 2026</span>
+    </div>
+    <p class="changelog-lede">Added a dedicated <b>Hong Kong · Macau · Taiwan (HK/Macau/TW) localization scope</b> to this roadmap — migrated out of the <b>GC Local POS RFP</b> so that all <b>Greater China</b> market‑specific requirements live in one place. Sources: <b>1POS HKMCTW</b> (tender / receipt / promotion / permission asks) and <b>TW NDS FY26 POS</b> optimization feedback.</p>
+    <div class="changelog-list">
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><b>Section 03 · HK · Macau · TW Localization</b> — new section for market requirements across payment tenders, receipt/invoice &amp; promotion wording, employee/permissions, accounting/reconciliation and performance.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><b>Payment tenders</b> — <b>HK</b> (Octopus, PayMe, UnionPay, AliPay/WeChat…) and <b>Macau</b> (MacauPass / MPay…) confirmed as <b>1POS parity · Must</b>; the <b>TW</b> tender list remains pending TW NDS confirmation.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><b>TW NDS feedback</b> — receipt line‑merge, reprint‑without‑fapiao, reason‑code simplification, consistent 2nd return/exchange, checkout/return performance, and inbound price‑sync brought into scope.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag scope">Scope</span>
+        <div class="cl-body">Program scope acknowledged to span <b>Greater China (Mainland China · HK · Macau · TW)</b>. Mainland four‑phase plan is unchanged; HK/Macau/TW localization is tracked in the new Section 03.</div>
+      </div>
+    </div>
+
+    <div class="changelog-head" style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(15,23,42,0.08);">
+      <span class="changelog-title" style="font-size: 15px; color: var(--text-dim);">Previous Update</span>
       <span class="changelog-date">Alignment Meeting · Jul 14, 2026</span>
     </div>
     <p class="changelog-lede">Based on the <b>Jul 14 alignment</b> plus additional <b>cross‑functional agreements</b> with <b>Finance, Retail Ops and Loss Prevention</b>: (1) the <b>NPOS Fixed Pilot</b> tender scope has been refined to cover the full spectrum of alternative tenders used in license &amp; pop‑up stores, plus a <b>Store Credit</b> fallback for gift card returns; and (2) a complete <b>gift card return lifecycle</b> has been formalized across Phases 02 → 03 → 04.</p>
@@ -668,7 +732,7 @@
           </div>
         </div>
         <div class="r">
-          <div class="metric"><div class="l1">Scope · Capabilities</div><div class="v1">15</div></div>
+          <div class="metric"><div class="l1">Scope · Capabilities</div><div class="v1">16</div></div>
           <div class="metric"><div class="l1">Footprint</div><div class="v1">200+ Stores</div></div>
         </div>
       </div>
@@ -691,6 +755,7 @@
             <tr><td class="cat">Receipt</td><td class="feature">Show Chinese Store Address</td><td class="desc">Show store address in Simplified Chinese for mainland China.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p>Show store address in Chinese (Simplified) for mainland China stores.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Receipt</td><td class="feature">Add More Space</td><td class="desc">Add more spacing between each product line on the receipt.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p>Add more space between each product line on the printed receipt to improve readability for GC consumers.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Cash Mgmt</td><td class="feature">Cash Management Rollout</td><td class="desc">Roll out Cash &amp; Cash Return with Cash Management integration to all 200+ scale stores.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p>Integration with as‑is GC physical cashier and Cash Management system (HP / APG model). Uses <b>Nike Cash Management</b> end‑to‑end.</p><p><b>Assumption from Confluence:</b> "We'll be using 1POS Cash Management since we're only replacing 1 or just half the registers with NPOS."</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">Tender Type</td><td class="feature">Consignment Non‑Integrated Tenders</td><td class="desc">Support <b>consignment tenders as non‑integrated tenders</b> at NPOS Mobile checkout — enabling <b>consignment store scale‑up</b>. These tenders do <b>not</b> settle through the integrated payment connection; athletes select them manually so consignment (department‑store / landlord) transactions can be captured for revenue &amp; reconciliation.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P1</span></div><p><b>Consignment store scale‑up</b> — as NPOS Mobile expands to consignment / department‑store doors, the consignment payment methods must be available as <b>non‑integrated (offline / manual) tenders</b> since settlement happens with the landlord / department store rather than through Nike's integrated payment path.</p><p>Relates to the Confluence tender placeholder items (offline tenders for consignment stores). The concrete consignment tender list is coordinated with Finance.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -780,10 +845,113 @@
     </div>
   </div>
 
+  <!-- ===== HK · Macau Localization ===== -->
+  <div class="section">
+    <div class="section-head">
+      <h2>03 · Hong Kong · Macau Localization</h2>
+      <span class="hint">Migrated from the GC Local POS RFP · source: 1POS HKMCTW</span>
+    </div>
+    <div class="phase" style="--c:#0ea5e9; --c-soft:#e6f6fd;">
+      <div class="phase-head">
+        <div class="l">
+          <span class="tag"><span class="dot"></span>Greater China · Hong Kong &amp; Macau</span>
+          <h3>Hong Kong · Macau market localization.</h3>
+          <div class="target">
+            <b>Target:</b> Consolidate all <b>HK (HKD) · Macau (MOP)</b> market‑specific requirements — payment (integrated‑mode direct connect), tender selection order &amp; returns, receipt/promotion wording and employee/permissions.
+            Payment aligns to <b>1POS parity (Must)</b>; the remaining optimizations are <b>Should</b>. Items tagged <b>HK · MC · TW</b> are shared with the Taiwan section.
+          </div>
+        </div>
+        <div class="r">
+          <div class="metric"><div class="l1">Scope · Requirements</div><div class="v1">8</div></div>
+          <div class="metric"><div class="l1">Markets</div><div class="v1">HK · MC</div></div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="features">
+          <thead><tr><th style="width:11%">Market</th><th style="width:20%">Requirement</th><th>Description</th><th style="width:11%">Priority</th><th style="width:12%">Status</th></tr></thead>
+          <tbody>
+            <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Payment Tenders · localized by market</td></tr>
+            <tr><td class="cat">HK</td><td class="feature">HK Payment · Integrated Mode</td><td class="desc">HK runs payment in <b>integrated mode</b> — NPOS connects <b>directly to Global Payments</b>, so every card &amp; e‑wallet tender settles through the Global Payments direct connection with <b>no manual key‑in</b>: <b>Visa / Mastercard / Amex / JCB / Diners / UnionPay 銀聯 / PayMe / AliPay (+ AliPay HK) / WeChat Pay (+ WeChat Pay HK) / Octopus 八达通</b>. <i>Source: 1POS HKMCTW.</i></td><td><span class="pri must">Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">Macau</td><td class="feature">Macau Payment · Integrated Mode</td><td class="desc">Macau runs payment in <b>integrated mode</b> with <b>two direct connections</b> — <b>Global Payments</b> and <b>MacauPass 澳门通 (MPay)</b>. All tenders settle through these direct integrations with <b>no manual key‑in</b>: <b>Visa / Mastercard / Amex / JCB / Diners / UnionPay 銀聯 / MacauPass (MPay) / AliPay / WeChat Pay</b>. <i>Source: 1POS HKMCTW.</i></td><td><span class="pri must">Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">HK · MC</td><td class="feature">Tender Selection Order</td><td class="desc">At checkout the <b>tender list must follow a fixed display order</b> matching stores' actual usage frequency: <b>1. AliPay · 2. WeChat Pay · 3. Tele Transfer · 4. Mall Certificate · 5. Landlord Card · 6. Foreign Tenders · 7. Store Credit · 8. Promo Voucher · 9. Samsung Pay · 10. HK Voucher</b>. Speeds athlete selection and reduces mis‑taps at the counter. <i>Source: HK/Macau actual usage.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">HK · MC</td><td class="feature">Original‑Tender Return</td><td class="desc">Enable <b>original‑route tender return (原路 tender return)</b> for tenders that currently <b>cannot be returned directly</b> to the original tender, so refunds go back via the same tender used at purchase. The <b>specific tender types that need tender return enabled are to be provided by Business</b>. <i>Source: 1POS HKMCTW · pending biz input.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status disc"><span class="d"></span>Pending Biz</span></td></tr>
+
+            <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Receipt / Invoice / Promotion Wording</td></tr>
+            <tr><td class="cat">HK · MC</td><td class="feature">Replace UPC with SKU</td><td class="desc">Receipt shows the <b>SKU number</b> instead of UPC on item lines (HK/Macau ask; consistent with mainland Replace‑UPC‑with‑SKU). <i>Source: 1POS HKMCTW.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status done"><span class="d"></span>Realized</span></td></tr>
+            <tr><td class="cat">HK · MC · TW</td><td class="feature">Promotion Wording · Full Receipt Display</td><td class="desc">Long promotion descriptions are currently <b>truncated to a single line</b> on the printed receipt — any wording beyond the first line is dropped. HK/Macau ask the receipt to <b>wrap long promotion text onto multiple lines and display it in full</b>. <i>Shared with Taiwan · Source: 1POS HKMCTW.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+
+            <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Employee / Permissions</td></tr>
+            <tr><td class="cat">HK · MC · TW</td><td class="feature">Employee Login Number Length</td><td class="desc">1POS currently only supports <b>9‑digit employee‑ID login</b>; staff whose employee ID <b>exceeds 9 digits cannot log in</b>. Extend login to support employee IDs <b>longer than 9 digits</b>. <i>Shared with Taiwan · Source: 1POS HKMCTW.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">HK · MC · TW</td><td class="feature">Cashier Permission Review</td><td class="desc">Review &amp; adjust the <b>cashier permission matrix</b> for HK/Macau/TW roles — specifically, <b>lower the price modification (price override) permission threshold from the current level 40+ to level 20+</b>, so athletes at level 20 and above can override prices. <i>Shared with Taiwan · Source: 1POS HKMCTW.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="legend-row">
+        <span class="li"><span class="sw" style="background:var(--info)"></span>Payment · 1POS parity (Must)</span>
+        <span class="li">Items tagged HK · MC · TW are shared with the Taiwan section</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Taiwan Localization ===== -->
+  <div class="section">
+    <div class="section-head">
+      <h2>04 · Taiwan (TW) Localization</h2>
+      <span class="hint">Sources: TW NDS FY26 (POS) &amp; 1POS HKMCTW (shared items)</span>
+    </div>
+    <div class="phase" style="--c:#14b8a6; --c-soft:#e0f7f4;">
+      <div class="phase-head">
+        <div class="l">
+          <span class="tag"><span class="dot"></span>Greater China · Taiwan</span>
+          <h3>Taiwan market localization.</h3>
+          <div class="target">
+            <b>Target:</b> Consolidate all <b>Taiwan (TWD)</b> market‑specific requirements — payment tenders, receipt/invoice (fapiao) &amp; promotion wording, employee/permissions, accounting reconciliation and performance/data latency.
+            Items tagged <b>HK · MC · TW</b> are <b>shared</b> with the Hong Kong · Macau section.
+          </div>
+        </div>
+        <div class="r">
+          <div class="metric"><div class="l1">Scope · Requirements</div><div class="v1">11</div></div>
+          <div class="metric"><div class="l1">Markets</div><div class="v1">TW</div></div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="features">
+          <thead><tr><th style="width:11%">Market</th><th style="width:20%">Requirement</th><th>Description</th><th style="width:11%">Priority</th><th style="width:12%">Status</th></tr></thead>
+          <tbody>
+            <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Payment Tenders</td></tr>
+            <tr><td class="cat">TW</td><td class="feature">TW Tenders</td><td class="desc">Taiwan (TWD) local card schemes &amp; e‑payments — final list pending TW NDS confirmation. <i>Source: TW NDS FY26.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+
+            <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Receipt / Invoice / Promotion Wording</td></tr>
+            <tr><td class="cat">TW</td><td class="feature">Merge Identical Items to One Line</td><td class="desc">Show identical items on a <b>single line with quantity</b> (e.g. SKU ×2) to avoid overly long detail on bulk purchases. <i>Source: TW NDS.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">TW</td><td class="feature">Reprint Receipt ≠ Reprint Fapiao</td><td class="desc">Reprinting the last receipt must <b>not</b> also reprint the fapiao (duplicate fapiao at self‑run stores must be voided). <i>Source: TW NDS.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">HK · MC · TW</td><td class="feature">Promotion Wording · Full Receipt Display</td><td class="desc">Long promotion descriptions are currently <b>truncated to a single line</b> on the printed receipt — any wording beyond the first line is dropped. HK/Macau ask the receipt to <b>wrap long promotion text onto multiple lines and display it in full</b>. <i>Shared with Hong Kong · Macau · Source: 1POS HKMCTW.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+
+            <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Employee / Permissions</td></tr>
+            <tr><td class="cat">HK · MC · TW</td><td class="feature">Employee Login Number Length</td><td class="desc">1POS currently only supports <b>9‑digit employee‑ID login</b>; staff whose employee ID <b>exceeds 9 digits cannot log in</b>. Extend login to support employee IDs <b>longer than 9 digits</b>. <i>Shared with Hong Kong · Macau · Source: 1POS HKMCTW.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">HK · MC · TW</td><td class="feature">Cashier Permission Review</td><td class="desc">Review &amp; adjust the <b>cashier permission matrix</b> for HK/Macau/TW roles — specifically, <b>lower the price modification (price override) permission threshold from the current level 40+ to level 20+</b>, so athletes at level 20 and above can override prices. <i>Shared with Hong Kong · Macau · Source: 1POS HKMCTW.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+
+            <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Accounting / Reconciliation</td></tr>
+            <tr><td class="cat">TW</td><td class="feature">Consistent 2nd Return/Exchange</td><td class="desc">A second return/exchange must follow the <b>same logic</b> as the first — <b>no cash‑value voucher</b> generated, no tender conversion — avoiding ledger discrepancies. <i>Source: TW NDS.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">TW</td><td class="feature">Reason Code Simplification</td><td class="desc">Simplify <b>credit‑card reconciliation</b> &amp; <b>discount</b> reason codes to store‑common Promotion options plus an <b>“Other”</b>, reducing finance reconciliation burden. <i>Source: TW NDS · links to POS Reason master data.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">TW</td><td class="feature">Payment Options UI Simplification</td><td class="desc">Merge payment options into the home page; remove options unused by finance to reduce steps. <i>Source: TW NDS.</i></td><td><span class="pri nice">Nice‑to‑Have</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+
+            <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Performance / Data Latency</td></tr>
+            <tr><td class="cat">TW</td><td class="feature">Checkout / Return Performance</td><td class="desc">Optimize device memory/performance to reduce <b>checkout &amp; return wait</b> time during sales peaks. <i>Source: TW NDS.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">TW</td><td class="feature">Inbound Price Sync Timeliness</td><td class="desc">New arrivals often have wrong prices with slow fixes; improve <b>inbound data / price sync timeliness</b> to avoid delayed floor availability. <i>Source: TW NDS.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="legend-row">
+        <span class="li"><span class="sw" style="background:#14b8a6"></span>TW NDS feedback · optimization opportunities</span>
+        <span class="li">Items tagged HK · MC · TW are shared with the Hong Kong · Macau section</span>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== Decisions Required ===== -->
   <div class="section">
     <div class="section-head">
-      <h2>03 · Alignment</h2>
+      <h2>05 · Alignment</h2>
       <span class="hint">Latest update from Yoci · email Jun 18, 2026 18:55</span>
     </div>
     <div class="phase" style="margin-top:0;">
@@ -825,7 +993,7 @@
   <!-- ===== Legend ===== -->
   <div class="section">
     <div class="section-head">
-      <h2>04 · Legend</h2>
+      <h2>06 · Legend</h2>
       <span class="hint">Aligned with the source deck (yellow = Must, orange = Stretch)</span>
     </div>
     <div class="panel">
