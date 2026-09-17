@@ -544,7 +544,7 @@
       </div>
       <div class="changelog-item">
         <span class="cl-tag moved">Split</span>
-        <div class="cl-body"><b>Localization split by market</b> — the former combined <b>HK · Macau · TW</b> section is now two dedicated sections: <b>03 · Hong Kong · Macau</b> (8 requirements) and <b>04 · Taiwan</b> (11 requirements). The 3 shared items (Promotion Wording Localization, Employee Login Number Length, Cashier Permission Review) appear in both and are tagged <b>HK · MC · TW</b>. Alignment &amp; Legend renumbered to 05 / 06.</div>
+        <div class="cl-body"><b>Localization split by market</b> — the former combined <b>HK · Macau · TW</b> section is now two dedicated sections: <b>03 · Hong Kong · Macau</b> (9 requirements) and <b>04 · Taiwan</b> (11 requirements). The 4 shared items (Promotion Wording · Full Receipt Display, Merge Identical Items to One Line, Employee Login Number Length, Cashier Permission Review) appear in both and are tagged <b>HK · MC · TW</b>. Alignment &amp; Legend renumbered to 05 / 06.</div>
       </div>
       <div class="changelog-item">
         <span class="cl-tag added">Added</span>
@@ -862,7 +862,7 @@
           </div>
         </div>
         <div class="r">
-          <div class="metric"><div class="l1">Scope · Requirements</div><div class="v1">8</div></div>
+          <div class="metric"><div class="l1">Scope · Requirements</div><div class="v1">9</div></div>
           <div class="metric"><div class="l1">Markets</div><div class="v1">HK · MC</div></div>
         </div>
       </div>
@@ -879,6 +879,7 @@
             <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Receipt / Invoice / Promotion Wording</td></tr>
             <tr><td class="cat">HK · MC</td><td class="feature">Replace UPC with SKU</td><td class="desc">Receipt shows the <b>SKU number</b> instead of UPC on item lines (HK/Macau ask; consistent with mainland Replace‑UPC‑with‑SKU). <i>Source: 1POS HKMCTW.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status done"><span class="d"></span>Realized</span></td></tr>
             <tr><td class="cat">HK · MC · TW</td><td class="feature">Promotion Wording · Full Receipt Display</td><td class="desc">Long promotion descriptions are currently <b>truncated to a single line</b> on the printed receipt — any wording beyond the first line is dropped. HK/Macau ask the receipt to <b>wrap long promotion text onto multiple lines and display it in full</b>. <i>Shared with Taiwan · Source: 1POS HKMCTW.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">HK · MC · TW</td><td class="feature">Merge Identical Items to One Line</td><td class="desc">Show identical items on a <b>single line with quantity</b> (e.g. SKU ×2) to avoid overly long detail on bulk purchases. <i>Shared with Taiwan · Source: TW NDS.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
 
             <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Employee / Permissions</td></tr>
             <tr><td class="cat">HK · MC · TW</td><td class="feature">Employee Login Number Length</td><td class="desc">1POS currently only supports <b>9‑digit employee‑ID login</b>; staff whose employee ID <b>exceeds 9 digits cannot log in</b>. Extend login to support employee IDs <b>longer than 9 digits</b>. <i>Shared with Taiwan · Source: 1POS HKMCTW.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
@@ -922,7 +923,7 @@
             <tr><td class="cat">TW</td><td class="feature">TW Tenders</td><td class="desc">Taiwan (TWD) local card schemes &amp; e‑payments — final list pending TW NDS confirmation. <i>Source: TW NDS FY26.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
 
             <tr><td colspan="5" style="background:var(--info-soft);font-weight:800;color:#0369a1;letter-spacing:.06em;">Receipt / Invoice / Promotion Wording</td></tr>
-            <tr><td class="cat">TW</td><td class="feature">Merge Identical Items to One Line</td><td class="desc">Show identical items on a <b>single line with quantity</b> (e.g. SKU ×2) to avoid overly long detail on bulk purchases. <i>Source: TW NDS.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">HK · MC · TW</td><td class="feature">Merge Identical Items to One Line</td><td class="desc">Show identical items on a <b>single line with quantity</b> (e.g. SKU ×2) to avoid overly long detail on bulk purchases. <i>Shared with Hong Kong · Macau · Source: TW NDS.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
             <tr><td class="cat">TW</td><td class="feature">Reprint Receipt ≠ Reprint Fapiao</td><td class="desc">Reprinting the last receipt must <b>not</b> also reprint the fapiao (duplicate fapiao at self‑run stores must be voided). <i>Source: TW NDS.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
             <tr><td class="cat">HK · MC · TW</td><td class="feature">Promotion Wording · Full Receipt Display</td><td class="desc">Long promotion descriptions are currently <b>truncated to a single line</b> on the printed receipt — any wording beyond the first line is dropped. HK/Macau ask the receipt to <b>wrap long promotion text onto multiple lines and display it in full</b>. <i>Shared with Hong Kong · Macau · Source: 1POS HKMCTW.</i></td><td><span class="pri stretch">Should</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
 
