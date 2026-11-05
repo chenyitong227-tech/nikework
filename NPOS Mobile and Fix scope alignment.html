@@ -380,6 +380,13 @@
     color: var(--text-mute); font-size: 12px;
   }
   details.src .src-body .pain b { color: var(--text); font-weight: 700; }
+  details.src .src-body pre.payload {
+    margin: 4px 0 10px; padding: 10px 12px; white-space: pre-wrap; overflow-wrap: anywhere;
+    background: #fff; border: 1px solid #fed7aa; border-radius: 6px;
+    font-family: ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, 'Courier New', monospace;
+    font-size: 11px; line-height: 1.5; color: var(--text);
+  }
+  details.src .src-body code { font-family: ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, 'Courier New', monospace; font-size: 11.5px; color: var(--text); }
   details.src .src-body .src-link { margin-top: 10px; text-align: right; }
   details.src .src-body .src-link a {
     color: var(--accent); text-decoration: none;
@@ -757,7 +764,65 @@
             <tr><td class="cat">Receipt</td><td class="feature">Add More Space</td><td class="desc">Add more spacing between each product line on the receipt.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p>Add more space between each product line on the printed receipt to improve readability for GC consumers.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
             <tr><td class="cat">Cash Mgmt</td><td class="feature">Cash Management Rollout</td><td class="desc">Roll out Cash &amp; Cash Return with Cash Management integration to all 200+ scale stores.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P0</span></div><p>Integration with as‑is GC physical cashier and Cash Management system (HP / APG model). Uses <b>Nike Cash Management</b> end‑to‑end.</p><p><b>Assumption from Confluence:</b> "We'll be using 1POS Cash Management since we're only replacing 1 or just half the registers with NPOS."</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
             <tr><td class="cat">Tender Type</td><td class="feature">Consignment Non‑Integrated Tenders</td><td class="desc">Support <b>consignment tenders as non‑integrated tenders</b> at NPOS Mobile checkout — enabling <b>consignment store scale‑up</b>. These tenders do <b>not</b> settle through the integrated payment connection; athletes select them manually so consignment (department‑store / landlord) transactions can be captured for revenue &amp; reconciliation.<details class="src"><summary>View source · GC NDP Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P1</span></div><p><b>Consignment store scale‑up</b> — as NPOS Mobile expands to consignment / department‑store doors, the consignment payment methods must be available as <b>non‑integrated (offline / manual) tenders</b> since settlement happens with the landlord / department store rather than through Nike's integrated payment path.</p><p>Relates to the Confluence tender placeholder items (offline tenders for consignment stores). The concrete consignment tender list is coordinated with Finance.</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
-            <tr><td class="cat">Consignment</td><td class="feature">Consignment SFTP to Landlord</td><td class="desc">Revenue‑share mode · UnionPay direct collection — SFTP data transfer to landlord for revenue sharing.</td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">Consignment</td><td class="feature">Consignment SFTP to Landlord</td><td class="desc">Revenue‑share mode · UnionPay direct collection — SFTP data transfer to landlord for revenue sharing. Store list is <b>configurable by store code</b>; <b>sale &amp; return</b> data is pushed <b>every 5 minutes</b>, with a <b>7‑day check</b> for missed transactions.<details class="src"><summary>View details · SFTP requirement &amp; sample payload</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Requirement · Consignment</span><span class="tag global">Interface · NPOS → Landlord SFTP</span></div><p><b>1. Store‑level configuration.</b> Maintain a configurable list of <b>store codes</b> (<code>storeCode</code>) whose transactions must be sent to the landlord SFTP. Adding or removing a consignment store should be a <b>configuration change</b>, not a code change, so the business can onboard new consignment stores flexibly.</p><p><b>2. Data scope &amp; file format.</b> Send both <b>sale</b> and <b>return</b> transactions for the configured stores. File name: <code>{yyyyMMdd_HHmmss}.txt</code>. Each transaction carries header, item and tender information (see samples below). Returns are shown with negative <code>quantity</code>, <code>totalAmount</code>, <code>transactionAmount</code> and tender <code>amount</code>, and reference the original sale through <code>origOrderId</code> / <code>origLine</code>.</p><p><b>3. Two services.</b></p><p>· <b>Incremental sync — every 5 minutes:</b> sends new sale &amp; return transactions to the landlord SFTP.<br>· <b>Completeness check — every 7 days:</b> checks whether any transactions were missed and re‑sends them.</p><p><b>Sample · Sale</b> (store 4072)</p><pre class="payload">{
+  "storeCode": "4072",
+  "orderId": "AC7B08112659191812A3ACADAF28347B275925788A7C7E5F",
+  "workstationNumber": "002",
+  "transactionSequenceNumber": "26110301450",
+  "orderDate": "2026-11-03 10:14:34",
+  "endTrandate": "2026-11-03 10:15:04",
+  "transactionAmount": 479.4,
+  "itemCount": 1,
+  "items": [
+    {
+      "line": "1",
+      "number": "00197593767271",
+      "quantity": 1,
+      "extendedTaxInclusiveAmount": 479.4,
+      "division": "FOOTWEAR DIVISION",
+      "totalAmount": 479.4
+    }
+  ],
+  "tenders": [
+    {
+      "line": "1",
+      "type": "微信支付*",
+      "NikeRefNo": "42171566999105112297472",
+      "IsEWalletSMSTender": "False",
+      "amount": 479.4
+    }
+  ]
+}</pre><p><b>Sample · Return</b> (store 4072)</p><pre class="payload">{
+  "storeCode": "4072",
+  "orderId": "E05D072FD01DB66BA5B1E2FAC0D141ED53896BDC5762168F",
+  "workstationNumber": "004",
+  "transactionSequenceNumber": "26110334506",
+  "orderDate": "2026-11-03 12:32:37",
+  "endTrandate": "2026-11-03 12:33:20",
+  "transactionAmount": -150.7,
+  "itemCount": 1,
+  "items": [
+    {
+      "line": "2",
+      "number": "00197593642387",
+      "quantity": -1,
+      "extendedTaxInclusiveAmount": 150.7,
+      "division": "FOOTWEAR DIVISION",
+      "totalAmount": -150.7,
+      "origOrderId": "E05D072FD01DB66BA5B1E2FAC0D141EDAF0ECB15C8735583",
+      "origLine": "2"
+    }
+  ],
+  "tenders": [
+    {
+      "line": "1",
+      "type": "微信支付*",
+      "NikeRefNo": "42171567033169227886592",
+      "IsEWalletSMSTender": "False",
+      "amount": -150.7
+    }
+  ]
+}</pre><div class="pain"><b>Sample source:</b> sale &amp; refund payloads shared by Ricky Zou (store 4072, Nov 3, 2026).</div></div></details></td><td class="owner">ITC</td><td><span class="pri must">Scale Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
           </tbody>
         </table>
       </div>
