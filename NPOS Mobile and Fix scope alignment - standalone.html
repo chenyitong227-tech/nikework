@@ -189,6 +189,22 @@
   .changelog-item .cl-tag.edited  { background: #0369a1; }
   .changelog-item .cl-body { color: var(--text-dim); }
   .changelog-item .cl-body b { color: var(--text); font-weight: 700; }
+  .changelog-item .cl-tag.flag    { background: #b91c1c; }
+  .changelog-item .cl-date {
+    display: inline-block; margin-right: 8px; padding: 1px 6px; border-radius: 4px;
+    background: #fff; border: 1px solid #fed7aa; color: var(--accent-2);
+    font-family: ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, 'Courier New', monospace;
+    font-size: 11px; font-weight: 700;
+  }
+  details.changelog-history { margin-top: 22px; padding-top: 14px; border-top: 1px solid rgba(15,23,42,0.08); }
+  details.changelog-history > summary {
+    cursor: pointer; list-style: none; user-select: none;
+    font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-2);
+  }
+  details.changelog-history > summary::-webkit-details-marker { display: none; }
+  details.changelog-history > summary::before { content: '▸'; display: inline-block; margin-right: 8px; transition: transform .15s ease; }
+  details.changelog-history[open] > summary::before { transform: rotate(90deg); }
+  details.changelog-history > summary span { margin-left: 8px; font-weight: 600; letter-spacing: .04em; text-transform: none; color: var(--text-mute); }
   @media (max-width: 720px) {
     .changelog-item { grid-template-columns: 1fr; gap: 4px; }
   }
@@ -519,6 +535,52 @@
   <div class="changelog">
     <div class="changelog-head">
       <span class="changelog-title">Latest Update · Change Log</span>
+      <span class="changelog-date">Roadmap Updates · Sep 22 – Nov 25, 2026</span>
+    </div>
+    <p class="changelog-lede">All roadmap edits since the Sep 17 update, newest first. Highlights: <b>CFD configuration at store level</b> and the <b>GC receipt template</b> join <b>Phase 03 · NPOS Fixed Pilot</b>, <b>NFC Login</b> becomes a Pilot Must, <b>Consignment SFTP to Landlord</b> moves to <b>Phase 02</b> with a detailed spec, and the <b>Taiwan</b> scope is refined for <b>NPOS Fixed only</b>.</p>
+    <div class="changelog-list">
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><span class="cl-date">Nov 25</span><b>Phase 03 · NPOS Fixed Pilot</b> — added <b>CFD Configuration at Store Level</b> (Pilot Must · In Discovery). NPOS Fixed hardware is configured per store, so each store decides whether it needs a <b>Customer Facing Display</b>; most NVS stores run Option C / D with <b>no CFD</b>. Global Store Tech to evaluate feasibility (Mickey Xu's email, Nov 2). Phase 03 → <b>16</b>, total → <b>51</b>.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag edited">Edited</span>
+        <div class="cl-body"><span class="cl-date">Nov 5</span><b>Consignment SFTP to Landlord</b> (Phase 02) — added the detailed requirement: store list <b>configurable by store code</b>; <b>sale &amp; return</b> data sent as <code>{yyyyMMdd_HHmmss}.txt</code> files; a <b>5‑minute sync</b> service plus a <b>7‑day completeness check</b>; sample sale &amp; return payloads.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><span class="cl-date">Oct 30</span><b>Phase 03 · NPOS Fixed Pilot</b> — added <b>GC Receipt Template</b> (Pilot Must · Planned): fewer blank lines between receipt lines, and fixed content such as the <b>return policy printed on the back</b>. Phase 03 → <b>15</b>, total → <b>50</b>.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag edited">Status</span>
+        <div class="cl-body"><span class="cl-date">Oct 30</span><b>NFC Login</b> (Phase 03) — now <b>Pilot Must · Planned</b>: NFC login is required for the <b>Offline Mode go‑live</b>.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag moved">Moved</span>
+        <div class="cl-body"><span class="cl-date">Oct 29</span><b>Consignment SFTP to Landlord</b> moved from <b>Phase 04 · NPOS Fixed Scale</b> → <b>Phase 02 · NPOS Mobile Scale</b>. Phase 02 → <b>17</b>, Phase 04 → <b>5</b>.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag flag">Flag</span>
+        <div class="cl-body"><span class="cl-date">Oct 29</span><b>Realize After‑Exchange Return</b> and <b>Support Multi‑Layer Promotion</b> (Phase 03) tagged <b>Need to raise to Global Ops</b>.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag added">Added</span>
+        <div class="cl-body"><span class="cl-date">Sep 22</span><b>Taiwan</b> — added <b>Fapiao Auto‑Print with Receipt</b> (Scale Must): TW's 5 directly‑operated stores print the fapiao together with the receipt. TW → <b>9</b> requirements.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag edited">Edited</span>
+        <div class="cl-body"><span class="cl-date">Sep 22</span><b>Taiwan</b> — <b>TW Tenders</b>: consignment mode only, athletes select credit card as the tender (now Scale Must). <b>After‑Exchange Return</b> rewritten from the Confluence scenario; GC has raised it to Global Ops, awaiting scheduling. <b>Reason Code Simplification</b> pending TW's reason‑code list. <b>Payment Options UI</b>: TW's common tenders on the home page (now Should). Checkout performance and price sync to be re‑assessed after NPOS go‑live. <b>Merge Identical Items</b> and <b>2 Receipts for Internal Purchases</b> → Nice‑to‑Have.</div>
+      </div>
+      <div class="changelog-item">
+        <span class="cl-tag scope">Scope</span>
+        <div class="cl-body"><span class="cl-date">Sep 22</span><b>Taiwan requirements are for NPOS Fixed only</b> (no NPOS Mobile / Assist stores in TW). Promotion Wording, Employee Login Number Length and Cashier Permission Review are now <b>HK · MC only</b>; Merge Identical Items is the only shared item.</div>
+      </div>
+    </div>
+
+    <details class="changelog-history">
+    <summary>Previous updates<span>Sep 17 · Sep 15 · Jul 14 · Jul 7, 2026</span></summary>
+    <div class="changelog-head" style="margin-top: 18px;">
+      <span class="changelog-title" style="font-size: 15px; color: var(--text-dim);">Previous Update</span>
       <span class="changelog-date">HK · Macau Payment Alignment · Sep 17, 2026</span>
     </div>
     <p class="changelog-lede">Reorganized the <b>Hong Kong &amp; Macau payment scope</b> in Section 03: both markets move to <b>integrated‑mode payment</b> via a direct connection to <b>Global Payments</b> (Macau additionally direct‑connects <b>MacauPass / MPay</b>), a fixed <b>tender selection order</b> is defined for the offline / manual tender list, and <b>Replace‑UPC‑with‑SKU</b> is confirmed <b>realized</b>.</p>
@@ -640,6 +702,7 @@
         <div class="cl-body"><b>Non‑Merch Products Income Keyin</b> moved from <b>Phase 02 · Scale Must</b> → <b>Phase 03 · Fixed Pilot Must</b>. Better fit for the fixed POS non‑merch key‑in flow used by store finance.</div>
       </div>
     </div>
+    </details>
   </div>
 
   <!-- ===== Phase Timeline ===== -->
