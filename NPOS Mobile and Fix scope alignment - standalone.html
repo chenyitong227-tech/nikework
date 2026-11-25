@@ -500,7 +500,7 @@
     </div>
     <div class="kpi k-fixed-pilot">
       <div class="label">Phase 3 · Fixed Pilot</div>
-      <div class="value">15</div>
+      <div class="value">16</div>
       <div class="sub">capabilities · core retail flows ready for fixed rollout</div>
     </div>
     <div class="kpi k-fixed-scale">
@@ -510,7 +510,7 @@
     </div>
     <div class="kpi k-total">
       <div class="label">Total Scoped Features</div>
-      <div class="value">50</div>
+      <div class="value">51</div>
       <div class="sub">across 4 phases · 10 functional categories</div>
     </div>
   </div>
@@ -838,11 +838,11 @@
           <h3>Stand up the fixed checkout. End‑to‑end.</h3>
           <div class="target">
             <b>Target:</b> Pilot NPOS Fixed with the must‑have flows required to run a real GC store —
-            sales (Suspend &amp; Resume, Gift Card), full payment coverage (Credit/Debit, Cash), Returns, Offline mode, Okta &amp; NFC login, multi‑layer promotion and the GC receipt template.
+            sales (Suspend &amp; Resume, Gift Card), full payment coverage (Credit/Debit, Cash), Returns, Offline mode, Okta &amp; NFC login, multi‑layer promotion, the GC receipt template and store‑level CFD configuration.
           </div>
         </div>
         <div class="r">
-          <div class="metric"><div class="l1">Scope · Capabilities</div><div class="v1">15</div></div>
+          <div class="metric"><div class="l1">Scope · Capabilities</div><div class="v1">16</div></div>
           <div class="metric"><div class="l1">Exit Criterion</div><div class="v1">Run a full store day</div></div>
         </div>
       </div>
@@ -865,6 +865,7 @@
             <tr><td class="cat">Tender Type</td><td class="feature">Alternative Tenders</td><td class="desc">Add alternative tender types at NPOS Fixed checkout — <b>Mall Certificate, Other Debit, Tele Transfer</b> (license &amp; pop‑up store operations) and <b>Store Credit</b> (gift card return backup). Expand below for the concrete usage scenario of each tender.<details class="src"><summary>View details · Tender usage scenarios &amp; Confluence</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Priority · P0</span><span class="tag global">Global Feedback · P1</span></div><p><b>1. Mall Certificate · 商场券</b></p><p>· Used for mall‑run joint promotions with tenants — e.g. Douyin (抖音) campaigns like <b>"pay ¥450 get ¥500 value"</b>.<br>· The consumer's payment does <b>NOT</b> clear via UnionPay — funds sit with the mall.<br>· Athletes ring the transaction under the <b>Mall Certificate</b> tender at NPOS; later reconciled with the mall via <b>Blackline</b>.<br>· <b>Share of total business: ~5%.</b></p><p><b>2. Other Debit · Backup for integrated UMS payment</b></p><p>· Used as the <b>backup solution for integrated UMS payment</b> whenever UnionPay cannot directly collect the transaction — e.g. pop‑up stores using hand‑held UnionPay mobile POS terminals that cannot sync book inventory back to the main system, or other cases where the standard integrated UMS path fails.<br>· Athletes must <b>key the transaction into NPOS under the "Other Debit" tender before store closing</b> so revenue and inventory can be captured.<br>· <b>Share of total business: cannot be statistically measured</b> (case‑by‑case backup usage).</p><p><b>3. Tele Transfer · 电汇 · 团购</b></p><p>· Used for corporate group‑buying (团购) orders.<br>· The counterparty company wire‑transfers the payment via bank.<br>· Athletes ring the transaction under the <b>Tele Transfer</b> tender at NPOS.<br>· <b>Share of total business: ~5%.</b></p><p><b>4. Store Credit</b></p><p>· <b>Backup solution when a Gift Card return is not possible</b> — e.g. the gift card issuance / return channel is temporarily unavailable, or a tender‑exchange scenario prevents a clean refund back to the original tender.<br>· Consumer receives an in‑store credit balance redeemable at any GC store for future purchases.</p><p><b>Confluence references:</b> <b>Other Debit / tender for NPOS manually keyin</b> (finance requirement · 财务需求 for license stores) and <b>Add 3 more tenders as placeholder</b> (offline tenders).</p><div class="src-link"><a href="https://confluence.nike.com/spaces/CDS/pages/1160275807/NPOS+GC+scope-inherit+from+FY25" target="_blank" rel="noopener">Open Confluence ↗</a></div></div></details></td><td><span class="pri must">Pilot Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
             <tr><td class="cat">Tender Return</td><td class="feature">Alternative Tender Return</td><td class="desc">Tender return support for <b>all alternative tender types</b> introduced in Fixed Pilot — <b>Mall Certificate, Other Debit, Tele Transfer</b> and <b>Store Credit</b> — via original channel. Returns for Mall Certificate &amp; Tele Transfer follow the <b>same manual key‑in mechanism as Other Debit</b> (退换 same as Other Debit). Store Credit itself acts as the fallback tender when a gift card cannot be refunded. Prioritized into Pilot — license stores (avg 30/month) rely on Mall Certificate for LL special promotions; needs alignment with Finance team.</td><td><span class="pri must">Pilot Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
             <tr><td class="cat">Receipt</td><td class="feature">GC Receipt Template</td><td class="desc">Optimize the GC receipt layout for NPOS Fixed: <b>1)</b> <b>reduce the blank lines</b> between receipt lines; <b>2)</b> print fixed content such as the <b>return policy on the back of the receipt</b>.</td><td><span class="pri must">Pilot Must</span></td><td><span class="status planned"><span class="d"></span>Planned</span></td></tr>
+            <tr><td class="cat">Hardware</td><td class="feature">CFD Configuration at Store Level</td><td class="desc">Configure NPOS Fixed hardware <b>at store level</b>, so each store defines whether it needs a <b>Customer Facing Display (CFD)</b>. Most NVS stores run <b>Option C / D</b>: Main Display for the athlete, <b>no CFD</b>, cash drawer optional.<details class="src"><summary>View details · GC ↔ Global alignment</summary><div class="src-body"><div class="meta"><span class="tag gc">GC Alignment · Nov 2, 2026</span><span class="tag global">Feasibility · Global Store Tech</span></div><p>GC aligns with Clarke's proposal to <b>configure NPOS Fixed hardware at store level</b>.</p><p><b>Store setup:</b> based on GC's investigation, most NVS stores will use <b>Option C and Option D</b>. The common need is a <b>Main Display</b> for the store athlete and <b>no CFD</b>; the only optional part is the <b>cash drawer</b> (the exception). Store‑level configuration decides whether NPOS Fixed in that store needs a CFD.</p><p><b>Why no CFD in most NVS stores</b> (agreed across GC cross‑functional teams):<br>1. Cost saving.<br>2. Potential labor impact and lost sales opportunities: a CFD may trigger more consumer queries, which lengthens checkout.</p><p><b>Next steps, in parallel:</b><br>a. Global Store Tech team to evaluate the <b>feasibility and effort of CFD configuration at store level</b>.<br>b. Store Operations (Global &amp; GC) to align on the <b>SOP for non‑CFD at NVS</b>, plus optional cash drawer deployment.</p><div class="pain"><b>Source:</b> email "Re: GC Nike POS Fixed Updates" — Mickey Xu to Clarke Sowers, Nov 2, 2026.</div></div></details></td><td><span class="pri must">Pilot Must</span></td><td><span class="status disc"><span class="d"></span>In Discovery</span></td></tr>
           </tbody>
         </table>
       </div>
